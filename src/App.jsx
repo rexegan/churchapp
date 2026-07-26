@@ -1,4 +1,9 @@
 import { useState, useEffect } from "react";
+import {
+  SEED_STAFF, SEED_MINISTRIES, SEED_LIFE_GROUPS,
+  SEED_PRAYER, SEED_EVENTS, SEED_TRANSACTIONS,
+  SEED_CAMPAIGNS, SEED_ANNOUNCEMENTS, BUDGETS
+} from "./data.js";
 
 // ── Persistent storage hook ───────────────────────────────────────────────────
 function useStored(key, defaultValue) {
@@ -29,87 +34,6 @@ const C = {
   muted: "#64748b", dim: "#94a3b8",
 };
 
-const SEED_STAFF = [
-  { id:1, name:"Pastor James Russell",  role:"Senior Pastor",       dept:"Leadership", email:"james@church.org",   phone:"555-0101", status:"Active", startDate:"2015-03-01", salary:95000 },
-  { id:2, name:"Maria Thompson",        role:"Executive Pastor",    dept:"Leadership", email:"maria@church.org",   phone:"555-0102", status:"Active", startDate:"2016-06-15", salary:82000 },
-  { id:3, name:"David Chen",            role:"Worship Director",    dept:"Worship",    email:"david@church.org",   phone:"555-0103", status:"Active", startDate:"2018-01-10", salary:68000 },
-  { id:4, name:"Sarah Williams",        role:"Children's Director", dept:"Children",   email:"sarah@church.org",   phone:"555-0104", status:"Active", startDate:"2019-04-22", salary:62000 },
-  { id:5, name:"Michael Brown",         role:"Finance Director",    dept:"Finance",    email:"michael@church.org", phone:"555-0105", status:"Active", startDate:"2017-09-01", salary:75000 },
-  { id:6, name:"Jennifer Davis",        role:"Communications Dir.", dept:"Marketing",  email:"jennifer@church.org",phone:"555-0106", status:"Active", startDate:"2020-02-14", salary:60000 },
-  { id:7, name:"Robert Garcia",         role:"Youth Pastor",        dept:"Youth",      email:"robert@church.org",  phone:"555-0107", status:"Active", startDate:"2021-07-01", salary:58000 },
-  { id:8, name:"Angela Martinez",       role:"Office Manager",      dept:"Admin",      email:"angela@church.org",  phone:"555-0108", status:"Active", startDate:"2018-11-01", salary:52000 },
-];
-
-const SEED_MINISTRIES = [
-  { id:1, name:"Worship & Arts",      leader:"David Chen",      members:45,  volunteers:12, status:"Active", budget:18000, description:"Music, choir, creative arts" },
-  { id:2, name:"Children's Ministry", leader:"Sarah Williams",  members:120, volunteers:28, status:"Active", budget:22000, description:"Nursery through 5th grade" },
-  { id:3, name:"Youth Ministry",      leader:"Robert Garcia",   members:85,  volunteers:15, status:"Active", budget:16000, description:"Middle & high school" },
-  { id:4, name:"Life Groups",         leader:"Maria Thompson",  members:210, volunteers:18, status:"Active", budget:8000,  description:"Small group community" },
-  { id:5, name:"Outreach & Missions", leader:"Pastor Russell",  members:60,  volunteers:22, status:"Active", budget:35000, description:"Local & global missions" },
-  { id:6, name:"Prayer Ministry",     leader:"Angela Martinez", members:40,  volunteers:8,  status:"Active", budget:3000,  description:"Intercession & prayer" },
-  { id:7, name:"Hospitality",         leader:"Jennifer Davis",  members:55,  volunteers:30, status:"Active", budget:12000, description:"Welcome & guest services" },
-  { id:8, name:"Men's Ministry",      leader:"Michael Brown",   members:75,  volunteers:6,  status:"Active", budget:9000,  description:"Men's discipleship" },
-];
-
-const SEED_TRANSACTIONS = [
-  { id:1,  date:"2026-07-20", type:"Income",  category:"Tithes & Offerings", amount:18420, description:"Sunday service offering",  account:"General Fund" },
-  { id:2,  date:"2026-07-20", type:"Income",  category:"Online Giving",       amount:6280,  description:"Online donations",          account:"General Fund" },
-  { id:3,  date:"2026-07-18", type:"Expense", category:"Facilities",          amount:3200,  description:"Utility bills July",        account:"Operations"   },
-  { id:4,  date:"2026-07-17", type:"Expense", category:"Staff",               amount:42500, description:"Bi-weekly payroll",         account:"Payroll"      },
-  { id:5,  date:"2026-07-15", type:"Income",  category:"Events",              amount:2100,  description:"VBS registration fees",     account:"Children Fund"},
-  { id:6,  date:"2026-07-14", type:"Expense", category:"Ministry",            amount:1850,  description:"Youth camp supplies",       account:"Youth Fund"   },
-  { id:7,  date:"2026-07-13", type:"Income",  category:"Missions",            amount:4500,  description:"Missions Sunday special",   account:"Missions Fund"},
-  { id:8,  date:"2026-07-12", type:"Expense", category:"Marketing",           amount:780,   description:"Social media ads July",     account:"Marketing"    },
-  { id:9,  date:"2026-07-10", type:"Expense", category:"Facilities",          amount:1200,  description:"Janitorial services",       account:"Operations"   },
-  { id:10, date:"2026-07-08", type:"Income",  category:"Tithes & Offerings",  amount:17900, description:"Sunday service offering",   account:"General Fund" },
-  { id:11, date:"2026-07-07", type:"Expense", category:"Equipment",           amount:2400,  description:"Sound system repair",       account:"Operations"   },
-  { id:12, date:"2026-07-06", type:"Income",  category:"Online Giving",       amount:5620,  description:"Online donations",          account:"General Fund" },
-];
-
-const SEED_CAMPAIGNS = [
-  { id:1, name:"Summer Revival Series",  type:"Event",    status:"Active",    channel:["Email","Social","SMS"], reach:1240, opens:68, startDate:"2026-07-01", endDate:"2026-08-15", description:"Weekly revival services promotion" },
-  { id:2, name:"Back-to-School Drive",   type:"Outreach", status:"Active",    channel:["Social","Website"],     reach:890,  opens:54, startDate:"2026-07-15", endDate:"2026-08-31", description:"School supplies donation campaign" },
-  { id:3, name:"Fall Kickoff Sunday",    type:"Event",    status:"Draft",     channel:["Email","Social"],       reach:0,    opens:0,  startDate:"2026-09-07", endDate:"2026-09-07", description:"New season launch announcement"   },
-  { id:4, name:"Annual Stewardship",     type:"Finance",  status:"Planned",   channel:["Email","Print"],        reach:0,    opens:0,  startDate:"2026-10-01", endDate:"2026-10-31", description:"Annual giving campaign"           },
-  { id:5, name:"VBS Registration",       type:"Event",    status:"Completed", channel:["Email","Social","SMS"], reach:2100, opens:82, startDate:"2026-06-01", endDate:"2026-06-28", description:"Vacation Bible School promo"      },
-];
-
-const SEED_ANNOUNCEMENTS = [
-  { id:1, title:"Summer Revival Every Friday",  body:"Join us every Friday at 7pm through August for our Summer Revival series.",  category:"Event",    published:true,  date:"2026-07-21", channels:["Bulletin","Website","Social"] },
-  { id:2, title:"Back-to-School Supply Drive",  body:"Donate school supplies for local kids. Drop boxes in the lobby through Aug 20.", category:"Outreach", published:true,  date:"2026-07-19", channels:["Bulletin","Website"] },
-  { id:3, title:"New Life Groups Starting",     body:"Sign up for a Life Group this fall! Groups meet weekly across the city.",     category:"Ministry", published:true,  date:"2026-07-14", channels:["Bulletin","Social"] },
-  { id:4, title:"Staff Appreciation Sunday",    body:"Join us August 3rd to honor our incredible staff and volunteers.",            category:"General",  published:false, date:"2026-07-25", channels:["Bulletin","Website","Social"] },
-];
-
-const SEED_PRAYER = [
-  { id:1, requester:"Linda Hawkins",  request:"Healing from recent surgery",         category:"Health",  status:"Active",   date:"2026-07-22", private:false },
-  { id:2, requester:"Tom & Amy Reed", request:"New job opportunity for Tom",          category:"Career",  status:"Active",   date:"2026-07-21", private:false },
-  { id:3, requester:"Youth Group",    request:"Safe travels for summer mission trip", category:"Missions",status:"Active",   date:"2026-07-20", private:false },
-  { id:4, requester:"Anonymous",      request:"Marriage restoration",                category:"Family",  status:"Active",   date:"2026-07-18", private:true  },
-  { id:5, requester:"Grace Kim",      request:"Praise - baby born healthy!",          category:"Praise",  status:"Answered", date:"2026-07-15", private:false },
-];
-
-const SEED_EVENTS = [
-  { id:1, title:"Sunday Service",         date:"2026-07-27", time:"10:00 AM", location:"Main Sanctuary", type:"Worship", lead:"Pastor Russell", attendees:380, notes:"" },
-  { id:2, title:"Summer Revival Night",   date:"2026-07-25", time:"7:00 PM",  location:"Main Sanctuary", type:"Revival", lead:"Guest Speaker",  attendees:200, notes:"Guest speaker TBD" },
-  { id:3, title:"Finance Committee Mtg",  date:"2026-07-28", time:"6:00 PM",  location:"Conference Rm",  type:"Meeting", lead:"Michael Brown",  attendees:8,   notes:"Q3 budget review" },
-  { id:4, title:"Youth Movie Night",      date:"2026-07-26", time:"6:30 PM",  location:"Fellowship Hall",type:"Youth",   lead:"Robert Garcia",  attendees:50,  notes:"Bring a friend night" },
-  { id:5, title:"Women's Bible Study",    date:"2026-07-29", time:"9:30 AM",  location:"Room 104",       type:"Study",   lead:"Maria Thompson", attendees:35,  notes:"Book of Ruth series" },
-  { id:6, title:"Leadership Team Mtg",    date:"2026-07-30", time:"8:00 AM",  location:"Pastor's Office",type:"Meeting", lead:"Pastor Russell", attendees:6,   notes:"Monthly meeting" },
-  { id:7, title:"Back-to-School Drive",   date:"2026-08-02", time:"9:00 AM",  location:"Lobby",          type:"Outreach",lead:"Outreach Team",  attendees:0,   notes:"Volunteer signup open" },
-  { id:8, title:"Fall Kickoff Sunday",    date:"2026-09-07", time:"10:00 AM", location:"Main Sanctuary", type:"Worship", lead:"All Staff",      attendees:0,   notes:"New season launch" },
-];
-
-const BUDGETS = [
-  { dept:"General Operations", allocated:180000, spent:112400 },
-  { dept:"Staff & Payroll",    allocated:620000, spent:382500 },
-  { dept:"Worship & Arts",     allocated:18000,  spent:11200  },
-  { dept:"Children's Ministry",allocated:22000,  spent:14800  },
-  { dept:"Youth Ministry",     allocated:16000,  spent:9400   },
-  { dept:"Outreach & Missions",allocated:35000,  spent:18200  },
-  { dept:"Marketing",          allocated:24000,  spent:13600  },
-  { dept:"Facilities",         allocated:95000,  spent:62300  },
-];
 
 const fmt$ = n => "$" + Number(n).toLocaleString();
 const fmtPct = (a, b) => b ? Math.round((a / b) * 100) + "%" : "0%";
@@ -202,7 +126,7 @@ function Dashboard({ staff, ministries, transactions, events, campaigns }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
       <div>
-        <h1 style={{ fontSize: 26, fontWeight: 900, color: C.text }}>Church Dashboard</h1>
+        <h1 style={{ fontSize: 26, fontWeight: 900, color: C.text }}>Dashboard</h1>
         <p style={{ color: C.muted, marginTop: 4 }}>Overview of all church operations</p>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 16 }}>
@@ -351,9 +275,102 @@ function Administrative({ events, setEvents }) {
   );
 }
 
+// ── Life Groups ───────────────────────────────────────────────────────────────
+function LifeGroupsView({ lifeGroups }) {
+  const [selected, setSelected] = useState(lifeGroups[0]?.id || null);
+  const [search, setSearch] = useState("");
+  const group = lifeGroups.find(g => g.id === selected);
+  const filtered = group ? group.members.filter(m =>
+    m.name.toLowerCase().includes(search.toLowerCase())
+  ) : [];
+
+  const attColor = a => a >= 90 ? C.green : a >= 70 ? C.gold : C.red;
+  const totalMembers = lifeGroups.reduce((s, g) => s + g.members.length, 0);
+  const needFollowUp = lifeGroups.flatMap(g => g.members).filter(m => {
+    const days = Math.round((new Date() - new Date(m.lastContact)) / 86400000);
+    return days > 14;
+  }).length;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px,1fr))", gap: 14 }}>
+        <StatCard icon="⛪" label="Total Groups"    value={lifeGroups.length}    color={C.accent}  />
+        <StatCard icon="👥" label="Total Members"   value={totalMembers}         color={C.green}   />
+        <StatCard icon="⚠️" label="Need Follow-Up"  value={needFollowUp} sub={needFollowUp > 0 ? "14+ days" : "All current"} color={needFollowUp > 0 ? C.gold : C.green} />
+      </div>
+
+      <div style={{ display: "flex", gap: 16 }}>
+        {/* Group list */}
+        <div style={{ width: 220, flexShrink: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+          {lifeGroups.map(g => (
+            <button key={g.id} onClick={() => { setSelected(g.id); setSearch(""); }}
+              style={{ textAlign: "left", padding: "12px 14px", borderRadius: 11, border: `1px solid ${selected === g.id ? C.accent : C.border}`, background: selected === g.id ? C.accent + "22" : C.card, color: selected === g.id ? C.accent : C.text, cursor: "pointer" }}>
+              <div style={{ fontWeight: 700, fontSize: 13 }}>{g.name}</div>
+              <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>{g.day} · {g.time}</div>
+              <div style={{ fontSize: 11, color: C.muted }}>{g.members.length} members</div>
+            </button>
+          ))}
+        </div>
+
+        {/* Member list */}
+        {group && (
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "16px 20px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div>
+                  <h3 style={{ fontWeight: 900, color: C.text, fontSize: 18 }}>{group.name}</h3>
+                  <div style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>
+                    {group.day}s at {group.time} · {group.location}
+                  </div>
+                  <div style={{ fontSize: 13, color: C.dim, marginTop: 2 }}>Led by {group.leader}</div>
+                </div>
+                <Badge label="Active" color={C.green} />
+              </div>
+            </div>
+
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search members..."
+              style={{ ...inputStyle, maxWidth: 320 }} />
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {filtered.map(m => {
+                const days = Math.round((new Date() - new Date(m.lastContact)) / 86400000);
+                const needsContact = days > 14;
+                return (
+                  <div key={m.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 16px", background: C.card, borderRadius: 11, border: `1px solid ${needsContact ? C.gold + "55" : C.border}` }}>
+                    <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                      <div style={{ width: 38, height: 38, borderRadius: "50%", background: C.accent + "22", border: `2px solid ${C.accent}44`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800, color: C.accent, flexShrink: 0 }}>
+                        {m.name.split(" ").map(n => n[0]).slice(0,2).join("")}
+                      </div>
+                      <div>
+                        <div style={{ fontWeight: 700, color: C.text, fontSize: 14 }}>{m.name}</div>
+                        <div style={{ fontSize: 11, color: C.muted }}>{m.email} · {m.phone}</div>
+                        <div style={{ fontSize: 11, color: C.muted }}>Joined {m.joined}</div>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                      {m.role !== "Member" && <Badge label={m.role} color={C.purple} />}
+                      <div style={{ textAlign: "right" }}>
+                        <div style={{ fontSize: 12, color: attColor(m.attendance), fontWeight: 700 }}>{m.attendance}% att.</div>
+                        <div style={{ fontSize: 11, color: needsContact ? C.gold : C.muted }}>
+                          {needsContact ? `⚠ ${days}d ago` : `✓ ${days}d ago`}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Ministry Leadership ───────────────────────────────────────────────────────
-function MinistryLeadership({ ministries, setMinistries, prayerRequests, setPrayerRequests }) {
+function MinistryLeadership({ ministries, setMinistries, prayerRequests, setPrayerRequests, lifeGroups }) {
   const [modal, setModal] = useState(null);
+  const [subTab, setSubTab] = useState("ministries");
   const [form, setForm] = useState({});
   const [pform, setPform] = useState({ requester:"", request:"", category:"Health", private:false });
   const emptyMin = { name:"", leader:"", members:"", volunteers:"", budget:"", description:"", status:"Active" };
@@ -373,16 +390,54 @@ function MinistryLeadership({ ministries, setMinistries, prayerRequests, setPray
     setModal(null);
   }
 
+  const subTabs = ["ministries","life groups","prayer"];
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div><h1 style={{ fontSize: 24, fontWeight: 900, color: C.text }}>Ministry Leadership</h1><p style={{ color: C.muted, marginTop: 4 }}>Ministries, teams, prayer & volunteers</p></div>
+        <div><h1 style={{ fontSize: 24, fontWeight: 900, color: C.text }}>Ministry Leadership</h1><p style={{ color: C.muted, marginTop: 4 }}>Ministries, Life Groups, prayer & volunteers</p></div>
         <div style={{ display: "flex", gap: 10 }}>
           <Btn outline color={C.purple} onClick={() => setModal("prayer")}>+ Prayer Request</Btn>
           <Btn onClick={() => { setForm(emptyMin); setModal("ministry"); }}>+ Add Ministry</Btn>
         </div>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 16 }}>
+      <div style={{ display: "flex", gap: 8 }}>
+        {subTabs.map(t => (
+          <button key={t} onClick={() => setSubTab(t)} style={{ background: subTab === t ? C.accent : C.card, color: subTab === t ? "#fff" : C.muted, border: `1px solid ${subTab === t ? C.accent : C.border}`, borderRadius: 8, padding: "8px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer", textTransform: "capitalize" }}>{t}</button>
+        ))}
+      </div>
+      {subTab === "life groups" && <LifeGroupsView lifeGroups={lifeGroups} />}
+      {subTab === "prayer" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 14, marginBottom: 8 }}>
+            <StatCard icon="🙏" label="Total Requests" value={prayerRequests.length}                                    color={C.purple} />
+            <StatCard icon="✅" label="Answered"       value={prayerRequests.filter(p => p.status==="Answered").length} color={C.green}  />
+            <StatCard icon="⏳" label="Active"         value={prayerRequests.filter(p => p.status==="Active").length}   color={C.accent} />
+          </div>
+          {[...prayerRequests].sort((a,b) => b.date.localeCompare(a.date)).map(p => (
+            <div key={p.id} style={{ background: C.card, border: `1px solid ${p.status === "Answered" ? C.green + "44" : C.border}`, borderRadius: 12, padding: "16px 18px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                  <span style={{ fontWeight: 700, color: C.text }}>{p.private ? "Anonymous" : p.requester}</span>
+                  {p.group && <Badge label={p.group} color={C.accent2} />}
+                  <Badge label={p.category} color={C.accent} />
+                  {p.private && <Badge label="Private" color={C.muted} />}
+                  <Badge label={p.status} color={statusColor[p.status] || C.muted} />
+                </div>
+                <span style={{ fontSize: 11, color: C.muted, flexShrink: 0 }}>{p.date}</span>
+              </div>
+              <p style={{ fontSize: 13, color: C.dim, lineHeight: 1.6, margin: 0 }}>{p.request}</p>
+              {p.followUpNote && (
+                <div style={{ marginTop: 10, padding: "10px 14px", background: C.green + "11", border: `1px solid ${C.green}33`, borderRadius: 9 }}>
+                  <div style={{ fontSize: 11, color: C.green, fontWeight: 700, marginBottom: 4 }}>FOLLOW-UP · {p.followUp}</div>
+                  <div style={{ fontSize: 13, color: C.dim }}>{p.followUpNote}</div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      {subTab === "ministries" && <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 16 }}>
         {ministries.map(m => (
           <div key={m.id} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: 22, display: "flex", flexDirection: "column", gap: 14 }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -408,26 +463,7 @@ function MinistryLeadership({ ministries, setMinistries, prayerRequests, setPray
             <Btn small outline color={C.accent} onClick={() => { setForm({ ...m, members:String(m.members), volunteers:String(m.volunteers), budget:String(m.budget) }); setModal("ministry"); }}>Edit Ministry</Btn>
           </div>
         ))}
-      </div>
-      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: 24 }}>
-        <h3 style={{ fontWeight: 800, color: C.text, marginBottom: 18 }}>Prayer Requests</h3>
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {prayerRequests.map(p => (
-            <div key={p.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "14px 16px", background: C.bg, borderRadius: 12, border: `1px solid ${C.border}` }}>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 6 }}>
-                  <span style={{ fontWeight: 700, color: C.text, fontSize: 14 }}>{p.private ? "Anonymous" : p.requester}</span>
-                  <Badge label={p.category} color={C.accent} />
-                  {p.private && <Badge label="Private" color={C.muted} />}
-                </div>
-                <div style={{ fontSize: 13, color: C.dim }}>{p.request}</div>
-                <div style={{ fontSize: 11, color: C.muted, marginTop: 4 }}>{p.date}</div>
-              </div>
-              <Badge label={p.status} color={statusColor[p.status] || C.muted} />
-            </div>
-          ))}
-        </div>
-      </div>
+      </div>}
       {modal === "ministry" && (
         <Modal title={form.id ? "Edit Ministry" : "New Ministry"} onClose={() => setModal(null)}>
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -863,14 +899,15 @@ const TABS = [
 
 // ── Root ──────────────────────────────────────────────────────────────────────
 export default function ChurchOS() {
-  const [tab,           setTab]           = useStored("cos-tab",           "dashboard");
-  const [staff,         setStaff]         = useStored("cos-staff",         SEED_STAFF);
-  const [ministries,    setMinistries]    = useStored("cos-ministries",    SEED_MINISTRIES);
-  const [transactions,  setTransactions]  = useStored("cos-transactions",  SEED_TRANSACTIONS);
-  const [campaigns,     setCampaigns]     = useStored("cos-campaigns",     SEED_CAMPAIGNS);
-  const [announcements, setAnnouncements] = useStored("cos-announcements", SEED_ANNOUNCEMENTS);
-  const [prayerRequests,setPrayerRequests]= useStored("cos-prayer",        SEED_PRAYER);
-  const [events,        setEvents]        = useStored("cos-events",        SEED_EVENTS);
+  const [tab,           setTab]           = useStored("cos2-tab",           "dashboard");
+  const [staff,         setStaff]         = useStored("cos2-staff",         SEED_STAFF);
+  const [ministries,    setMinistries]    = useStored("cos2-ministries",    SEED_MINISTRIES);
+  const [lifeGroups,    setLifeGroups]    = useStored("cos2-lifegroups",    SEED_LIFE_GROUPS);
+  const [transactions,  setTransactions]  = useStored("cos2-transactions",  SEED_TRANSACTIONS);
+  const [campaigns,     setCampaigns]     = useStored("cos2-campaigns",     SEED_CAMPAIGNS);
+  const [announcements, setAnnouncements] = useStored("cos2-announcements", SEED_ANNOUNCEMENTS);
+  const [prayerRequests,setPrayerRequests]= useStored("cos2-prayer",        SEED_PRAYER);
+  const [events,        setEvents]        = useStored("cos2-events",        SEED_EVENTS);
   const [open,          setOpen]          = useState(true);
 
   return (
@@ -901,7 +938,7 @@ export default function ChurchOS() {
       <main style={{ flex: 1, padding: "32px 36px", overflowY: "auto" }}>
         {tab === "dashboard" && <Dashboard staff={staff} ministries={ministries} transactions={transactions} events={events} campaigns={campaigns} />}
         {tab === "admin"     && <Administrative events={events} setEvents={setEvents} />}
-        {tab === "ministry"  && <MinistryLeadership ministries={ministries} setMinistries={setMinistries} prayerRequests={prayerRequests} setPrayerRequests={setPrayerRequests} />}
+        {tab === "ministry"  && <MinistryLeadership ministries={ministries} setMinistries={setMinistries} prayerRequests={prayerRequests} setPrayerRequests={setPrayerRequests} lifeGroups={lifeGroups} />}
         {tab === "finance"   && <Finance transactions={transactions} setTransactions={setTransactions} />}
         {tab === "hr"        && <HR staff={staff} setStaff={setStaff} />}
         {tab === "pr"        && <PRComms announcements={announcements} setAnnouncements={setAnnouncements} />}
