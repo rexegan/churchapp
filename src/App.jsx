@@ -1953,15 +1953,7 @@ export default function ChurchOS() {
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Inter','Segoe UI',system-ui,sans-serif" }}>
       <aside style={{ width: open ? 220 : 64, background: C.surface, borderRight: `1px solid ${C.border}`, display: "flex", flexDirection: "column", transition: "width .22s", flexShrink: 0, position: "sticky", top: 0, height: "100vh", overflowY: "auto", overflowX: "hidden" }}>
-        <div style={{ padding: "20px 16px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 36, height: 36, background: `linear-gradient(135deg,${C.accent},${C.accent2})`, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>✝</div>
-          {open && (
-            <div style={{ overflow: "hidden" }}>
-              <div style={{ fontWeight: 900, fontSize: 14, color: C.text, whiteSpace: "nowrap" }}>ChurchOS</div>
-              <div style={{ fontSize: 10, color: C.muted, whiteSpace: "nowrap" }}>Management Platform</div>
-            </div>
-          )}
-        </div>
+        <div style={{ padding: "16px 8px", borderBottom: `1px solid ${C.border}` }}></div>
         <nav style={{ flex: 1, padding: "12px 8px" }}>
           {TABS.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)} style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", padding: "10px 12px", marginBottom: 4, borderRadius: 10, border: "none", cursor: "pointer", background: tab === t.id ? C.accent + "22" : "transparent", color: tab === t.id ? C.accent : C.muted, fontWeight: tab === t.id ? 700 : 500, fontSize: 14, textAlign: "left" }}>
