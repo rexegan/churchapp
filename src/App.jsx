@@ -29,10 +29,10 @@ function useStored(key, defaultValue) {
 }
 
 const C = {
-  bg: "#0a0f1e", surface: "#111827", card: "#1a2235", border: "#1e2d47",
-  accent: "#3b82f6", accent2: "#6366f1", gold: "#f59e0b", green: "#10b981",
-  red: "#ef4444", purple: "#8b5cf6", pink: "#ec4899", text: "#e2e8f0",
-  muted: "#64748b", dim: "#94a3b8",
+  bg: "#f0f4f8", surface: "#ffffff", card: "#ffffff", border: "#d1dce8",
+  accent: "#2563eb", accent2: "#6366f1", gold: "#d97706", green: "#059669",
+  red: "#dc2626", purple: "#7c3aed", pink: "#db2777", text: "#1e293b",
+  muted: "#64748b", dim: "#475569",
 };
 
 
