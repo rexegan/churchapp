@@ -48,15 +48,29 @@ function Badge({ label, color = C.accent }) {
   );
 }
 
-function StatCard({ icon, label, value, sub, color = C.accent }) {
+function StatCard({ icon, label, value, sub, color = C.accent, onClick }) {
+  const [hov, setHov] = useState(false);
   return (
-    <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "20px 24px", display: "flex", flexDirection: "column", gap: 8 }}>
+    <div
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        background: C.card, border: `2px solid ${hov && onClick ? color : C.border}`,
+        borderRadius: 14, padding: "20px 24px", display: "flex", flexDirection: "column", gap: 8,
+        cursor: onClick ? "pointer" : "default",
+        transform: hov && onClick ? "translateY(-2px)" : "none",
+        boxShadow: hov && onClick ? `0 6px 20px ${color}22` : "none",
+        transition: "all 0.15s ease",
+      }}
+    >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <span style={{ fontSize: 28 }}>{icon}</span>
         {sub && <span style={{ fontSize: 11, color, background: color + "22", padding: "2px 8px", borderRadius: 20, fontWeight: 700 }}>{sub}</span>}
       </div>
       <div style={{ fontSize: 28, fontWeight: 800, color: C.text }}>{value}</div>
       <div style={{ fontSize: 13, color: C.muted }}>{label}</div>
+      {onClick && <div style={{ fontSize: 11, color, fontWeight: 700, marginTop: 2 }}>Open →</div>}
     </div>
   );
 }
@@ -117,7 +131,7 @@ function Btn({ children, onClick, color = C.accent, outline, small, danger, styl
 }
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
-function Dashboard({ staff, ministries, transactions, events, campaigns }) {
+function Dashboard({ staff, ministries, transactions, events, campaigns, setTab }) {
   const income  = transactions.filter(t => t.type === "Income").reduce((s, t)  => s + t.amount, 0);
   const expense = transactions.filter(t => t.type === "Expense").reduce((s, t) => s + t.amount, 0);
   const upcoming = events.filter(e => e.date >= today()).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 5);
@@ -128,15 +142,15 @@ function Dashboard({ staff, ministries, transactions, events, campaigns }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
       <div>
         <h1 style={{ fontSize: 26, fontWeight: 900, color: C.text }}>Dashboard</h1>
-        <p style={{ color: C.muted, marginTop: 4 }}>Overview of all church operations</p>
+        <p style={{ color: C.muted, marginTop: 4 }}>Overview of all church operations — click any card to open that section</p>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 16 }}>
-        <StatCard icon="👥" label="Ministry Members"   value={totalMembers.toLocaleString()} sub="+12 this mo" color={C.accent}  />
-        <StatCard icon="👔" label="Active Staff"       value={staff.filter(s => s.status === "Active").length} color={C.purple} />
-        <StatCard icon="⛪" label="Active Ministries"  value={ministries.filter(m => m.status === "Active").length} color={C.green} />
-        <StatCard icon="💰" label="Monthly Income"     value={fmt$(income)}   sub="+8%"    color={C.gold}   />
-        <StatCard icon="📊" label="Monthly Expenses"   value={fmt$(expense)}               color={C.red}    />
-        <StatCard icon="📣" label="Active Campaigns"   value={campaigns.filter(c => c.status === "Active").length} color={C.pink} />
+        <StatCard icon="👥" label="Ministry Members"   value={totalMembers.toLocaleString()} sub="+12 this mo" color={C.accent}  onClick={() => setTab("ministry")} />
+        <StatCard icon="👔" label="Active Staff"       value={staff.filter(s => s.status === "Active").length} color={C.purple} onClick={() => setTab("hr")} />
+        <StatCard icon="⛪" label="Active Ministries"  value={ministries.filter(m => m.status === "Active").length} color={C.green} onClick={() => setTab("ministry")} />
+        <StatCard icon="💰" label="Monthly Income"     value={fmt$(income)}   sub="+8%"    color={C.gold}   onClick={() => setTab("finance")} />
+        <StatCard icon="📊" label="Monthly Expenses"   value={fmt$(expense)}               color={C.red}    onClick={() => setTab("finance")} />
+        <StatCard icon="📣" label="Active Campaigns"   value={campaigns.filter(c => c.status === "Active").length} color={C.pink} onClick={() => setTab("marketing")} />
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
         <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: 24 }}>
@@ -1968,7 +1982,7 @@ export default function ChurchOS() {
         </button>
       </aside>
       <main style={{ flex: 1, padding: "32px 36px", overflowY: "auto" }}>
-        {tab === "dashboard" && <Dashboard staff={staff} ministries={ministries} transactions={transactions} events={events} campaigns={campaigns} />}
+        {tab === "dashboard" && <Dashboard staff={staff} ministries={ministries} transactions={transactions} events={events} campaigns={campaigns} setTab={setTab} />}
         {tab === "admin"     && <Administrative events={events} setEvents={setEvents} />}
         {tab === "ministry"  && <MinistryLeadership ministries={ministries} setMinistries={setMinistries} prayerRequests={prayerRequests} setPrayerRequests={setPrayerRequests} lifeGroups={lifeGroups} />}
         {tab === "finance"   && <Finance transactions={transactions} setTransactions={setTransactions} />}
