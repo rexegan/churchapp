@@ -131,30 +131,38 @@ function Btn({ children, onClick, color = C.accent, outline, small, danger, styl
 }
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
-function Dashboard({ staff, ministries, transactions, events, campaigns, setTab }) {
+function Dashboard({ staff, ministries, transactions, events, campaigns, prayerRequests, lifeGroups, setTab }) {
   const income  = transactions.filter(t => t.type === "Income").reduce((s, t)  => s + t.amount, 0);
   const expense = transactions.filter(t => t.type === "Expense").reduce((s, t) => s + t.amount, 0);
   const upcoming = events.filter(e => e.date >= today()).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 5);
-  const recentTx = [...transactions].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
   const totalMembers = ministries.reduce((s, m) => s + m.members, 0);
+  const lgMembers = lifeGroups.reduce((s, g) => s + g.members.length, 0);
+  const activePrayers = prayerRequests.filter(p => p.status === "Active" || p.status === "Ongoing").length;
+  const recentPrayers = [...prayerRequests].sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 5);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
       <div>
         <h1 style={{ fontSize: 26, fontWeight: 900, color: C.text }}>Dashboard</h1>
-        <p style={{ color: C.muted, marginTop: 4 }}>Overview of all church operations — click any card to open that section</p>
+        <p style={{ color: C.muted, marginTop: 4 }}>People first — click any card to open that section</p>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 16 }}>
-        <StatCard icon="👥" label="Ministry Members"   value={totalMembers.toLocaleString()} sub="+12 this mo" color={C.accent}  onClick={() => setTab("ministry")} />
-        <StatCard icon="👔" label="Active Staff"       value={staff.filter(s => s.status === "Active").length} color={C.purple} onClick={() => setTab("hr")} />
-        <StatCard icon="⛪" label="Active Ministries"  value={ministries.filter(m => m.status === "Active").length} color={C.green} onClick={() => setTab("ministry")} />
-        <StatCard icon="💰" label="Monthly Income"     value={fmt$(income)}   sub="+8%"    color={C.gold}   onClick={() => setTab("finance")} />
-        <StatCard icon="📊" label="Monthly Expenses"   value={fmt$(expense)}               color={C.red}    onClick={() => setTab("finance")} />
-        <StatCard icon="📣" label="Active Campaigns"   value={campaigns.filter(c => c.status === "Active").length} color={C.pink} onClick={() => setTab("marketing")} />
+
+      {/* People stats — full width, prominent */}
+      <div>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>People & Community</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14 }}>
+          <StatCard icon="👥" label="LifeGroup Members"  value={lgMembers}                                               color={C.accent}  onClick={() => setTab("ministry")} />
+          <StatCard icon="⛪" label="Active Ministries"  value={ministries.filter(m => m.status === "Active").length}   color={C.green}   onClick={() => setTab("ministry")} />
+          <StatCard icon="🙏" label="Active Prayer Reqs" value={activePrayers}                                           color={C.purple}  onClick={() => setTab("ministry")} />
+          <StatCard icon="👔" label="Active Staff"       value={staff.filter(s => s.status === "Active").length}        color={C.accent2} onClick={() => setTab("hr")} />
+        </div>
       </div>
+
+      {/* Upcoming events + Prayer needs — the heart of the view */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
         <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: 24 }}>
           <h3 style={{ fontWeight: 800, color: C.text, marginBottom: 18, fontSize: 15 }}>Upcoming Events</h3>
+          {upcoming.length === 0 && <p style={{ color: C.muted, fontSize: 13 }}>No upcoming events.</p>}
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {upcoming.map(e => (
               <div key={e.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: C.bg, borderRadius: 10, border: `1px solid ${C.border}` }}>
@@ -170,36 +178,68 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, setTab 
             ))}
           </div>
         </div>
+
         <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: 24 }}>
-          <h3 style={{ fontWeight: 800, color: C.text, marginBottom: 18, fontSize: 15 }}>Recent Transactions</h3>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
+            <h3 style={{ fontWeight: 800, color: C.text, fontSize: 15, margin: 0 }}>Prayer Requests</h3>
+            <button onClick={() => setTab("ministry")} style={{ fontSize: 12, color: C.accent, background: "none", border: "none", cursor: "pointer", fontWeight: 700 }}>View all →</button>
+          </div>
+          {recentPrayers.length === 0 && <p style={{ color: C.muted, fontSize: 13 }}>No prayer requests yet.</p>}
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {recentTx.map(t => (
-              <div key={t.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: C.bg, borderRadius: 10, border: `1px solid ${C.border}` }}>
-                <div>
-                  <div style={{ fontWeight: 700, color: C.text, fontSize: 13 }}>{t.description}</div>
-                  <div style={{ fontSize: 11, color: C.muted }}>{t.category}</div>
+            {recentPrayers.map(p => (
+              <div key={p.id} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "10px 14px", background: C.bg, borderRadius: 10, border: `1px solid ${C.border}` }}>
+                <span style={{ fontSize: 18, flexShrink: 0 }}>🙏</span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 700, color: C.text, fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.member || p.name || "Member"}</div>
+                  <div style={{ fontSize: 12, color: C.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.request || p.title || ""}</div>
                 </div>
-                <span style={{ fontWeight: 800, color: t.type === "Income" ? C.green : C.red, fontSize: 14 }}>
-                  {t.type === "Income" ? "+" : "-"}{fmt$(t.amount)}
-                </span>
+                <span style={{ fontSize: 11, color: p.status === "Answered" ? C.green : C.accent, background: (p.status === "Answered" ? C.green : C.accent) + "18", padding: "2px 8px", borderRadius: 20, fontWeight: 700, flexShrink: 0 }}>{p.status}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      {/* Ministry roster — people-focused, no budget bars */}
       <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: 24 }}>
-        <h3 style={{ fontWeight: 800, color: C.text, marginBottom: 18, fontSize: 15 }}>Ministry Overview</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
+          <h3 style={{ fontWeight: 800, color: C.text, fontSize: 15, margin: 0 }}>Ministry Roster</h3>
+          <button onClick={() => setTab("ministry")} style={{ fontSize: 12, color: C.accent, background: "none", border: "none", cursor: "pointer", fontWeight: 700 }}>Open Ministry →</button>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
           {ministries.map(m => (
             <div key={m.id} style={{ padding: "14px 16px", background: C.bg, borderRadius: 12, border: `1px solid ${C.border}` }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
                 <span style={{ fontWeight: 700, color: C.text, fontSize: 14 }}>{m.name}</span>
                 <Badge label={m.status} color={C.green} />
               </div>
-              <div style={{ fontSize: 12, color: C.muted, marginBottom: 8 }}>{m.leader} · {m.members} members · {m.volunteers} volunteers</div>
-              <ProgressBar value={m.budget * 0.6} max={m.budget} />
+              <div style={{ fontSize: 13, color: C.muted }}>{m.leader}</div>
+              <div style={{ display: "flex", gap: 14, marginTop: 10 }}>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: 18, fontWeight: 800, color: C.accent }}>{m.members}</div>
+                  <div style={{ fontSize: 11, color: C.muted }}>Members</div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: 18, fontWeight: 800, color: C.green }}>{m.volunteers}</div>
+                  <div style={{ fontSize: 11, color: C.muted }}>Volunteers</div>
+                </div>
+              </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Finance — present but quiet, at the bottom */}
+      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: 20 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <h3 style={{ fontWeight: 800, color: C.text, fontSize: 14, margin: 0 }}>Financial Summary</h3>
+          <button onClick={() => setTab("finance")} style={{ fontSize: 12, color: C.muted, background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>View Finance →</button>
+        </div>
+        <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
+          <div><div style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>Monthly Income</div><div style={{ fontSize: 20, fontWeight: 800, color: C.green, marginTop: 2 }}>{fmt$(income)}</div></div>
+          <div><div style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>Monthly Expenses</div><div style={{ fontSize: 20, fontWeight: 800, color: C.text, marginTop: 2 }}>{fmt$(expense)}</div></div>
+          <div><div style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>Net</div><div style={{ fontSize: 20, fontWeight: 800, color: income - expense >= 0 ? C.green : C.red, marginTop: 2 }}>{fmt$(income - expense)}</div></div>
+          <div><div style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>Active Campaigns</div><div style={{ fontSize: 20, fontWeight: 800, color: C.text, marginTop: 2 }}>{campaigns.filter(c => c.status === "Active").length}</div></div>
         </div>
       </div>
     </div>
@@ -1982,7 +2022,7 @@ export default function ChurchOS() {
         </button>
       </aside>
       <main style={{ flex: 1, padding: "32px 36px", overflowY: "auto" }}>
-        {tab === "dashboard" && <Dashboard staff={staff} ministries={ministries} transactions={transactions} events={events} campaigns={campaigns} setTab={setTab} />}
+        {tab === "dashboard" && <Dashboard staff={staff} ministries={ministries} transactions={transactions} events={events} campaigns={campaigns} prayerRequests={prayerRequests} lifeGroups={lifeGroups} setTab={setTab} />}
         {tab === "admin"     && <Administrative events={events} setEvents={setEvents} />}
         {tab === "ministry"  && <MinistryLeadership ministries={ministries} setMinistries={setMinistries} prayerRequests={prayerRequests} setPrayerRequests={setPrayerRequests} lifeGroups={lifeGroups} />}
         {tab === "finance"   && <Finance transactions={transactions} setTransactions={setTransactions} />}
