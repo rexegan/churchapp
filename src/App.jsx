@@ -1697,92 +1697,265 @@ function Finance({ transactions, setTransactions }) {
 }
 
 // ── HR ────────────────────────────────────────────────────────────────────────
+function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
+  const col = colorFor(member.dept);
+  const [editing, setEditing] = useState(false);
+  const [form, setForm] = useState({ ...member, salary: String(member.salary || "") });
+  const initials = member.name.split(" ").map(n => n[0]).slice(0, 2).join("");
+  const yearsServed = member.startDate ? Math.floor((new Date() - new Date(member.startDate)) / (365.25 * 24 * 60 * 60 * 1000)) : null;
+
+  function save() {
+    if (!form.name || !form.role) return;
+    onSave({ ...form, salary: +form.salary || 0 });
+    setEditing(false);
+  }
+
+  const Row = ({ label, value }) => value ? (
+    <div style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: 8, padding: "10px 0", borderBottom: `1px solid ${C.border}` }}>
+      <span style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.07em", paddingTop: 2 }}>{label}</span>
+      <span style={{ fontSize: 14, color: C.text }}>{value}</span>
+    </div>
+  ) : null;
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "#000b", zIndex: 1000, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "24px 16px", overflowY: "auto" }}>
+      <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 20, width: "100%", maxWidth: 680, boxShadow: "0 20px 60px rgba(0,0,0,0.18)" }}>
+
+        {/* Header band */}
+        <div style={{ background: col + "18", borderBottom: `1px solid ${col}44`, borderRadius: "20px 20px 0 0", padding: "28px 32px", display: "flex", gap: 20, alignItems: "center" }}>
+          <div style={{ width: 64, height: 64, borderRadius: "50%", background: col + "33", border: `3px solid ${col}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, fontWeight: 900, color: col, flexShrink: 0 }}>
+            {initials}
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 22, fontWeight: 900, color: C.text }}>{member.name}</div>
+            <div style={{ fontSize: 14, color: C.muted, marginTop: 3 }}>{member.role} · {member.dept}</div>
+            <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
+              <Badge label={member.status} color={member.status === "Active" ? C.green : C.muted} />
+              {yearsServed !== null && <Badge label={yearsServed === 0 ? "< 1 yr" : yearsServed + (yearsServed === 1 ? " yr" : " yrs")} color={C.accent} />}
+            </div>
+          </div>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: C.muted, fontSize: 24, cursor: "pointer", alignSelf: "flex-start" }}>×</button>
+        </div>
+
+        <div style={{ padding: "28px 32px" }}>
+          {!editing ? (
+            <>
+              {/* Contact */}
+              <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Contact</div>
+              <Row label="Email"       value={member.email} />
+              <Row label="Phone"       value={member.phone} />
+              <Row label="Address"     value={member.address} />
+
+              {/* Emergency contact */}
+              {(member.emergencyName || member.emergencyPhone) && <>
+                <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 20, marginBottom: 8 }}>Emergency Contact</div>
+                <Row label="Name"         value={member.emergencyName} />
+                <Row label="Relationship" value={member.emergencyRel} />
+                <Row label="Phone"        value={member.emergencyPhone} />
+              </>}
+
+              {/* Employment */}
+              <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 20, marginBottom: 8 }}>Employment</div>
+              <Row label="Department"  value={member.dept} />
+              <Row label="Role / Title" value={member.role} />
+              <Row label="Status"      value={member.status} />
+              <Row label="Start Date"  value={member.startDate} />
+              <Row label="Salary"      value={member.salary > 0 ? fmt$(member.salary) + " / yr" : null} />
+              <Row label="Employee ID" value={member.employeeId} />
+
+              {/* Notes */}
+              {member.notes && <>
+                <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 20, marginBottom: 8 }}>HR Notes</div>
+                <div style={{ fontSize: 14, color: C.text, background: C.bg, borderRadius: 10, padding: "14px 16px", lineHeight: 1.6 }}>{member.notes}</div>
+              </>}
+
+              <div style={{ display: "flex", gap: 10, marginTop: 28, justifyContent: "flex-end", flexWrap: "wrap" }}>
+                {member.email && <a href={`mailto:${member.email}`} style={{ background: C.bg, border: `1px solid ${C.border}`, color: C.text, borderRadius: 9, padding: "8px 16px", textDecoration: "none", fontSize: 13, fontWeight: 700 }}>✉ Email</a>}
+                {member.phone && <a href={`tel:${member.phone}`}   style={{ background: C.bg, border: `1px solid ${C.border}`, color: C.text, borderRadius: 9, padding: "8px 16px", textDecoration: "none", fontSize: 13, fontWeight: 700 }}>📞 Call</a>}
+                <Btn outline color={C.red}   small onClick={() => { if (window.confirm("Remove " + member.name + "?")) { onDelete(member.id); onClose(); } }}>Remove</Btn>
+                <Btn small onClick={() => setEditing(true)}>Edit File</Btn>
+              </div>
+            </>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Basic Info</div>
+              <Inp label="Full Name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <Inp label="Role / Title" value={form.role}  onChange={e => setForm(f => ({ ...f, role: e.target.value }))} />
+                <Inp label="Department"   value={form.dept}  onChange={e => setForm(f => ({ ...f, dept: e.target.value }))} />
+              </div>
+
+              <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>Contact</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <Inp label="Email" type="email" value={form.email || ""} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
+                <Inp label="Phone"              value={form.phone || ""} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} />
+              </div>
+              <Inp label="Address" value={form.address || ""} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} />
+
+              <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>Emergency Contact</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <Inp label="Name"         value={form.emergencyName  || ""} onChange={e => setForm(f => ({ ...f, emergencyName:  e.target.value }))} />
+                <Inp label="Relationship" value={form.emergencyRel   || ""} onChange={e => setForm(f => ({ ...f, emergencyRel:   e.target.value }))} />
+              </div>
+              <Inp label="Emergency Phone" value={form.emergencyPhone || ""} onChange={e => setForm(f => ({ ...f, emergencyPhone: e.target.value }))} />
+
+              <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>Employment</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+                <Sel label="Status" value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>
+                  <option>Active</option><option>On Leave</option><option>Inactive</option>
+                </Sel>
+                <Inp label="Start Date"  type="date"   value={form.startDate   || ""} onChange={e => setForm(f => ({ ...f, startDate:   e.target.value }))} />
+                <Inp label="Salary ($)"  type="number" value={form.salary      || ""} onChange={e => setForm(f => ({ ...f, salary:      e.target.value }))} />
+              </div>
+              <Inp label="Employee ID" value={form.employeeId || ""} onChange={e => setForm(f => ({ ...f, employeeId: e.target.value }))} />
+
+              <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>HR Notes</div>
+              <Txt label="" value={form.notes || ""} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} placeholder="Performance notes, review dates, special circumstances…" />
+
+              <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 8 }}>
+                <Btn outline color={C.muted} small onClick={() => setEditing(false)}>Cancel</Btn>
+                <Btn small onClick={save}>Save File</Btn>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function HR({ staff, setStaff }) {
-  const [modal, setModal] = useState(false);
-  const [search, setSearch] = useState("");
-  const [form, setForm] = useState({});
-  const empty = { name:"", role:"", dept:"", email:"", phone:"", status:"Active", startDate:today(), salary:"" };
+  const [search, setSearch]         = useState("");
+  const [filterStatus, setFilter]   = useState("All");
+  const [selectedId, setSelectedId] = useState(null);
+  const [addModal, setAddModal]     = useState(false);
+  const [addForm, setAddForm]       = useState({});
+
+  const empty = { name:"", role:"", dept:"", email:"", phone:"", address:"", status:"Active", startDate:today(), salary:"", notes:"", emergencyName:"", emergencyRel:"", emergencyPhone:"", employeeId:"" };
   const depts = [...new Set(staff.map(s => s.dept))];
   const deptColors = [C.accent, C.purple, C.green, C.gold, C.pink, C.accent2, C.red];
   const colorFor = d => deptColors[depts.indexOf(d) % deptColors.length] || C.accent;
 
-  const filtered = staff.filter(s =>
-    s.name.toLowerCase().includes(search.toLowerCase()) ||
-    s.role.toLowerCase().includes(search.toLowerCase()) ||
-    s.dept.toLowerCase().includes(search.toLowerCase())
-  );
+  const totalPayroll = staff.reduce((s, x) => s + (x.salary || 0), 0);
+  const selectedMember = staff.find(s => s.id === selectedId);
 
-  function save() {
-    if (!form.name || !form.role) return;
-    if (form.id) setStaff(s => s.map(x => x.id === form.id ? { ...form, salary:+form.salary||0 } : x));
-    else setStaff(s => [...s, { ...form, id: Date.now(), salary:+form.salary||0 }]);
-    setModal(false);
+  const filtered = staff.filter(s => {
+    const matchStatus = filterStatus === "All" || s.status === filterStatus || (filterStatus === "Depts" );
+    const matchSearch = !search || s.name.toLowerCase().includes(search.toLowerCase()) || s.role.toLowerCase().includes(search.toLowerCase()) || s.dept.toLowerCase().includes(search.toLowerCase());
+    return matchStatus && matchSearch;
+  });
+
+  function saveNew() {
+    if (!addForm.name || !addForm.role) return;
+    setStaff(s => [...s, { ...addForm, id: Date.now(), salary: +addForm.salary || 0 }]);
+    setAddModal(false);
   }
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div><h1 style={{ fontSize: 24, fontWeight: 900, color: C.text }}>Human Resources</h1><p style={{ color: C.muted, marginTop: 4 }}>Staff directory, roles & compensation</p></div>
-        <Btn onClick={() => { setForm(empty); setModal(true); }}>+ Add Staff</Btn>
+        <div><h1 style={{ fontSize: 24, fontWeight: 900, color: C.text }}>Human Resources</h1><p style={{ color: C.muted, marginTop: 4 }}>Click any stat to filter · click any staff member to open their HR file</p></div>
+        <Btn onClick={() => { setAddForm(empty); setAddModal(true); }}>+ Add Staff</Btn>
       </div>
+
+      {/* Stat cards — each filters the list */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 14 }}>
-        <StatCard icon="👔" label="Total Staff"       value={staff.length} color={C.accent} />
-        <StatCard icon="✅" label="Active"            value={staff.filter(s => s.status === "Active").length} color={C.green} />
-        <StatCard icon="🏢" label="Departments"       value={depts.length} color={C.purple} />
-        <StatCard icon="💰" label="Payroll (Annual)"  value={fmt$(staff.reduce((s, x) => s + (x.salary || 0), 0))} color={C.gold} />
+        <StatCard icon="👔" label="Total Staff"      value={staff.length}                                      color={C.accent} onClick={() => setFilter("All")}      />
+        <StatCard icon="✅" label="Active"           value={staff.filter(s => s.status === "Active").length}   color={C.green}  onClick={() => setFilter("Active")}   />
+        <StatCard icon="🏖" label="On Leave"         value={staff.filter(s => s.status === "On Leave").length} color={C.gold}   onClick={() => setFilter("On Leave")} />
+        <StatCard icon="💰" label="Payroll (Annual)" value={fmt$(totalPayroll)}                                color={C.purple} onClick={() => setFilter("All")}      />
       </div>
-      <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search staff..." style={{ ...inputStyle, maxWidth: 400 }} />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: 16 }}>
+
+      {/* Active filter chip */}
+      {filterStatus !== "All" && (
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 13, color: C.muted }}>Filtered:</span>
+          <span style={{ background: C.accent + "18", color: C.accent, border: `1px solid ${C.accent}44`, borderRadius: 20, padding: "3px 12px", fontSize: 13, fontWeight: 700 }}>{filterStatus}</span>
+          <button onClick={() => setFilter("All")} style={{ background: "none", border: "none", color: C.muted, cursor: "pointer", fontSize: 18, lineHeight: 1 }}>×</button>
+        </div>
+      )}
+
+      {/* Department tabs */}
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        {["All", ...depts].map(d => (
+          <button key={d} onClick={() => { setFilter("All"); setSearch(d === "All" ? "" : d); }}
+            style={{ background: search === d || (d === "All" && !search && filterStatus === "All") ? C.accent : C.card, color: search === d || (d === "All" && !search && filterStatus === "All") ? "#fff" : C.muted, border: `1px solid ${C.border}`, borderRadius: 20, padding: "5px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+            {d}
+          </button>
+        ))}
+      </div>
+
+      <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name, role, or department…" style={{ ...inputStyle, maxWidth: 440 }} />
+
+      {/* Staff cards — each is fully clickable */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
         {filtered.map(s => {
           const col = colorFor(s.dept);
           return (
-            <div key={s.id} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: 20, display: "flex", flexDirection: "column", gap: 12 }}>
+            <div key={s.id}
+              onClick={() => setSelectedId(s.id)}
+              style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: 20, display: "flex", flexDirection: "column", gap: 12, cursor: "pointer", transition: "all 0.15s" }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = col; e.currentTarget.style.boxShadow = `0 4px 16px ${col}22`; e.currentTarget.style.transform = "translateY(-2px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}
+            >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: col + "33", border: `2px solid ${col}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 800, color: col, flexShrink: 0 }}>
+                  <div style={{ width: 46, height: 46, borderRadius: "50%", background: col + "22", border: `2px solid ${col}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 900, color: col, flexShrink: 0 }}>
                     {s.name.split(" ").map(n => n[0]).slice(0, 2).join("")}
                   </div>
                   <div>
                     <div style={{ fontWeight: 800, color: C.text, fontSize: 15 }}>{s.name}</div>
-                    <div style={{ fontSize: 12, color: C.muted }}>{s.role}</div>
+                    <div style={{ fontSize: 12, color: C.muted, marginTop: 2 }}>{s.role}</div>
                   </div>
                 </div>
-                <Badge label={s.status} color={s.status === "Active" ? C.green : C.muted} />
+                <Badge label={s.status} color={s.status === "Active" ? C.green : s.status === "On Leave" ? C.gold : C.muted} />
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <Badge label={s.dept} color={col} />
-                <div style={{ fontSize: 12, color: C.muted, marginTop: 4 }}>{s.email}</div>
-                <div style={{ fontSize: 12, color: C.muted }}>{s.phone}</div>
-                <div style={{ fontSize: 12, color: C.muted }}>Since {s.startDate}</div>
-                {s.salary > 0 && <div style={{ fontSize: 12, color: C.gold, fontWeight: 700 }}>{fmt$(s.salary)}/yr</div>}
+                {s.salary > 0 && <Badge label={fmt$(s.salary) + "/yr"} color={C.purple} />}
               </div>
-              <Btn small outline color={C.accent} onClick={() => { setForm({ ...s, salary:String(s.salary||"") }); setModal(true); }}>Edit</Btn>
+              <div style={{ fontSize: 12, color: C.muted }}>{s.email}</div>
+              {s.startDate && <div style={{ fontSize: 12, color: C.muted }}>Since {s.startDate}</div>}
+              <div style={{ fontSize: 12, color: C.accent, fontWeight: 700, marginTop: 2 }}>Open HR File →</div>
             </div>
           );
         })}
       </div>
-      {modal && (
-        <Modal title={form.id ? "Edit Staff Member" : "Add Staff Member"} onClose={() => setModal(false)}>
+
+      {/* HR File panel */}
+      {selectedMember && (
+        <HRFile
+          member={selectedMember}
+          colorFor={colorFor}
+          onClose={() => setSelectedId(null)}
+          onSave={updated => { setStaff(s => s.map(x => x.id === updated.id ? updated : x)); }}
+          onDelete={id => setStaff(s => s.filter(x => x.id !== id))}
+        />
+      )}
+
+      {/* Add staff modal */}
+      {addModal && (
+        <Modal title="Add Staff Member" onClose={() => setAddModal(false)}>
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <Inp label="Full Name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
+            <Inp label="Full Name" value={addForm.name || ""} onChange={e => setAddForm(f => ({ ...f, name: e.target.value }))} />
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              <Inp label="Role / Title" value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))} />
-              <Inp label="Department"   value={form.dept} onChange={e => setForm(f => ({ ...f, dept: e.target.value }))} />
+              <Inp label="Role / Title" value={addForm.role || ""} onChange={e => setAddForm(f => ({ ...f, role: e.target.value }))} />
+              <Inp label="Department"   value={addForm.dept || ""} onChange={e => setAddForm(f => ({ ...f, dept: e.target.value }))} />
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              <Inp label="Email" type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
-              <Inp label="Phone"             value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} />
+              <Inp label="Email" type="email" value={addForm.email || ""} onChange={e => setAddForm(f => ({ ...f, email: e.target.value }))} />
+              <Inp label="Phone"              value={addForm.phone || ""} onChange={e => setAddForm(f => ({ ...f, phone: e.target.value }))} />
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
-              <Sel label="Status" value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>
+              <Sel label="Status" value={addForm.status || "Active"} onChange={e => setAddForm(f => ({ ...f, status: e.target.value }))}>
                 <option>Active</option><option>On Leave</option><option>Inactive</option>
               </Sel>
-              <Inp label="Start Date" type="date" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} />
-              <Inp label="Salary ($)" type="number" value={form.salary} onChange={e => setForm(f => ({ ...f, salary: e.target.value }))} />
+              <Inp label="Start Date" type="date"   value={addForm.startDate || ""} onChange={e => setAddForm(f => ({ ...f, startDate: e.target.value }))} />
+              <Inp label="Salary ($)" type="number" value={addForm.salary    || ""} onChange={e => setAddForm(f => ({ ...f, salary:    e.target.value }))} />
             </div>
             <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-              <Btn outline color={C.muted} onClick={() => setModal(false)}>Cancel</Btn>
-              <Btn onClick={save}>Save</Btn>
+              <Btn outline color={C.muted} onClick={() => setAddModal(false)}>Cancel</Btn>
+              <Btn onClick={saveNew}>Add Staff Member</Btn>
             </div>
           </div>
         </Modal>
