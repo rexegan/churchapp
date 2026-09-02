@@ -42,9 +42,46 @@ const today = () => new Date().toISOString().slice(0, 10);
 
 function Badge({ label, color = C.accent }) {
   return (
-    <span style={{ background: color + "22", color, border: `1px solid ${color}44`, borderRadius: 8, padding: "4px 14px", fontSize: 13, fontWeight: 700, letterSpacing: 0.3, whiteSpace: "nowrap" }}>
+    <span style={{ background: color + "10", color, border: `1px solid ${color}33`, borderRadius: 6, padding: "3px 12px", fontSize: 12.5, fontWeight: 600, letterSpacing: 0.2, whiteSpace: "nowrap" }}>
       {label}
     </span>
+  );
+}
+
+// Professional line-style SVG icons, keyed by the emoji they replace.
+// Unknown glyphs fall back to rendering the emoji itself.
+const ICON_PATHS = {
+  "🏠": "M3 10.5 12 3l9 7.5 M5 9.5V21h14V9.5 M9.5 21v-6h5v6",
+  "📅": "M8 2v4 M16 2v4 M3 9h18 M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z",
+  "⛪": "M12 3v4 M10 5h4 M6 21V11l6-4.5 6 4.5v10 M4 21h16 M10 21v-4.5h4V21",
+  "💰": "M12 3v18 M16.5 6.5H10a2.75 2.75 0 0 0 0 5.5h4a2.75 2.75 0 0 1 0 5.5H7",
+  "👔": "M4 8h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z M8.5 8V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2",
+  "📢": "M4 10v4h3.5l5 4.5v-13L7.5 10H4z M15.5 9.5a4 4 0 0 1 0 5 M18 7a7.5 7.5 0 0 1 0 10",
+  "📣": "M4 10v4h3.5l5 4.5v-13L7.5 10H4z M15.5 9.5a4 4 0 0 1 0 5 M18 7a7.5 7.5 0 0 1 0 10",
+  "👥": "M16.5 21v-2a4 4 0 0 0-4-4h-6a4 4 0 0 0-4 4v2 M9.5 11a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5 M21.5 21v-2a4 4 0 0 0-3-3.87 M15 3.63a3.75 3.75 0 0 1 0 7.25",
+  "✅": "M21.5 11.2V12a9.5 9.5 0 1 1-5.6-8.65 M21.5 4.5 12 14l-2.75-2.75",
+  "🏖": "M12 21.5a9.5 9.5 0 1 0 0-19 9.5 9.5 0 0 0 0 19z M12 6.5V12l3.5 3.5",
+  "🙏": "M20.6 5a5.3 5.3 0 0 0-7.5 0L12 6.1 10.9 5a5.3 5.3 0 0 0-7.5 7.5l1.1 1.1L12 21l7.5-7.4 1.1-1.1a5.3 5.3 0 0 0 0-7.5z",
+  "📈": "M22 7l-8.5 8.5-4.5-4.5L2 18 M16.5 7H22v5.5",
+  "📉": "M22 17l-8.5-8.5-4.5 4.5L2 6 M16.5 17H22v-5.5",
+  "📊": "M18 20V10 M12 20V4 M6 20v-6",
+  "🏢": "M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16 M3 21h18 M9.5 7h1 M14 7h1 M9.5 11h1 M14 11h1 M9.5 15h1 M14 15h1",
+  "📝": "M11.5 4.5H5a2 2 0 0 0-2 2V19a2 2 0 0 0 2 2h12.5a2 2 0 0 0 2-2v-6.5 M17.9 2.9a2.2 2.2 0 0 1 3.1 3.1L12 15l-4.2 1.1L9 12 17.9 2.9z",
+  "🟢": "M21.5 12h-4l-3 8.5-5-17-3 8.5h-4",
+  "👁": "M2 12s3.75-7.5 10-7.5S22 12 22 12s-3.75 7.5-10 7.5S2 12 2 12z M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
+  "📧": "M4 4.5h16a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-11a2 2 0 0 1 2-2z M21.5 7 12 13.5 2.5 7",
+  "🚨": "M12 9.5v4 M12 17h.01 M10.3 3.9 1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z",
+  "⭐": "M12 2.5l2.9 5.9 6.6.95-4.75 4.6 1.1 6.55L12 17.4l-5.85 3.1 1.1-6.55L2.5 9.35l6.6-.95L12 2.5z",
+};
+
+function Icon({ glyph, size = 20, color = "currentColor", strokeWidth = 1.7 }) {
+  const d = ICON_PATHS[glyph];
+  if (!d) return <span style={{ fontSize: size, lineHeight: 1 }}>{glyph}</span>;
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color}
+      strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" style={{ display: "block" }}>
+      <path d={d} />
+    </svg>
   );
 }
 
@@ -56,21 +93,25 @@ function StatCard({ icon, label, value, sub, color = C.accent, onClick }) {
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        background: C.card, border: `2px solid ${hov && onClick ? color : C.border}`,
-        borderRadius: 18, padding: "28px 30px", display: "flex", flexDirection: "column", gap: 12,
+        background: C.card, border: `1px solid ${hov && onClick ? color : C.border}`,
+        borderRadius: 12, padding: "26px 28px", display: "flex", flexDirection: "column", gap: 14,
         cursor: onClick ? "pointer" : "default",
-        transform: hov && onClick ? "translateY(-3px)" : "none",
-        boxShadow: hov && onClick ? `0 8px 28px ${color}28` : "0 1px 4px rgba(0,0,0,0.04)",
+        transform: hov && onClick ? "translateY(-2px)" : "none",
+        boxShadow: hov && onClick ? "0 8px 24px rgba(15,23,42,0.10)" : "0 1px 3px rgba(15,23,42,0.05)",
         transition: "all 0.15s ease",
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <span style={{ fontSize: 38 }}>{icon}</span>
-        {sub && <span style={{ fontSize: 13, color, background: color + "22", padding: "4px 12px", borderRadius: 20, fontWeight: 700 }}>{sub}</span>}
+        <div style={{ width: 46, height: 46, borderRadius: 10, background: color + "14", display: "flex", alignItems: "center", justifyContent: "center", color }}>
+          <Icon glyph={icon} size={23} />
+        </div>
+        {sub && <span style={{ fontSize: 13, color, background: color + "14", padding: "4px 12px", borderRadius: 6, fontWeight: 600 }}>{sub}</span>}
       </div>
-      <div style={{ fontSize: 38, fontWeight: 800, color: C.text, lineHeight: 1 }}>{value}</div>
-      <div style={{ fontSize: 16, color: C.muted, fontWeight: 500 }}>{label}</div>
-      {onClick && <div style={{ fontSize: 14, color, fontWeight: 700, marginTop: 4 }}>Open →</div>}
+      <div>
+        <div style={{ fontSize: 34, fontWeight: 700, color: C.text, lineHeight: 1.05, letterSpacing: "-0.02em" }}>{value}</div>
+        <div style={{ fontSize: 15, color: C.muted, fontWeight: 500, marginTop: 6 }}>{label}</div>
+      </div>
+      {onClick && <div style={{ fontSize: 13, color, fontWeight: 600, letterSpacing: "0.02em" }}>View →</div>}
     </div>
   );
 }
@@ -88,7 +129,7 @@ function Modal({ title, onClose, children, width = 640 }) {
   return (
     <div style={{ position: "fixed", inset: 0, background: "#000b", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" }}
       onClick={e => e.target === e.currentTarget && onClose()}>
-      <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 22, padding: 40, width, maxWidth: "95vw", maxHeight: "92vh", overflowY: "auto" }}>
+      <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, padding: 40, width, maxWidth: "95vw", maxHeight: "92vh", overflowY: "auto" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 30 }}>
           <h2 style={{ fontSize: 24, fontWeight: 800, color: C.text }}>{title}</h2>
           <button onClick={onClose} style={{ background: "none", border: "none", color: C.muted, fontSize: 28, cursor: "pointer", lineHeight: 1 }}>×</button>
@@ -124,7 +165,7 @@ function Txt({ label, ...props }) {
 
 function Btn({ children, onClick, color = C.accent, outline, small, danger, style = {} }) {
   return (
-    <button onClick={onClick} style={{ background: danger ? C.red : outline ? "transparent" : color, border: outline ? `2px solid ${color}` : danger ? `2px solid ${C.red}` : "none", color: outline ? color : "#fff", borderRadius: 10, padding: small ? "9px 18px" : "13px 26px", fontWeight: 700, fontSize: small ? 14 : 16, cursor: "pointer", ...style }}>
+    <button onClick={onClick} style={{ background: danger ? C.red : outline ? "transparent" : color, border: outline ? `2px solid ${color}` : danger ? `2px solid ${C.red}` : "none", color: outline ? color : "#fff", borderRadius: 10, padding: small ? "9px 18px" : "13px 26px", fontWeight: 600, fontSize: small ? 14 : 15.5, cursor: "pointer", ...style }}>
       {children}
     </button>
   );
@@ -143,7 +184,7 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
       <div>
-        <h1 style={{ fontSize: 34, fontWeight: 900, color: C.text }}>Dashboard</h1>
+        <h1 style={{ fontSize: 30, fontWeight: 700, color: C.text, letterSpacing: "-0.02em" }}>Dashboard</h1>
         <p style={{ color: C.muted, marginTop: 6, fontSize: 17 }}>People first — click any card to open that section</p>
       </div>
 
@@ -160,8 +201,8 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
 
       {/* Upcoming events + Prayer needs — the heart of the view */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
-        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 18, padding: 28 }}>
-          <h3 style={{ fontWeight: 800, color: C.text, marginBottom: 20, fontSize: 19 }}>Upcoming Events</h3>
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 28 }}>
+          <h3 style={{ fontWeight: 700, color: C.text, marginBottom: 20, fontSize: 18 }}>Upcoming Events</h3>
           {upcoming.length === 0 && <p style={{ color: C.muted, fontSize: 13 }}>No upcoming events.</p>}
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {upcoming.map(e => (
@@ -179,7 +220,7 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
           </div>
         </div>
 
-        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 18, padding: 28 }}>
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 28 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
             <h3 style={{ fontWeight: 800, color: C.text, fontSize: 18, margin: 0 }}>Prayer Requests</h3>
             <button onClick={() => setTab("ministry")} style={{ fontSize: 12, color: C.accent, background: "none", border: "none", cursor: "pointer", fontWeight: 700 }}>View all →</button>
@@ -188,7 +229,7 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {recentPrayers.map(p => (
               <div key={p.id} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "10px 14px", background: C.bg, borderRadius: 10, border: `1px solid ${C.border}` }}>
-                <span style={{ fontSize: 18, flexShrink: 0 }}>🙏</span>
+                <span style={{ flexShrink: 0, color: C.purple, display: "flex", paddingTop: 2 }}><Icon glyph="🙏" size={17} /></span>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontWeight: 700, color: C.text, fontSize: 16, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.member || p.name || "Member"}</div>
                   <div style={{ fontSize: 14, color: C.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.request || p.title || ""}</div>
@@ -201,7 +242,7 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
       </div>
 
       {/* Ministry roster — people-focused, no budget bars */}
-      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 18, padding: 28 }}>
+      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 28 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
           <h3 style={{ fontWeight: 800, color: C.text, fontSize: 18, margin: 0 }}>Ministry Roster</h3>
           <button onClick={() => setTab("ministry")} style={{ fontSize: 12, color: C.accent, background: "none", border: "none", cursor: "pointer", fontWeight: 700 }}>Open Ministry →</button>
@@ -270,7 +311,7 @@ function Administrative({ events, setEvents }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div><h1 style={{ fontSize: 32, fontWeight: 900, color: C.text }}>Administrative</h1><p style={{ color: C.muted, marginTop: 6, fontSize: 17 }}>Church calendar, events & coordination</p></div>
+        <div><h1 style={{ fontSize: 28, fontWeight: 700, color: C.text, letterSpacing: "-0.02em" }}>Administrative</h1><p style={{ color: C.muted, marginTop: 6, fontSize: 17 }}>Church calendar, events & coordination</p></div>
         <Btn onClick={() => { setForm(emptyForm); setModal(true); }}>+ Add Event</Btn>
       </div>
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
@@ -283,7 +324,7 @@ function Administrative({ events, setEvents }) {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 16 }}>
         {filtered.map(e => (
-          <div key={e.id} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 18, padding: 28, display: "flex", flexDirection: "column", gap: 12 }}>
+          <div key={e.id} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 28, display: "flex", flexDirection: "column", gap: 12 }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <Badge label={e.type} color={typeColor[e.type] || C.accent} />
               <span style={{ fontSize: 14, color: C.muted }}>{e.date}</span>
@@ -361,11 +402,11 @@ function MemberDetailPanel({ member, onClose, prayerRequests, meetings }) {
         {/* Header */}
         <div style={{ padding: "24px 28px 20px", borderBottom: `1px solid ${C.border}`, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
-            <div style={{ width: 52, height: 52, borderRadius: "50%", background: C.accent + "22", border: `2px solid ${C.accent}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 900, color: C.accent, flexShrink: 0 }}>
+            <div style={{ width: 52, height: 52, borderRadius: "50%", background: C.accent + "22", border: `2px solid ${C.accent}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 700, color: C.accent, flexShrink: 0 }}>
               {member.name.split(" ").map(n => n[0]).slice(0,2).join("")}
             </div>
             <div>
-              <div style={{ fontWeight: 900, fontSize: 18, color: C.text }}>{member.name}</div>
+              <div style={{ fontWeight: 700, fontSize: 18, color: C.text }}>{member.name}</div>
               <div style={{ fontSize: 14, color: C.muted, marginTop: 3 }}>{member.role} · Joined {member.joined}</div>
             </div>
           </div>
@@ -394,7 +435,7 @@ function MemberDetailPanel({ member, onClose, prayerRequests, meetings }) {
                 ].map(([l, v, color]) => (
                   <div key={l} style={{ background: C.bg, borderRadius: 10, padding: "10px 12px", textAlign: "center", border: `1px solid ${C.border}` }}>
                     <div style={{ fontSize: 10, color: C.muted, textTransform: "uppercase", fontWeight: 700 }}>{l}</div>
-                    <div style={{ fontSize: 20, fontWeight: 900, color, marginTop: 4 }}>{v}</div>
+                    <div style={{ fontSize: 20, fontWeight: 700, color, marginTop: 4 }}>{v}</div>
                   </div>
                 ))}
               </div>
@@ -490,7 +531,7 @@ function MeetingDetailModal({ meeting, groupMembers, onClose }) {
         ].map(([l, v, color]) => (
           <div key={l} style={{ flex: 1, background: C.bg, borderRadius: 10, padding: "12px 16px", textAlign: "center", border: `1px solid ${C.border}` }}>
             <div style={{ fontSize: 13, color: C.muted, textTransform: "uppercase", fontWeight: 700 }}>{l}</div>
-            <div style={{ fontSize: 22, fontWeight: 900, color, marginTop: 4 }}>{v}</div>
+            <div style={{ fontSize: 22, fontWeight: 700, color, marginTop: 4 }}>{v}</div>
           </div>
         ))}
       </div>
@@ -550,7 +591,7 @@ function LGQuickView({ group, prayerRequests, meetings }) {
         ].map(([icon,label,value,color]) => (
           <div key={label} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: "14px 16px" }}>
             <div style={{ fontSize: 20 }}>{icon}</div>
-            <div style={{ fontSize: 22, fontWeight: 900, color, marginTop: 6 }}>{value}</div>
+            <div style={{ fontSize: 22, fontWeight: 700, color, marginTop: 6 }}>{value}</div>
             <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{label}</div>
           </div>
         ))}
@@ -627,7 +668,7 @@ function LGTodayTab({ group }) {
             <input type="date" value={session.date} onChange={e => setSession(s => ({ ...s, date: e.target.value }))} style={{ ...inputStyle, width: 180 }} />
           </div>
           <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: 36, fontWeight: 900, color: pct >= 75 ? C.green : pct >= 55 ? C.gold : C.red }}>{session.present.length}</div>
+            <div style={{ fontSize: 36, fontWeight: 700, color: pct >= 75 ? C.green : pct >= 55 ? C.gold : C.red }}>{session.present.length}</div>
             <div style={{ fontSize: 14, color: C.muted }}>of {group.members.length} present · {pct}%</div>
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -687,7 +728,7 @@ function LGJoinedUsTab({ group }) {
         <Btn onClick={() => setShowForm(!showForm)}>+ Add Visitor</Btn>
       </div>
       {showForm && (
-        <div style={{ background: C.card, border: `1px solid ${C.accent}44`, borderRadius: 18, padding: 28 }}>
+        <div style={{ background: C.card, border: `1px solid ${C.accent}44`, borderRadius: 12, padding: 28 }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <Inp label="Name *" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Full name" />
             <Inp label="Date" type="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
@@ -765,7 +806,7 @@ function LGPrayerTab({ group, prayerRequests, setPrayerRequests }) {
         {[["🙏","Total",groupPrayers.length,C.purple],["✅","Answered",groupPrayers.filter(p=>p.status==="Answered").length,C.green],["⏳","Active",groupPrayers.filter(p=>p.status==="Active").length,C.accent],["🌟","Praise",groupPrayers.filter(p=>p.status==="Praise").length,C.gold]].map(([icon,label,val,color]) => (
           <div key={label} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: "14px 16px", textAlign: "center" }}>
             <div style={{ fontSize: 20 }}>{icon}</div>
-            <div style={{ fontSize: 22, fontWeight: 900, color, marginTop: 4 }}>{val}</div>
+            <div style={{ fontSize: 22, fontWeight: 700, color, marginTop: 4 }}>{val}</div>
             <div style={{ fontSize: 13, color: C.muted }}>{label}</div>
           </div>
         ))}
@@ -890,9 +931,9 @@ function LGEventsTab({ group }) {
 
       {/* Edit form */}
       {editingEvent && (
-        <div style={{ background: C.card, border: `1px solid ${C.accent}44`, borderRadius: 18, padding: 28 }}>
+        <div style={{ background: C.card, border: `1px solid ${C.accent}44`, borderRadius: 12, padding: 28 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
-            <div style={{ fontWeight: 900, color: C.text, fontSize: 16 }}>{getType(editingEvent.type).icon} {lgEvents.find(e => e.id === editingEvent.id) ? "Edit Event" : "New Event"}</div>
+            <div style={{ fontWeight: 700, color: C.text, fontSize: 16 }}>{getType(editingEvent.type).icon} {lgEvents.find(e => e.id === editingEvent.id) ? "Edit Event" : "New Event"}</div>
             <button onClick={() => setEditingEvent(null)} style={{ background: "none", border: "none", color: C.muted, fontSize: 20, cursor: "pointer" }}>✕</button>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
@@ -1031,7 +1072,7 @@ function LGTeachingTab({ group }) {
             <Btn onClick={() => setEditSession(blankSession())}>+ New Session</Btn>
           </div>
           {editSession && (
-            <div style={{ background: C.card, border: `1px solid ${C.accent}44`, borderRadius: 18, padding: 28 }}>
+            <div style={{ background: C.card, border: `1px solid ${C.accent}44`, borderRadius: 12, padding: 28 }}>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <div style={{ gridColumn: "1/-1" }}><Inp label="Title / Series" value={editSession.title} onChange={e => setEditSession(s => ({ ...s, title: e.target.value }))} placeholder="Teaching title or series" /></div>
                 <Inp label="Scripture" value={editSession.scripture} onChange={e => setEditSession(s => ({ ...s, scripture: e.target.value }))} placeholder="John 3:16" />
@@ -1081,7 +1122,7 @@ function LGTeachingTab({ group }) {
             <Btn onClick={() => setShowVideoForm(!showVideoForm)}>+ Add Video</Btn>
           </div>
           {showVideoForm && (
-            <div style={{ background: C.card, border: `1px solid ${C.accent}44`, borderRadius: 18, padding: 28 }}>
+            <div style={{ background: C.card, border: `1px solid ${C.accent}44`, borderRadius: 12, padding: 28 }}>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <Inp label="Title" value={newVideo.title} onChange={e => setNewVideo(v => ({ ...v, title: e.target.value }))} />
                 <Inp label="Speaker" value={newVideo.speaker} onChange={e => setNewVideo(v => ({ ...v, speaker: e.target.value }))} />
@@ -1224,7 +1265,7 @@ function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
             <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "16px 20px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div>
-                  <h3 style={{ fontWeight: 900, color: C.text, fontSize: 18, margin: 0 }}>{group.name}</h3>
+                  <h3 style={{ fontWeight: 700, color: C.text, fontSize: 18, margin: 0 }}>{group.name}</h3>
                   <div style={{ fontSize: 15, color: C.muted, marginTop: 5 }}>{group.day}s · {group.time} · {group.location}</div>
                   <div style={{ fontSize: 13, color: C.dim, marginTop: 2 }}>Led by {group.leader}</div>
                 </div>
@@ -1376,7 +1417,7 @@ function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
                         <div style={{ width: 120, background: C.border, borderRadius: 99, height: 8 }}>
                           <div style={{ width: pct + "%", background: pct >= 75 ? C.green : pct >= 55 ? C.gold : C.red, height: "100%", borderRadius: 99 }} />
                         </div>
-                        <span style={{ fontSize: 15, fontWeight: 900, color: pct >= 75 ? C.green : pct >= 55 ? C.gold : C.red, minWidth: 40, textAlign: "right" }}>{pct}%</span>
+                        <span style={{ fontSize: 15, fontWeight: 700, color: pct >= 75 ? C.green : pct >= 55 ? C.gold : C.red, minWidth: 40, textAlign: "right" }}>{pct}%</span>
                         <span style={{ color: C.muted }}>›</span>
                       </div>
                     </div>
@@ -1405,7 +1446,7 @@ function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
                           <div style={{ fontSize: 14, color: C.muted }}>{m.email} · {m.phone}</div>
                         </div>
                         <div style={{ textAlign: "right" }}>
-                          <div style={{ fontWeight: 900, fontSize: 18, color: att.consecAbsent >= 4 ? C.red : C.gold }}>{att.consecAbsent} wk</div>
+                          <div style={{ fontWeight: 700, fontSize: 18, color: att.consecAbsent >= 4 ? C.red : C.gold }}>{att.consecAbsent} wk</div>
                           <div style={{ fontSize: 13, color: C.muted }}>consecutive</div>
                         </div>
                       </div>
@@ -1489,7 +1530,7 @@ function MinistryLeadership({ ministries, setMinistries, prayerRequests, setPray
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div><h1 style={{ fontSize: 32, fontWeight: 900, color: C.text }}>Ministry Leadership</h1><p style={{ color: C.muted, marginTop: 6, fontSize: 17 }}>Ministries, Life Groups, prayer & volunteers</p></div>
+        <div><h1 style={{ fontSize: 28, fontWeight: 700, color: C.text, letterSpacing: "-0.02em" }}>Ministry Leadership</h1><p style={{ color: C.muted, marginTop: 6, fontSize: 17 }}>Ministries, Life Groups, prayer & volunteers</p></div>
         <div style={{ display: "flex", gap: 10 }}>
           <Btn outline color={C.purple} onClick={() => setModal("prayer")}>+ Prayer Request</Btn>
           <Btn onClick={() => { setForm(emptyMin); setModal("ministry"); }}>+ Add Ministry</Btn>
@@ -1623,7 +1664,7 @@ function Finance({ transactions, setTransactions }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div><h1 style={{ fontSize: 32, fontWeight: 900, color: C.text }}>Finance</h1><p style={{ color: C.muted, marginTop: 6, fontSize: 17 }}>Budgets, giving & financial reports</p></div>
+        <div><h1 style={{ fontSize: 28, fontWeight: 700, color: C.text, letterSpacing: "-0.02em" }}>Finance</h1><p style={{ color: C.muted, marginTop: 6, fontSize: 17 }}>Budgets, giving & financial reports</p></div>
         <Btn onClick={() => setModal(true)}>+ Add Transaction</Btn>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
@@ -1631,7 +1672,7 @@ function Finance({ transactions, setTransactions }) {
         <StatCard icon="📉" label="Total Expenses" value={fmt$(expense)}                   color={C.red}   />
         <StatCard icon="💵" label="Net Balance"    value={fmt$(net)} sub={net >= 0 ? "Surplus" : "Deficit"} color={net >= 0 ? C.green : C.red} />
       </div>
-      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 18, padding: 28 }}>
+      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 28 }}>
         <h3 style={{ fontWeight: 800, color: C.text, marginBottom: 18 }}>Budget by Department</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {BUDGETS.map(b => (
@@ -1645,7 +1686,7 @@ function Finance({ transactions, setTransactions }) {
           ))}
         </div>
       </div>
-      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 18, padding: 28 }}>
+      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 28 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
           <h3 style={{ fontWeight: 800, color: C.text }}>Transactions</h3>
           <div style={{ display: "flex", gap: 8 }}>
@@ -1719,15 +1760,15 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "#000b", zIndex: 1000, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "24px 16px", overflowY: "auto" }}>
-      <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 20, width: "100%", maxWidth: 680, boxShadow: "0 20px 60px rgba(0,0,0,0.18)" }}>
+      <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, width: "100%", maxWidth: 680, boxShadow: "0 20px 60px rgba(0,0,0,0.18)" }}>
 
         {/* Header band */}
-        <div style={{ background: col + "18", borderBottom: `1px solid ${col}44`, borderRadius: "20px 20px 0 0", padding: "28px 32px", display: "flex", gap: 20, alignItems: "center" }}>
-          <div style={{ width: 64, height: 64, borderRadius: "50%", background: col + "33", border: `3px solid ${col}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, fontWeight: 900, color: col, flexShrink: 0 }}>
+        <div style={{ background: col + "18", borderBottom: `1px solid ${col}44`, borderRadius: "14px 14px 0 0", padding: "28px 32px", display: "flex", gap: 20, alignItems: "center" }}>
+          <div style={{ width: 64, height: 64, borderRadius: "50%", background: col + "33", border: `3px solid ${col}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, fontWeight: 700, color: col, flexShrink: 0 }}>
             {initials}
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 22, fontWeight: 900, color: C.text }}>{member.name}</div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: C.text }}>{member.name}</div>
             <div style={{ fontSize: 14, color: C.muted, marginTop: 3 }}>{member.role} · {member.dept}</div>
             <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
               <Badge label={member.status} color={member.status === "Active" ? C.green : C.muted} />
@@ -1854,7 +1895,7 @@ function HR({ staff, setStaff }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div><h1 style={{ fontSize: 32, fontWeight: 900, color: C.text }}>Human Resources</h1><p style={{ color: C.muted, marginTop: 6, fontSize: 17 }}>Click any stat to filter · click any staff member to open their HR file</p></div>
+        <div><h1 style={{ fontSize: 28, fontWeight: 700, color: C.text, letterSpacing: "-0.02em" }}>Human Resources</h1><p style={{ color: C.muted, marginTop: 6, fontSize: 17 }}>Click any stat to filter · click any staff member to open their HR file</p></div>
         <Btn onClick={() => { setAddForm(empty); setAddModal(true); }}>+ Add Staff</Btn>
       </div>
 
@@ -1894,13 +1935,13 @@ function HR({ staff, setStaff }) {
           return (
             <div key={s.id}
               onClick={() => setSelectedId(s.id)}
-              style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 18, padding: 28, display: "flex", flexDirection: "column", gap: 12, cursor: "pointer", transition: "all 0.15s" }}
+              style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 28, display: "flex", flexDirection: "column", gap: 12, cursor: "pointer", transition: "all 0.15s" }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = col; e.currentTarget.style.boxShadow = `0 4px 16px ${col}22`; e.currentTarget.style.transform = "translateY(-2px)"; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                  <div style={{ width: 46, height: 46, borderRadius: "50%", background: col + "22", border: `2px solid ${col}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 900, color: col, flexShrink: 0 }}>
+                  <div style={{ width: 46, height: 46, borderRadius: "50%", background: col + "22", border: `2px solid ${col}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 700, color: col, flexShrink: 0 }}>
                     {s.name.split(" ").map(n => n[0]).slice(0, 2).join("")}
                   </div>
                   <div>
@@ -1985,7 +2026,7 @@ function PRComms({ announcements, setAnnouncements }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div><h1 style={{ fontSize: 32, fontWeight: 900, color: C.text }}>PR & Communications</h1><p style={{ color: C.muted, marginTop: 6, fontSize: 17 }}>Announcements, press & church messaging</p></div>
+        <div><h1 style={{ fontSize: 28, fontWeight: 700, color: C.text, letterSpacing: "-0.02em" }}>PR & Communications</h1><p style={{ color: C.muted, marginTop: 6, fontSize: 17 }}>Announcements, press & church messaging</p></div>
         <Btn onClick={() => { setForm(emptyForm); setModal(true); }}>+ New Announcement</Btn>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 14 }}>
@@ -1995,7 +2036,7 @@ function PRComms({ announcements, setAnnouncements }) {
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         {[...announcements].sort((a, b) => b.date.localeCompare(a.date)).map(a => (
-          <div key={a.id} style={{ background: C.card, border: `1px solid ${a.published ? C.border : C.gold + "44"}`, borderRadius: 18, padding: 28 }}>
+          <div key={a.id} style={{ background: C.card, border: `1px solid ${a.published ? C.border : C.gold + "44"}`, borderRadius: 12, padding: 28 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <Badge label={a.category} color={catColor[a.category] || C.accent} />
@@ -2073,7 +2114,7 @@ function Marketing({ campaigns, setCampaigns }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div><h1 style={{ fontSize: 32, fontWeight: 900, color: C.text }}>Marketing & Messaging</h1><p style={{ color: C.muted, marginTop: 6, fontSize: 17 }}>Campaigns, outreach analytics & communications</p></div>
+        <div><h1 style={{ fontSize: 28, fontWeight: 700, color: C.text, letterSpacing: "-0.02em" }}>Marketing & Messaging</h1><p style={{ color: C.muted, marginTop: 6, fontSize: 17 }}>Campaigns, outreach analytics & communications</p></div>
         <Btn onClick={() => { setForm(emptyForm); setModal(true); }}>+ New Campaign</Btn>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 14 }}>
@@ -2084,7 +2125,7 @@ function Marketing({ campaigns, setCampaigns }) {
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
         {[...campaigns].sort((a, b) => b.startDate.localeCompare(a.startDate)).map(c => (
-          <div key={c.id} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 18, padding: 28 }}>
+          <div key={c.id} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 28 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
               <div>
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 6 }}>
@@ -2180,15 +2221,14 @@ export default function ChurchOS() {
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Inter','Segoe UI',system-ui,sans-serif" }}>
       <aside style={{ width: open ? 260 : 76, background: C.surface, borderRight: `1px solid ${C.border}`, display: "flex", flexDirection: "column", transition: "width .22s", flexShrink: 0, position: "sticky", top: 0, height: "100vh", overflowY: "auto", overflowX: "hidden" }}>
-        <div style={{ padding: "20px 12px", borderBottom: `1px solid ${C.border}`, minHeight: 64 }}>
-          {open && <div style={{ fontSize: 18, fontWeight: 800, color: C.text, padding: "0 6px" }}>ChurchOS</div>}
+        <div style={{ padding: "22px 16px", borderBottom: `1px solid ${C.border}`, minHeight: 64 }}>
+          {open && <div style={{ fontSize: 19, fontWeight: 700, color: C.text, padding: "0 4px", letterSpacing: "-0.01em" }}>ChurchOS</div>}
         </div>
         <nav style={{ flex: 1, padding: "16px 10px" }}>
           {TABS.map(t => (
-            <button key={t.id} onClick={() => setTab(t.id)} style={{ display: "flex", alignItems: "center", gap: 14, width: "100%", padding: "13px 14px", marginBottom: 6, borderRadius: 12, border: "none", cursor: "pointer", background: tab === t.id ? C.accent + "18" : "transparent", color: tab === t.id ? C.accent : C.muted, fontWeight: tab === t.id ? 700 : 500, fontSize: 16, textAlign: "left" }}>
-              <span style={{ fontSize: 22, flexShrink: 0 }}>{t.icon}</span>
+            <button key={t.id} onClick={() => setTab(t.id)} style={{ display: "flex", alignItems: "center", gap: 13, width: "100%", padding: "12px 14px", marginBottom: 4, borderRadius: 9, border: "none", cursor: "pointer", background: tab === t.id ? C.accent + "12" : "transparent", color: tab === t.id ? C.accent : C.dim, fontWeight: tab === t.id ? 600 : 500, fontSize: 15.5, textAlign: "left" }}>
+              <span style={{ flexShrink: 0, display: "flex" }}><Icon glyph={t.icon} size={21} /></span>
               {open && <span style={{ whiteSpace: "nowrap", overflow: "hidden" }}>{t.label}</span>}
-              {open && tab === t.id && <span style={{ marginLeft: "auto", width: 8, height: 8, borderRadius: "50%", background: C.accent, flexShrink: 0 }} />}
             </button>
           ))}
         </nav>
