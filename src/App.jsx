@@ -679,74 +679,43 @@ function LGDeepDiveTab({ group }) {
   const consistentlyAbsent = group.members.filter(m => att(m).pct <= 40).sort((a, b) => att(a).pct - att(b).pct || byLast(a, b));
   const followUpNeeded     = group.members.filter(m => att(m).consecAbsent >= 2 && att(m).pct > 40).sort((a, b) => att(b).consecAbsent - att(a).consecAbsent || byLast(a, b));
 
-  const NameRow = ({ m, right, rightColor }) => (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "7px 11px", background: C.bg, borderRadius: 8, border: `1px solid ${C.border}` }}>
-      <span style={{ fontSize: 13.5, color: C.text }}>{lastFirst(m.name)}</span>
-      {right && <span style={{ fontSize: 12, fontWeight: 700, color: rightColor || C.muted, whiteSpace: "nowrap", marginLeft: 8 }}>{right}</span>}
+  // Compact row: just the name (and a check for the Here column)
+  const NameRow = ({ m, check }) => (
+    <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 8px", background: C.bg, borderRadius: 6, border: `1px solid ${C.border}` }}>
+      {check && <span style={{ fontSize: 11, fontWeight: 700, color: C.green, flexShrink: 0 }}>✓</span>}
+      <span style={{ fontSize: 12.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{lastFirst(m.name)}</span>
     </div>
   );
 
-  const ColHead = ({ label, count, color }) => (
-    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-      <span style={{ fontSize: 13, fontWeight: 700, color: C.text }}>{label}</span>
-      <span style={{ fontSize: 12, fontWeight: 700, color, background: color + "16", borderRadius: 10, padding: "1px 9px" }}>{count}</span>
+  const Col = ({ label, color, list, check, empty }) => (
+    <div style={{ background: C.card, border: `1px solid ${color}33`, borderRadius: 10, padding: "12px 10px", minWidth: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8, padding: "0 2px" }}>
+        <span style={{ fontSize: 12.5, fontWeight: 700, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{label}</span>
+        <span style={{ fontSize: 11.5, fontWeight: 700, color, background: color + "16", borderRadius: 9, padding: "0 7px", flexShrink: 0 }}>{list.length}</span>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+        {list.map(m => <NameRow key={m.id} m={m} check={check} />)}
+        {list.length === 0 && <div style={{ fontSize: 12, color: C.muted, fontStyle: "italic", padding: "2px 4px" }}>{empty || "None"}</div>}
+      </div>
     </div>
   );
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: "16px 20px" }}>
-        <div style={{ fontSize: 17, fontWeight: 700, color: C.text }}>Deep Dive — {fmtLong(sourceDate)}</div>
-        <div style={{ fontSize: 13, color: C.muted, marginTop: 3 }}>
-          {usingToday
-            ? `Live from today's LG Today attendance · ${here.length} of ${group.members.length} present`
-            : `No attendance marked yet today — showing the most recent recorded meeting · ${here.length} of ${group.members.length} present`}
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+        <div style={{ fontSize: 15.5, fontWeight: 700, color: C.text }}>Deep Dive — {fmtLong(sourceDate)}</div>
+        <div style={{ fontSize: 12.5, color: C.muted }}>
+          {usingToday ? "Live from LG Today" : "Most recent recorded meeting"} · {here.length} of {group.members.length} present
         </div>
       </div>
 
-      {/* Here / Not Here — alphabetized */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-        <div style={{ background: C.card, border: `1px solid ${C.green}44`, borderRadius: 12, padding: 18 }}>
-          <ColHead label="Here Today" count={here.length} color={C.green} />
-          <div style={{ display: "flex", flexDirection: "column", gap: 5, maxHeight: 420, overflowY: "auto" }}>
-            {here.map(m => <NameRow key={m.id} m={m} right="✓" rightColor={C.green} />)}
-            {here.length === 0 && <div style={{ fontSize: 13, color: C.muted, fontStyle: "italic" }}>No one marked present yet.</div>}
-          </div>
-        </div>
-        <div style={{ background: C.card, border: `1px solid ${C.red}33`, borderRadius: 12, padding: 18 }}>
-          <ColHead label="Not Here Today" count={notHere.length} color={C.red} />
-          <div style={{ display: "flex", flexDirection: "column", gap: 5, maxHeight: 420, overflowY: "auto" }}>
-            {notHere.map(m => <NameRow key={m.id} m={m} right={att(m).consecAbsent >= 2 ? att(m).consecAbsent + "wk out" : null} rightColor={att(m).consecAbsent >= 4 ? C.red : C.gold} />)}
-            {notHere.length === 0 && <div style={{ fontSize: 13, color: C.green }}>Everyone is here! 🎉</div>}
-          </div>
-        </div>
-      </div>
-
-      {/* Pattern columns */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
-        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 18 }}>
-          <ColHead label="Consistently Here" count={consistentlyHere.length} color={C.green} />
-          <div style={{ fontSize: 12, color: C.muted, marginBottom: 10 }}>85%+ attendance over the last 12 meetings</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 5, maxHeight: 380, overflowY: "auto" }}>
-            {consistentlyHere.map(m => <NameRow key={m.id} m={m} right={att(m).pct + "%"} rightColor={C.green} />)}
-          </div>
-        </div>
-        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 18 }}>
-          <ColHead label="Consistently Absent" count={consistentlyAbsent.length} color={C.red} />
-          <div style={{ fontSize: 12, color: C.muted, marginBottom: 10 }}>40% or less attendance — may have stepped away</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 5, maxHeight: 380, overflowY: "auto" }}>
-            {consistentlyAbsent.map(m => <NameRow key={m.id} m={m} right={att(m).pct + "%"} rightColor={C.red} />)}
-            {consistentlyAbsent.length === 0 && <div style={{ fontSize: 13, color: C.muted, fontStyle: "italic" }}>None — great sign.</div>}
-          </div>
-        </div>
-        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 18 }}>
-          <ColHead label="Follow-Up Needed" count={followUpNeeded.length} color={C.gold} />
-          <div style={{ fontSize: 12, color: C.muted, marginBottom: 10 }}>Usually here, but missed the last 2+ weeks — reach out</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 5, maxHeight: 380, overflowY: "auto" }}>
-            {followUpNeeded.map(m => <NameRow key={m.id} m={m} right={att(m).consecAbsent + "wk out"} rightColor={att(m).consecAbsent >= 4 ? C.red : C.gold} />)}
-            {followUpNeeded.length === 0 && <div style={{ fontSize: 13, color: C.muted, fontStyle: "italic" }}>No one slipping — all caught up.</div>}
-          </div>
-        </div>
+      {/* All five lists side by side */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(5, minmax(0, 1fr))", gap: 10, alignItems: "start" }}>
+        <Col label="Here Today"          color={C.green} list={here}               check   empty="No one marked yet" />
+        <Col label="Not Here Today"      color={C.red}   list={notHere}            empty="Everyone is here!" />
+        <Col label="Consistently Here"   color={C.green} list={consistentlyHere} />
+        <Col label="Consistently Absent" color={C.red}   list={consistentlyAbsent} empty="None — great sign" />
+        <Col label="Follow-Up Needed"    color={C.gold}  list={followUpNeeded}     empty="All caught up" />
       </div>
     </div>
   );
@@ -1342,26 +1311,7 @@ function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
       </div>
 
       <div style={{ display: "flex", gap: 16 }}>
-        {/* Group selector */}
-        <div style={{ width: 200, flexShrink: 0, display: "flex", flexDirection: "column", gap: 8 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: 1, padding: "0 4px", marginBottom: 4 }}>Groups</div>
-          {lifeGroups.map(g => {
-            const gAtRisk = g.members.filter(m => (LG_ATTENDANCE[String(m.id)]?.consecAbsent||0) >= 3).length;
-            return (
-              <button key={g.id} onClick={() => { setSelectedGroup(g.id); setSearch(""); setLgTab("roster"); }}
-                style={{ textAlign: "left", padding: "12px 14px", borderRadius: 11, border: `1px solid ${selectedGroup === g.id ? C.accent : C.border}`, background: selectedGroup === g.id ? C.accent + "22" : C.card, cursor: "pointer" }}>
-                <div style={{ fontWeight: 700, fontSize: 13, color: selectedGroup === g.id ? C.accent : C.text }}>{g.name}</div>
-                <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{g.day}s · {g.time}</div>
-                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
-                  <span style={{ fontSize: 13, color: C.muted }}>{g.members.length} members</span>
-                  {gAtRisk > 0 && <span style={{ fontSize: 11, color: C.red, fontWeight: 700 }}>⚠ {gAtRisk}</span>}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Main panel */}
+        {/* Main panel — full width */}
         {group && (
           <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 14, minWidth: 0 }}>
             {/* Group header */}
