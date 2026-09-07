@@ -1304,10 +1304,10 @@ function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
       {/* Top stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 14 }}>
-        <StatCard icon="⛪" label="Groups"       value={lifeGroups.length}   color={C.accent}  />
-        <StatCard icon="👥" label="Total Members" value={totalMembers}         color={C.green}   />
-        {hasTracking && <StatCard icon="🚨" label="At Risk (3+ wk)" value={lifeGroups.find(g=>g.id===1)?.members.filter(m => (LG_ATTENDANCE[String(m.id)]?.consecAbsent||0) >= 3).length || 0} color={C.red} />}
-        {hasTracking && <StatCard icon="⭐" label="Consistent" value={lifeGroups.find(g=>g.id===1)?.members.filter(m => (LG_ATTENDANCE[String(m.id)]?.pct||0) >= 90).length || 0} color={C.gold} />}
+        <StatCard icon="⛪" label="Groups"       value={lifeGroups.length}   color={C.accent}  onClick={() => setLgTab("roster")} />
+        <StatCard icon="👥" label="Total Members" value={totalMembers}         color={C.green}   onClick={() => setLgTab("roster")} />
+        {hasTracking && <StatCard icon="🚨" label="At Risk (3+ wk)" value={lifeGroups.find(g=>g.id===1)?.members.filter(m => (LG_ATTENDANCE[String(m.id)]?.consecAbsent||0) >= 3).length || 0} color={C.red} onClick={() => setLgTab("deep dive")} />}
+        {hasTracking && <StatCard icon="⭐" label="Consistent" value={lifeGroups.find(g=>g.id===1)?.members.filter(m => (LG_ATTENDANCE[String(m.id)]?.pct||0) >= 90).length || 0} color={C.gold} onClick={() => setLgTab("deep dive")} />}
       </div>
 
       <div style={{ display: "flex", gap: 16 }}>
@@ -1380,36 +1380,25 @@ function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
                     </Sel>
                   )}
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 6 }}>
                   {getMembers().map(m => {
                     const att = LG_ATTENDANCE[String(m.id)];
                     const risk = att && att.consecAbsent >= 3;
                     const warn = att && att.consecAbsent >= 1 && att.consecAbsent < 3;
                     return (
                       <div key={m.id} onClick={() => setMemberDetail(m)}
-                        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 16px", background: C.card, borderRadius: 11, border: `1px solid ${risk ? C.red + "55" : warn ? C.gold + "44" : C.border}`, cursor: "pointer", transition: "border-color .15s" }}>
-                        <div style={{ display: "flex", gap: 12, alignItems: "center", minWidth: 0 }}>
-                          <div style={{ width: 36, height: 36, borderRadius: "50%", background: risk ? C.red + "22" : C.accent + "22", border: `2px solid ${risk ? C.red : C.accent}44`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 800, color: risk ? C.red : C.accent, flexShrink: 0 }}>
-                            {m.name.split(" ").map(n => n[0]).slice(0,2).join("")}
-                          </div>
-                          <div style={{ minWidth: 0 }}>
-                            <div style={{ fontWeight: 600, color: C.text, fontSize: 15 }}>{m.name}</div>
-                            <div style={{ fontSize: 13, color: C.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{m.email}</div>
-                          </div>
+                        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, padding: "8px 12px", background: C.card, borderRadius: 9, border: `1px solid ${risk ? C.red + "55" : warn ? C.gold + "44" : C.border}`, cursor: "pointer", transition: "border-color .15s", minWidth: 0 }}>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontWeight: 600, color: C.text, fontSize: 13.5, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{m.name}</div>
+                          <div style={{ fontSize: 12, color: C.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{m.email}</div>
                         </div>
-                        <div style={{ display: "flex", gap: 12, alignItems: "center", flexShrink: 0 }}>
-                          {att && <AttendanceDots record={att.record} size={10} meetings={LG_MEETINGS} />}
-                          {m.role !== "Member" && <Badge label={m.role} color={C.purple} />}
-                          {att && (
-                            <div style={{ textAlign: "right", minWidth: 70 }}>
-                              <div style={{ fontSize: 13, color: attColor(att.pct), fontWeight: 800 }}>{att.pct}%</div>
-                              {att.consecAbsent > 0 && <div style={{ fontSize: 10, color: risk ? C.red : C.gold, fontWeight: 700 }}>
-                                {risk ? "🚨" : "⚠"} {att.consecAbsent}wk absent
-                              </div>}
-                            </div>
-                          )}
-                          <span style={{ color: C.muted, fontSize: 18 }}>›</span>
-                        </div>
+                        {att && (
+                          <div style={{ display: "flex", gap: 8, alignItems: "baseline", flexShrink: 0 }}>
+                            <span style={{ fontSize: 13, fontWeight: 700, color: C.green }}>{att.attended}</span>
+                            <span style={{ fontSize: 11, color: C.muted }}>/</span>
+                            <span style={{ fontSize: 13, fontWeight: 700, color: att.absent > 4 ? C.red : C.muted }}>{att.absent}</span>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
