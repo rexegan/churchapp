@@ -30,7 +30,7 @@ function useStored(key, defaultValue) {
 
 const C = {
   bg: "#f0f4f8", surface: "#ffffff", card: "#ffffff", border: "#d1dce8",
-  accent: "#2563eb", accent2: "#6366f1", gold: "#d97706", green: "#059669",
+  accent: "#1e3a5f", accent2: "#2c5282", gold: "#d97706", green: "#059669",
   red: "#dc2626", purple: "#7c3aed", pink: "#db2777", text: "#1e293b",
   muted: "#64748b", dim: "#475569",
 };
@@ -1547,6 +1547,208 @@ function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
 }
 
 // ── Ministry Leadership ───────────────────────────────────────────────────────
+// ── Ministry areas (departments with people & resources) ─────────────────────
+const MINISTRY_AREAS = [
+  {
+    id: "family", name: "Family Ministry", icon: "👨‍👩‍👧‍👦", color: "#1e3a5f",
+    leader: "Sarah Williams", meets: "Sundays · 9:30 AM · Family Center",
+    members: 140, volunteers: 24,
+    description: "Marriage, parenting, and whole-family discipleship.",
+    people: [
+      { name: "Sarah Williams", role: "Family Pastor" },
+      { name: "James Patterson", role: "Marriage Ministry Lead" },
+      { name: "Diana Cole", role: "Parenting Classes Coordinator" },
+      { name: "Mark & Lisa Reynolds", role: "Family Events Team" },
+      { name: "Karen Mitchell", role: "Volunteer Coordinator" },
+    ],
+    resources: [
+      { name: "Family Center — Main Hall", detail: "Seats 200 · reserved Sundays" },
+      { name: "Marriage Course Curriculum", detail: "12-week series · 30 workbooks on hand" },
+      { name: "Parenting Toolkit Library", detail: "45 titles · checkout system" },
+      { name: "Annual Budget", detail: "$14,000 · $8,100 used" },
+    ],
+  },
+  {
+    id: "college", name: "College & Career", icon: "🎓", color: "#2c5282",
+    leader: "Robert Garcia", meets: "Thursdays · 7:00 PM · The Loft",
+    members: 48, volunteers: 8,
+    description: "Ages 18–25 — students, young professionals, and singles.",
+    people: [
+      { name: "Robert Garcia", role: "College Pastor" },
+      { name: "Emily Chen", role: "Worship Lead" },
+      { name: "Tyler Brooks", role: "Small Groups Coordinator" },
+      { name: "Hannah Foster", role: "Campus Outreach" },
+    ],
+    resources: [
+      { name: "The Loft", detail: "Dedicated space · coffee bar" },
+      { name: "Campus Outreach Kit", detail: "TCU / UTA / Tarleton materials" },
+      { name: "Spring Retreat Fund", detail: "$4,500 reserved" },
+      { name: "Annual Budget", detail: "$8,000 · $4,700 used" },
+    ],
+  },
+  {
+    id: "high", name: "High School", icon: "🏈", color: "#7c3aed", parent: "Student Ministry",
+    leader: "Josh Turner", meets: "Wednesdays · 6:30 PM · Student Building",
+    members: 52, volunteers: 10,
+    description: "Grades 9–12 — discipleship, camps, and student leadership.",
+    people: [
+      { name: "Josh Turner", role: "High School Director" },
+      { name: "Amber Wells", role: "Girls Discipleship Lead" },
+      { name: "Chris Dalton", role: "Guys Discipleship Lead" },
+      { name: "Rachel Kim", role: "Worship / Band Lead" },
+    ],
+    resources: [
+      { name: "Student Building — Main Room", detail: "Stage, sound, lighting" },
+      { name: "Summer Camp Deposits", detail: "38 students registered" },
+      { name: "Curriculum — 'Rooted'", detail: "Fall semester series" },
+      { name: "Annual Budget", detail: "$9,500 · $6,200 used" },
+    ],
+  },
+  {
+    id: "middle", name: "Middle School", icon: "🏀", color: "#0e7490", parent: "Student Ministry",
+    leader: "Katie Sanders", meets: "Wednesdays · 6:30 PM · Room 200",
+    members: 44, volunteers: 9,
+    description: "Grades 6–8 — foundations of faith and belonging.",
+    people: [
+      { name: "Katie Sanders", role: "Middle School Director" },
+      { name: "Ben Hoffman", role: "6th Grade Boys Lead" },
+      { name: "Jill Marsh", role: "Small Group Coordinator" },
+      { name: "Danny Ortiz", role: "Games & Events" },
+    ],
+    resources: [
+      { name: "Room 200 Wing", detail: "3 breakout rooms" },
+      { name: "Curriculum — 'Grow'", detail: "Year-long track" },
+      { name: "Fall Retreat Fund", detail: "$2,800 reserved" },
+      { name: "Annual Budget", detail: "$6,500 · $3,900 used" },
+    ],
+  },
+  {
+    id: "children", name: "Children's", icon: "🎨", color: "#059669", parent: "Student Ministry",
+    leader: "Melissa Grant", meets: "Sundays · both services · Kids Wing",
+    members: 96, volunteers: 26,
+    description: "K–5th grade — Sunday large group plus small groups.",
+    people: [
+      { name: "Melissa Grant", role: "Children's Director" },
+      { name: "Tom Avery", role: "K-2 Coordinator" },
+      { name: "Susan Lee", role: "3-5 Coordinator" },
+      { name: "Grace Nolan", role: "Check-in / Safety Lead" },
+      { name: "Peter Shaw", role: "Large Group Host" },
+    ],
+    resources: [
+      { name: "Kids Wing", detail: "6 classrooms + theater room" },
+      { name: "Check-in System", detail: "2 kiosks · security tags" },
+      { name: "Curriculum — 'Orange'", detail: "Licensed through 2027" },
+      { name: "Annual Budget", detail: "$15,500 · $10,300 used" },
+    ],
+  },
+  {
+    id: "nursery", name: "Nursery", icon: "🍼", color: "#db2777", parent: "Student Ministry",
+    leader: "Beth Caldwell", meets: "Sundays · both services · Nursery Suite",
+    members: 38, volunteers: 18,
+    description: "Birth through pre-K — safe, loving early care.",
+    people: [
+      { name: "Beth Caldwell", role: "Nursery Director" },
+      { name: "Angela Ruiz", role: "Infant Room Lead" },
+      { name: "Monica Hayes", role: "Toddler Room Lead" },
+      { name: "Cindy Palmer", role: "Volunteer Scheduler" },
+    ],
+    resources: [
+      { name: "Nursery Suite", detail: "4 rooms · pager system" },
+      { name: "Background Checks", detail: "18 of 18 current" },
+      { name: "Supplies Inventory", detail: "Restocked monthly" },
+      { name: "Annual Budget", detail: "$5,000 · $2,600 used" },
+    ],
+  },
+];
+
+function MinistryAreas() {
+  const [openArea, setOpenArea] = useState(null);
+  const area = MINISTRY_AREAS.find(a => a.id === openArea);
+
+  const AreaCard = ({ a }) => (
+    <div onClick={() => setOpenArea(a.id)}
+      style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: "16px 18px", cursor: "pointer", transition: "all .15s", minWidth: 0 }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = a.color; e.currentTarget.style.boxShadow = "0 4px 14px rgba(15,23,42,0.10)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+        <span style={{ fontSize: 22 }}>{a.icon}</span>
+        <div style={{ fontWeight: 700, fontSize: 15, color: C.text }}>{a.name}</div>
+      </div>
+      <div style={{ fontSize: 12.5, color: C.muted, marginBottom: 10 }}>{a.leader} · {a.members} members · {a.volunteers} volunteers</div>
+      <div style={{ fontSize: 12, color: a.color, fontWeight: 600 }}>Open breakout →</div>
+    </div>
+  );
+
+  if (area) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div>
+          <button onClick={() => setOpenArea(null)} style={{ background: "none", border: "none", color: C.muted, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0 }}>← All ministry areas</button>
+        </div>
+        <div style={{ background: C.card, border: `1px solid ${area.color}44`, borderRadius: 12, padding: "18px 22px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+            <span style={{ fontSize: 28 }}>{area.icon}</span>
+            <div style={{ flex: 1, minWidth: 200 }}>
+              <div style={{ fontSize: 19, fontWeight: 700, color: C.text }}>{area.parent ? area.parent + " — " + area.name : area.name}</div>
+              <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{area.description}</div>
+              <div style={{ fontSize: 12.5, color: C.dim, marginTop: 4 }}>{area.meets}</div>
+            </div>
+            <div style={{ display: "flex", gap: 18 }}>
+              {[["Members", area.members], ["Volunteers", area.volunteers]].map(([l, v]) => (
+                <div key={l} style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: 20, fontWeight: 700, color: area.color }}>{v}</div>
+                  <div style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em" }}>{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: 18 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: C.text, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 12 }}>People</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {area.people.map(p => (
+                <div key={p.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, padding: "8px 12px", background: C.bg, borderRadius: 8, border: `1px solid ${C.border}` }}>
+                  <span style={{ fontSize: 13.5, fontWeight: 600, color: C.text }}>{p.name}</span>
+                  <span style={{ fontSize: 12, color: C.muted, textAlign: "right" }}>{p.role}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: 18 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: C.text, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 12 }}>Resources</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {area.resources.map(r => (
+                <div key={r.name} style={{ padding: "8px 12px", background: C.bg, borderRadius: 8, border: `1px solid ${C.border}` }}>
+                  <div style={{ fontSize: 13.5, fontWeight: 600, color: C.text }}>{r.name}</div>
+                  <div style={{ fontSize: 12, color: C.muted, marginTop: 1 }}>{r.detail}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const top = MINISTRY_AREAS.filter(a => !a.parent);
+  const student = MINISTRY_AREAS.filter(a => a.parent === "Student Ministry");
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
+        {top.map(a => <AreaCard key={a.id} a={a} />)}
+      </div>
+      <div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 10 }}>Student Ministry</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
+          {student.map(a => <AreaCard key={a.id} a={a} />)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function MinistryLeadership({ ministries, setMinistries, prayerRequests, setPrayerRequests, lifeGroups }) {
   const [modal, setModal] = useState(null);
   const [subTab, setSubTab] = useState("ministries");
@@ -1616,33 +1818,7 @@ function MinistryLeadership({ ministries, setMinistries, prayerRequests, setPray
           ))}
         </div>
       )}
-      {subTab === "ministries" && <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 16 }}>
-        {ministries.map(m => (
-          <div key={m.id} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: 22, display: "flex", flexDirection: "column", gap: 14 }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <div style={{ fontSize: 18, fontWeight: 800, color: C.text }}>{m.name}</div>
-              <Badge label={m.status} color={C.green} />
-            </div>
-            <p style={{ fontSize: 13.5, color: C.muted }}>{m.description}</p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
-              {[["Leader", m.leader.split(" ").slice(-1)[0]], ["Members", m.members], ["Volunteers", m.volunteers]].map(([l, v]) => (
-                <div key={l} style={{ background: C.bg, borderRadius: 9, padding: "10px 12px", textAlign: "center" }}>
-                  <div style={{ fontSize: 10, color: C.muted, textTransform: "uppercase", fontWeight: 700 }}>{l}</div>
-                  <div style={{ fontSize: 16, fontWeight: 800, color: C.text, marginTop: 4 }}>{v}</div>
-                </div>
-              ))}
-            </div>
-            <div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                <span style={{ fontSize: 13, color: C.muted }}>Budget: {fmt$(m.budget)}</span>
-                <span style={{ fontSize: 12, color: C.accent }}>~60% used</span>
-              </div>
-              <ProgressBar value={m.budget * 0.6} max={m.budget} />
-            </div>
-            <Btn small outline color={C.accent} onClick={() => { setForm({ ...m, members:String(m.members), volunteers:String(m.volunteers), budget:String(m.budget) }); setModal("ministry"); }}>Edit Ministry</Btn>
-          </div>
-        ))}
-      </div>}
+      {subTab === "ministries" && <MinistryAreas />}
       {modal === "ministry" && (
         <Modal title={form.id ? "Edit Ministry" : "New Ministry"} onClose={() => setModal(null)}>
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
