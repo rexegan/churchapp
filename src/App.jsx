@@ -566,11 +566,11 @@ function MeetingDetailModal({ meeting, groupMembers, onClose }) {
 }
 
 // ── LG Quick View ────────────────────────────────────────────────────────────
-function LGQuickView({ group, prayerRequests, meetings }) {
+function LGQuickView({ group, prayerRequests, meetings, onNavigate }) {
   const attData = group.members.map(m => LG_ATTENDANCE[String(m.id)]).filter(Boolean);
   const avgPct = attData.length ? Math.round(attData.reduce((s, a) => s + a.pct, 0) / attData.length) : 0;
   const atRisk = group.members.filter(m => (LG_ATTENDANCE[String(m.id)]?.consecAbsent || 0) >= 3).length;
-  const perfect = group.members.filter(m => (LG_ATTENDANCE[String(m.id)]?.pct || 0) >= 90).length;
+  const consistent = group.members.filter(m => (LG_ATTENDANCE[String(m.id)]?.pct || 0) >= 90).length;
   const groupPrayers = prayerRequests.filter(p =>
     p.group === group.name ||
     group.members.some(m => p.requester.toLowerCase().includes(m.name.split(" ")[0].toLowerCase()))
@@ -581,17 +581,21 @@ function LGQuickView({ group, prayerRequests, meetings }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))", gap: 12 }}>
         {[
-          ["👥","Members",group.members.length,C.accent],
-          ["📊","Avg Attend.",avgPct+"%",attColor(avgPct)],
-          ["🚨","At Risk",atRisk,C.red],
-          ["⭐","Perfect",perfect,C.gold],
-          ["🙏","Prayers",groupPrayers.length,C.purple],
-          ["📅","Meetings",meetings.length,C.accent2],
-        ].map(([icon,label,value,color]) => (
-          <div key={label} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: "14px 16px" }}>
+          ["👥","Members",group.members.length,C.accent,"deep dive"],
+          ["📊","Avg Attend.",avgPct+"%",attColor(avgPct),"deep dive"],
+          ["🚨","At Risk",atRisk,C.red,"deep dive"],
+          ["⭐","Consistent",consistent,C.gold,"deep dive"],
+          ["🙏","Prayers",groupPrayers.length,C.purple,"prayer"],
+          ["📅","Meetings",meetings.length,C.accent2,"meetings"],
+        ].map(([icon,label,value,color,dest]) => (
+          <div key={label} onClick={() => onNavigate && onNavigate(dest)}
+            style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: "14px 16px", cursor: "pointer", transition: "all 0.15s" }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = color; e.currentTarget.style.boxShadow = "0 4px 14px rgba(15,23,42,0.10)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}>
             <div style={{ fontSize: 20 }}>{icon}</div>
             <div style={{ fontSize: 19, fontWeight: 700, color, marginTop: 4 }}>{value}</div>
             <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{label}</div>
+            <div style={{ fontSize: 11.5, color, fontWeight: 600, marginTop: 5 }}>View →</div>
           </div>
         ))}
       </div>
@@ -644,6 +648,106 @@ function LGQuickView({ group, prayerRequests, meetings }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// ── LG Deep Dive (today's attendance + attendance patterns) ──────────────────
+function LGDeepDiveTab({ group }) {
+  // Reads the same stored session that LG Today writes, so today's marks flow straight in
+  const [session] = useStored("cos2-lg-today-" + group.id, { date: today(), present: [], notes: "" });
+
+  const byLast = (a, b) => {
+    const la = a.name.trim().split(" ").slice(-1)[0].toLowerCase();
+    const lb = b.name.trim().split(" ").slice(-1)[0].toLowerCase();
+    return la.localeCompare(lb) || a.name.localeCompare(b.name);
+  };
+  const lastFirst = n => { const p = n.trim().split(" "); return p.slice(-1)[0] + ", " + p.slice(0, -1).join(" "); };
+  const fmtLong = d => { const p = new Date(d + "T12:00:00"); return isNaN(p) ? d : p.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }); };
+
+  // Today's marks if any exist; otherwise fall back to the most recent recorded meeting
+  const latestMeeting = LG_MEETINGS[LG_MEETINGS.length - 1];
+  const usingToday = session.present.length > 0;
+  const presentIds = usingToday ? session.present : (latestMeeting?.attendees || []);
+  const sourceDate = usingToday ? session.date : latestMeeting?.date;
+
+  const here    = group.members.filter(m => presentIds.includes(m.id)).sort(byLast);
+  const notHere = group.members.filter(m => !presentIds.includes(m.id)).sort(byLast);
+
+  const att = m => LG_ATTENDANCE[String(m.id)] || { pct: 0, consecAbsent: 0, attended: 0, absent: 0 };
+  const consistentlyHere   = group.members.filter(m => att(m).pct >= 85).sort((a, b) => att(b).pct - att(a).pct || byLast(a, b));
+  const consistentlyAbsent = group.members.filter(m => att(m).pct <= 40).sort((a, b) => att(a).pct - att(b).pct || byLast(a, b));
+  const followUpNeeded     = group.members.filter(m => att(m).consecAbsent >= 2 && att(m).pct > 40).sort((a, b) => att(b).consecAbsent - att(a).consecAbsent || byLast(a, b));
+
+  const NameRow = ({ m, right, rightColor }) => (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "7px 11px", background: C.bg, borderRadius: 8, border: `1px solid ${C.border}` }}>
+      <span style={{ fontSize: 13.5, color: C.text }}>{lastFirst(m.name)}</span>
+      {right && <span style={{ fontSize: 12, fontWeight: 700, color: rightColor || C.muted, whiteSpace: "nowrap", marginLeft: 8 }}>{right}</span>}
+    </div>
+  );
+
+  const ColHead = ({ label, count, color }) => (
+    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+      <span style={{ fontSize: 13, fontWeight: 700, color: C.text }}>{label}</span>
+      <span style={{ fontSize: 12, fontWeight: 700, color, background: color + "16", borderRadius: 10, padding: "1px 9px" }}>{count}</span>
+    </div>
+  );
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: "16px 20px" }}>
+        <div style={{ fontSize: 17, fontWeight: 700, color: C.text }}>Deep Dive — {fmtLong(sourceDate)}</div>
+        <div style={{ fontSize: 13, color: C.muted, marginTop: 3 }}>
+          {usingToday
+            ? `Live from today's LG Today attendance · ${here.length} of ${group.members.length} present`
+            : `No attendance marked yet today — showing the most recent recorded meeting · ${here.length} of ${group.members.length} present`}
+        </div>
+      </div>
+
+      {/* Here / Not Here — alphabetized */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        <div style={{ background: C.card, border: `1px solid ${C.green}44`, borderRadius: 12, padding: 18 }}>
+          <ColHead label="Here Today" count={here.length} color={C.green} />
+          <div style={{ display: "flex", flexDirection: "column", gap: 5, maxHeight: 420, overflowY: "auto" }}>
+            {here.map(m => <NameRow key={m.id} m={m} right="✓" rightColor={C.green} />)}
+            {here.length === 0 && <div style={{ fontSize: 13, color: C.muted, fontStyle: "italic" }}>No one marked present yet.</div>}
+          </div>
+        </div>
+        <div style={{ background: C.card, border: `1px solid ${C.red}33`, borderRadius: 12, padding: 18 }}>
+          <ColHead label="Not Here Today" count={notHere.length} color={C.red} />
+          <div style={{ display: "flex", flexDirection: "column", gap: 5, maxHeight: 420, overflowY: "auto" }}>
+            {notHere.map(m => <NameRow key={m.id} m={m} right={att(m).consecAbsent >= 2 ? att(m).consecAbsent + "wk out" : null} rightColor={att(m).consecAbsent >= 4 ? C.red : C.gold} />)}
+            {notHere.length === 0 && <div style={{ fontSize: 13, color: C.green }}>Everyone is here! 🎉</div>}
+          </div>
+        </div>
+      </div>
+
+      {/* Pattern columns */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 18 }}>
+          <ColHead label="Consistently Here" count={consistentlyHere.length} color={C.green} />
+          <div style={{ fontSize: 12, color: C.muted, marginBottom: 10 }}>85%+ attendance over the last 12 meetings</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 5, maxHeight: 380, overflowY: "auto" }}>
+            {consistentlyHere.map(m => <NameRow key={m.id} m={m} right={att(m).pct + "%"} rightColor={C.green} />)}
+          </div>
+        </div>
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 18 }}>
+          <ColHead label="Consistently Absent" count={consistentlyAbsent.length} color={C.red} />
+          <div style={{ fontSize: 12, color: C.muted, marginBottom: 10 }}>40% or less attendance — may have stepped away</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 5, maxHeight: 380, overflowY: "auto" }}>
+            {consistentlyAbsent.map(m => <NameRow key={m.id} m={m} right={att(m).pct + "%"} rightColor={C.red} />)}
+            {consistentlyAbsent.length === 0 && <div style={{ fontSize: 13, color: C.muted, fontStyle: "italic" }}>None — great sign.</div>}
+          </div>
+        </div>
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: 18 }}>
+          <ColHead label="Follow-Up Needed" count={followUpNeeded.length} color={C.gold} />
+          <div style={{ fontSize: 12, color: C.muted, marginBottom: 10 }}>Usually here, but missed the last 2+ weeks — reach out</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 5, maxHeight: 380, overflowY: "auto" }}>
+            {followUpNeeded.map(m => <NameRow key={m.id} m={m} right={att(m).consecAbsent + "wk out"} rightColor={att(m).consecAbsent >= 4 ? C.red : C.gold} />)}
+            {followUpNeeded.length === 0 && <div style={{ fontSize: 13, color: C.muted, fontStyle: "italic" }}>No one slipping — all caught up.</div>}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -1234,7 +1338,7 @@ function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
         <StatCard icon="⛪" label="Groups"       value={lifeGroups.length}   color={C.accent}  />
         <StatCard icon="👥" label="Total Members" value={totalMembers}         color={C.green}   />
         {hasTracking && <StatCard icon="🚨" label="At Risk (3+ wk)" value={lifeGroups.find(g=>g.id===1)?.members.filter(m => (LG_ATTENDANCE[String(m.id)]?.consecAbsent||0) >= 3).length || 0} color={C.red} />}
-        {hasTracking && <StatCard icon="⭐" label="Perfect Attend." value={lifeGroups.find(g=>g.id===1)?.members.filter(m => (LG_ATTENDANCE[String(m.id)]?.pct||0) >= 90).length || 0} color={C.gold} />}
+        {hasTracking && <StatCard icon="⭐" label="Consistent" value={lifeGroups.find(g=>g.id===1)?.members.filter(m => (LG_ATTENDANCE[String(m.id)]?.pct||0) >= 90).length || 0} color={C.gold} />}
       </div>
 
       <div style={{ display: "flex", gap: 16 }}>
@@ -1280,7 +1384,7 @@ function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
             {/* Sub-tabs */}
             <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
               {(hasTracking
-                ? ["quick view","lg today","roster","joined us","follow-up","prayer","events","teaching","attendance","meetings"]
+                ? ["quick view","lg today","deep dive","roster","joined us","follow-up","prayer","events","teaching","attendance","meetings"]
                 : ["roster","events","teaching"]
               ).map(t => (
                 <button key={t} onClick={() => setLgTab(t)} style={{ background: lgTab===t?C.accent:C.card, color: lgTab===t?"#fff":C.muted, border: `1px solid ${lgTab===t?C.accent:C.border}`, borderRadius: 8, padding: "7px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", textTransform: "capitalize" }}>{t}</button>
@@ -1288,10 +1392,12 @@ function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
             </div>
 
             {/* ── Quick View tab ── */}
-            {lgTab === "quick view" && hasTracking && <LGQuickView group={group} prayerRequests={prayerRequests} meetings={LG_MEETINGS} />}
+            {lgTab === "quick view" && hasTracking && <LGQuickView group={group} prayerRequests={prayerRequests} meetings={LG_MEETINGS} onNavigate={setLgTab} />}
 
             {/* ── LG Today tab ── */}
             {lgTab === "lg today" && hasTracking && <LGTodayTab group={group} />}
+
+            {lgTab === "deep dive" && hasTracking && <LGDeepDiveTab group={group} />}
 
             {/* ── Joined Us tab ── */}
             {lgTab === "joined us" && <LGJoinedUsTab group={group} />}
