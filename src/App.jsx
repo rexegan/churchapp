@@ -192,9 +192,9 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
       <div>
         <div style={{ fontSize: 12, fontWeight: 600, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 12 }}>People & Community</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12 }}>
-          <StatCard icon="👥" label="LifeGroup Members"  value={lgMembers}                                               color={C.accent}  onClick={() => setTab("ministry")} />
-          <StatCard icon="⛪" label="Active Ministries"  value={ministries.filter(m => m.status === "Active").length}   color={C.green}   onClick={() => setTab("ministry")} />
-          <StatCard icon="🙏" label="Active Prayer Reqs" value={activePrayers}                                           color={C.purple}  onClick={() => setTab("ministry")} />
+          <StatCard icon="👥" label="LifeGroup Members"  value={lgMembers}                                               color={C.accent}  onClick={() => setTab("lifegroups")} />
+          <StatCard icon="⛪" label="Active Ministries"  value={ministries.filter(m => m.status === "Active").length}   color={C.green}   onClick={() => setTab("family")} />
+          <StatCard icon="🙏" label="Active Prayer Reqs" value={activePrayers}                                           color={C.purple}  onClick={() => setTab("lifegroups")} />
           <StatCard icon="👔" label="Active Staff"       value={staff.filter(s => s.status === "Active").length}        color={C.accent2} onClick={() => setTab("hr")} />
         </div>
       </div>
@@ -223,7 +223,7 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
         <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: 20 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
             <h3 style={{ fontWeight: 600, color: C.text, fontSize: 15, margin: 0 }}>Prayer Requests</h3>
-            <button onClick={() => setTab("ministry")} style={{ fontSize: 12, color: C.accent, background: "none", border: "none", cursor: "pointer", fontWeight: 700 }}>View all →</button>
+            <button onClick={() => setTab("lifegroups")} style={{ fontSize: 12, color: C.accent, background: "none", border: "none", cursor: "pointer", fontWeight: 700 }}>View all →</button>
           </div>
           {recentPrayers.length === 0 && <p style={{ color: C.muted, fontSize: 13 }}>No prayer requests yet.</p>}
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -245,7 +245,7 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
       <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: 20 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
           <h3 style={{ fontWeight: 600, color: C.text, fontSize: 15, margin: 0 }}>Ministry Roster</h3>
-          <button onClick={() => setTab("ministry")} style={{ fontSize: 12, color: C.accent, background: "none", border: "none", cursor: "pointer", fontWeight: 700 }}>Open Ministry →</button>
+          <button onClick={() => setTab("family")} style={{ fontSize: 12, color: C.accent, background: "none", border: "none", cursor: "pointer", fontWeight: 700 }}>Open Family Ministries →</button>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 12 }}>
           {ministries.map(m => (
@@ -291,8 +291,8 @@ function Administrative({ events, setEvents }) {
   const [modal, setModal] = useState(false);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
-  const types = ["All","Worship","Revival","Meeting","Youth","Study","Outreach"];
-  const typeColor = { Worship: C.accent, Revival: C.gold, Meeting: C.purple, Youth: C.pink, Study: C.green, Outreach: C.accent2 };
+  const types = ["All","Worship","Meeting","Youth","Study","Outreach"];
+  const typeColor = { Worship: C.accent, Meeting: C.purple, Youth: C.pink, Study: C.green, Outreach: C.accent2 };
   const emptyForm = { title:"", date:today(), time:"10:00 AM", location:"", type:"Worship", lead:"", attendees:"", notes:"" };
   const [form, setForm] = useState(emptyForm);
 
@@ -353,7 +353,7 @@ function Administrative({ events, setEvents }) {
             <Inp label="Location" value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} />
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <Sel label="Type" value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}>
-                {["Worship","Revival","Meeting","Youth","Study","Outreach"].map(t => <option key={t}>{t}</option>)}
+                {["Worship","Meeting","Youth","Study","Outreach"].map(t => <option key={t}>{t}</option>)}
               </Sel>
               <Inp label="Lead" value={form.lead} onChange={e => setForm(f => ({ ...f, lead: e.target.value }))} />
             </div>
@@ -1661,204 +1661,89 @@ const MINISTRY_AREAS = [
   },
 ];
 
-function MinistryAreas() {
-  const [openArea, setOpenArea] = useState(null);
-  const area = MINISTRY_AREAS.find(a => a.id === openArea);
-
-  const AreaCard = ({ a }) => (
-    <div onClick={() => setOpenArea(a.id)}
-      style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: "16px 18px", cursor: "pointer", transition: "all .15s", minWidth: 0 }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor = a.color; e.currentTarget.style.boxShadow = "0 4px 14px rgba(15,23,42,0.10)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-        <span style={{ fontSize: 22 }}>{a.icon}</span>
-        <div style={{ fontWeight: 700, fontSize: 15, color: C.text }}>{a.name}</div>
-      </div>
-      <div style={{ fontSize: 12.5, color: C.muted, marginBottom: 10 }}>{a.leader} · {a.members} members · {a.volunteers} volunteers</div>
-      <div style={{ fontSize: 12, color: a.color, fontWeight: 600 }}>Open breakout →</div>
-    </div>
-  );
-
-  if (area) {
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-        <div>
-          <button onClick={() => setOpenArea(null)} style={{ background: "none", border: "none", color: C.muted, fontSize: 13, fontWeight: 600, cursor: "pointer", padding: 0 }}>← All ministry areas</button>
-        </div>
-        <div style={{ background: C.card, border: `1px solid ${area.color}44`, borderRadius: 12, padding: "18px 22px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-            <span style={{ fontSize: 28 }}>{area.icon}</span>
-            <div style={{ flex: 1, minWidth: 200 }}>
-              <div style={{ fontSize: 19, fontWeight: 700, color: C.text }}>{area.parent ? area.parent + " — " + area.name : area.name}</div>
-              <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{area.description}</div>
-              <div style={{ fontSize: 12.5, color: C.dim, marginTop: 4 }}>{area.meets}</div>
-            </div>
-            <div style={{ display: "flex", gap: 18 }}>
-              {[["Members", area.members], ["Volunteers", area.volunteers]].map(([l, v]) => (
-                <div key={l} style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: 20, fontWeight: 700, color: area.color }}>{v}</div>
-                  <div style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em" }}>{l}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: 18 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: C.text, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 12 }}>People</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              {area.people.map(p => (
-                <div key={p.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, padding: "8px 12px", background: C.bg, borderRadius: 8, border: `1px solid ${C.border}` }}>
-                  <span style={{ fontSize: 13.5, fontWeight: 600, color: C.text }}>{p.name}</span>
-                  <span style={{ fontSize: 12, color: C.muted, textAlign: "right" }}>{p.role}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: 18 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: C.text, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 12 }}>Resources</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              {area.resources.map(r => (
-                <div key={r.name} style={{ padding: "8px 12px", background: C.bg, borderRadius: 8, border: `1px solid ${C.border}` }}>
-                  <div style={{ fontSize: 13.5, fontWeight: 600, color: C.text }}>{r.name}</div>
-                  <div style={{ fontSize: 12, color: C.muted, marginTop: 1 }}>{r.detail}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const top = MINISTRY_AREAS.filter(a => !a.parent);
-  const student = MINISTRY_AREAS.filter(a => a.parent === "Student Ministry");
-
+function AreaBreakout({ area }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
-        {top.map(a => <AreaCard key={a.id} a={a} />)}
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      <div style={{ background: C.card, border: `1px solid ${area.color}44`, borderRadius: 12, padding: "18px 22px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 28 }}>{area.icon}</span>
+          <div style={{ flex: 1, minWidth: 200 }}>
+            <div style={{ fontSize: 19, fontWeight: 700, color: C.text }}>{area.name}</div>
+            <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{area.description}</div>
+            <div style={{ fontSize: 12.5, color: C.dim, marginTop: 4 }}>{area.meets} · Led by {area.leader}</div>
+          </div>
+          <div style={{ display: "flex", gap: 18 }}>
+            {[["Members", area.members], ["Volunteers", area.volunteers]].map(([l, v]) => (
+              <div key={l} style={{ textAlign: "center" }}>
+                <div style={{ fontSize: 20, fontWeight: 700, color: area.color }}>{v}</div>
+                <div style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em" }}>{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-      <div>
-        <div style={{ fontSize: 13, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 10 }}>Student Ministry</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
-          {student.map(a => <AreaCard key={a.id} a={a} />)}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: 18 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: C.text, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 12 }}>People</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {area.people.map(p => (
+              <div key={p.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, padding: "8px 12px", background: C.bg, borderRadius: 8, border: `1px solid ${C.border}` }}>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: C.text }}>{p.name}</span>
+                <span style={{ fontSize: 12, color: C.muted, textAlign: "right" }}>{p.role}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: 18 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: C.text, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 12 }}>Resources</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {area.resources.map(r => (
+              <div key={r.name} style={{ padding: "8px 12px", background: C.bg, borderRadius: 8, border: `1px solid ${C.border}` }}>
+                <div style={{ fontSize: 13.5, fontWeight: 600, color: C.text }}>{r.name}</div>
+                <div style={{ fontSize: 12, color: C.muted, marginTop: 1 }}>{r.detail}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function MinistryLeadership({ ministries, setMinistries, prayerRequests, setPrayerRequests, lifeGroups }) {
-  const [modal, setModal] = useState(null);
-  const [subTab, setSubTab] = useState("ministries");
-  const [form, setForm] = useState({});
-  const [pform, setPform] = useState({ requester:"", request:"", category:"Health", private:false });
-  const emptyMin = { name:"", leader:"", members:"", volunteers:"", budget:"", description:"", status:"Active" };
-  const statusColor = { Active: C.green, Inactive: C.muted, Answered: C.gold };
-
-  function saveMin() {
-    if (!form.name) return;
-    if (form.id) setMinistries(m => m.map(x => x.id === form.id ? { ...form, members:+form.members||0, volunteers:+form.volunteers||0, budget:+form.budget||0 } : x));
-    else setMinistries(m => [...m, { ...form, id: Date.now(), members:+form.members||0, volunteers:+form.volunteers||0, budget:+form.budget||0 }]);
-    setModal(null);
-  }
-
-  function savePrayer() {
-    if (!pform.requester || !pform.request) return;
-    setPrayerRequests(p => [...p, { ...pform, id: Date.now(), date: today(), status:"Active" }]);
-    setPform({ requester:"", request:"", category:"Health", private:false });
-    setModal(null);
-  }
-
-  const subTabs = ["ministries","life groups","prayer"];
+// ── Family Ministries (sidebar section with sub-tabs per area) ───────────────
+function FamilyMinistries() {
+  const areas = MINISTRY_AREAS.filter(a => a.id !== "family");
+  const [areaId, setAreaId] = useState(areas[0].id);
+  const area = areas.find(a => a.id === areaId);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div><h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>Ministry Leadership</h1><p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>Ministries, Life Groups, prayer & volunteers</p></div>
-        <div style={{ display: "flex", gap: 10 }}>
-          <Btn outline color={C.purple} onClick={() => setModal("prayer")}>+ Prayer Request</Btn>
-          <Btn onClick={() => { setForm(emptyMin); setModal("ministry"); }}>+ Add Ministry</Btn>
-        </div>
+      <div>
+        <h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>Family Ministries</h1>
+        <p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>People and resources for every age and stage</p>
       </div>
-      <div style={{ display: "flex", gap: 8 }}>
-        {subTabs.map(t => (
-          <button key={t} onClick={() => setSubTab(t)} style={{ background: subTab === t ? C.accent : C.card, color: subTab === t ? "#fff" : C.muted, border: `1px solid ${subTab === t ? C.accent : C.border}`, borderRadius: 8, padding: "8px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer", textTransform: "capitalize" }}>{t}</button>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        {areas.map(a => (
+          <button key={a.id} onClick={() => setAreaId(a.id)}
+            style={{ background: areaId === a.id ? C.accent : C.card, color: areaId === a.id ? "#fff" : C.muted, border: `1px solid ${areaId === a.id ? C.accent : C.border}`, borderRadius: 8, padding: "8px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+            {a.name}
+          </button>
         ))}
       </div>
-      {subTab === "life groups" && <LifeGroupsView lifeGroups={lifeGroups} prayerRequests={prayerRequests} setPrayerRequests={setPrayerRequests} />}
-      {subTab === "prayer" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 14, marginBottom: 8 }}>
-            <StatCard icon="🙏" label="Total Requests" value={prayerRequests.length}                                    color={C.purple} />
-            <StatCard icon="✅" label="Answered"       value={prayerRequests.filter(p => p.status==="Answered").length} color={C.green}  />
-            <StatCard icon="⏳" label="Active"         value={prayerRequests.filter(p => p.status==="Active").length}   color={C.accent} />
-          </div>
-          {[...prayerRequests].sort((a,b) => b.date.localeCompare(a.date)).map(p => (
-            <div key={p.id} style={{ background: C.card, border: `1px solid ${p.status === "Answered" ? C.green + "44" : C.border}`, borderRadius: 12, padding: "16px 18px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-                  <span style={{ fontWeight: 700, color: C.text }}>{p.private ? "Anonymous" : p.requester}</span>
-                  {p.group && <Badge label={p.group} color={C.accent2} />}
-                  <Badge label={p.category} color={C.accent} />
-                  {p.private && <Badge label="Private" color={C.muted} />}
-                  <Badge label={p.status} color={statusColor[p.status] || C.muted} />
-                </div>
-                <span style={{ fontSize: 13, color: C.muted, flexShrink: 0 }}>{p.date}</span>
-              </div>
-              <p style={{ fontSize: 13, color: C.dim, lineHeight: 1.6, margin: 0 }}>{p.request}</p>
-              {p.followUpNote && (
-                <div style={{ marginTop: 10, padding: "10px 14px", background: C.green + "11", border: `1px solid ${C.green}33`, borderRadius: 9 }}>
-                  <div style={{ fontSize: 11, color: C.green, fontWeight: 700, marginBottom: 4 }}>FOLLOW-UP · {p.followUp}</div>
-                  <div style={{ fontSize: 13, color: C.dim }}>{p.followUpNote}</div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-      {subTab === "ministries" && <MinistryAreas />}
-      {modal === "ministry" && (
-        <Modal title={form.id ? "Edit Ministry" : "New Ministry"} onClose={() => setModal(null)}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <Inp label="Ministry Name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
-            <Inp label="Ministry Leader" value={form.leader} onChange={e => setForm(f => ({ ...f, leader: e.target.value }))} />
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
-              <Inp label="Members" type="number" value={form.members} onChange={e => setForm(f => ({ ...f, members: e.target.value }))} />
-              <Inp label="Volunteers" type="number" value={form.volunteers} onChange={e => setForm(f => ({ ...f, volunteers: e.target.value }))} />
-              <Inp label="Budget ($)" type="number" value={form.budget} onChange={e => setForm(f => ({ ...f, budget: e.target.value }))} />
-            </div>
-            <Txt label="Description" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
-            <Sel label="Status" value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>
-              <option>Active</option><option>Inactive</option>
-            </Sel>
-            <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-              <Btn outline color={C.muted} onClick={() => setModal(null)}>Cancel</Btn>
-              <Btn onClick={saveMin}>Save</Btn>
-            </div>
-          </div>
-        </Modal>
-      )}
-      {modal === "prayer" && (
-        <Modal title="New Prayer Request" onClose={() => setModal(null)}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <Inp label="Name / Requester" value={pform.requester} onChange={e => setPform(f => ({ ...f, requester: e.target.value }))} />
-            <Txt label="Prayer Request" value={pform.request} onChange={e => setPform(f => ({ ...f, request: e.target.value }))} />
-            <Sel label="Category" value={pform.category} onChange={e => setPform(f => ({ ...f, category: e.target.value }))}>
-              {["Health","Family","Career","Missions","Finances","Praise","Other"].map(c => <option key={c}>{c}</option>)}
-            </Sel>
-            <label style={{ display: "flex", gap: 10, alignItems: "center", color: C.dim, fontSize: 14, cursor: "pointer" }}>
-              <input type="checkbox" checked={pform.private} onChange={e => setPform(f => ({ ...f, private: e.target.checked }))} />
-              Keep requester anonymous
-            </label>
-            <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-              <Btn outline color={C.muted} onClick={() => setModal(null)}>Cancel</Btn>
-              <Btn color={C.purple} onClick={savePrayer}>Submit</Btn>
-            </div>
-          </div>
-        </Modal>
-      )}
+      {area && <AreaBreakout area={area} />}
+    </div>
+  );
+}
+
+// ── Life Groups (sidebar section) ────────────────────────────────────────────
+function LifeGroupsPage({ lifeGroups, prayerRequests, setPrayerRequests }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+      <div>
+        <h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>Life Groups</h1>
+        <p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>Attendance, follow-up, prayer & community</p>
+      </div>
+      <LifeGroupsView lifeGroups={lifeGroups} prayerRequests={prayerRequests} setPrayerRequests={setPrayerRequests} />
     </div>
   );
 }
@@ -2418,7 +2303,8 @@ function Marketing({ campaigns, setCampaigns }) {
 const TABS = [
   { id:"dashboard", label:"Dashboard",      icon:"🏠" },
   { id:"admin",     label:"Administrative", icon:"📅" },
-  { id:"ministry",  label:"Ministry",       icon:"⛪" },
+  { id:"lifegroups", label:"Life Groups",       icon:"👥" },
+  { id:"family",     label:"Family Ministries", icon:"⛪" },
   { id:"finance",   label:"Finance",        icon:"💰" },
   { id:"hr",        label:"HR",             icon:"👔" },
   { id:"pr",        label:"PR & Comms",     icon:"📢" },
@@ -2427,7 +2313,8 @@ const TABS = [
 
 // ── Root ──────────────────────────────────────────────────────────────────────
 export default function ChurchOS() {
-  const [tab,           setTab]           = useStored("cos2-tab",           "dashboard");
+  const [storedTab,     setTab]           = useStored("cos2-tab",           "dashboard");
+  const tab = TABS.some(t => t.id === storedTab) ? storedTab : "dashboard"; // migrate away from removed tab ids
   const [staff,         setStaff]         = useStored("cos2-staff",         SEED_STAFF);
   const [ministries,    setMinistries]    = useStored("cos2-ministries",    SEED_MINISTRIES);
   const [lifeGroups,    setLifeGroups]    = useStored("cos2-lifegroups",    SEED_LIFE_GROUPS);
@@ -2459,7 +2346,8 @@ export default function ChurchOS() {
       <main style={{ flex: 1, padding: "28px 32px", overflowY: "auto" }}>
         {tab === "dashboard" && <Dashboard staff={staff} ministries={ministries} transactions={transactions} events={events} campaigns={campaigns} prayerRequests={prayerRequests} lifeGroups={lifeGroups} setTab={setTab} />}
         {tab === "admin"     && <Administrative events={events} setEvents={setEvents} />}
-        {tab === "ministry"  && <MinistryLeadership ministries={ministries} setMinistries={setMinistries} prayerRequests={prayerRequests} setPrayerRequests={setPrayerRequests} lifeGroups={lifeGroups} />}
+        {tab === "lifegroups" && <LifeGroupsPage lifeGroups={lifeGroups} prayerRequests={prayerRequests} setPrayerRequests={setPrayerRequests} />}
+        {tab === "family"     && <FamilyMinistries />}
         {tab === "finance"   && <Finance transactions={transactions} setTransactions={setTransactions} />}
         {tab === "hr"        && <HR staff={staff} setStaff={setStaff} />}
         {tab === "pr"        && <PRComms announcements={announcements} setAnnouncements={setAnnouncements} />}
