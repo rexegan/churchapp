@@ -2092,7 +2092,7 @@ function HR({ staff, setStaff }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div><h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>Human Resources</h1><p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>Click any stat to filter · click any staff member to open their HR file</p></div>
+        <div><h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>Staff & Elders</h1><p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>Staff and elder body — click any stat to filter, click any person to open their file</p></div>
         <Btn onClick={() => { setAddForm(empty); setAddModal(true); }}>+ Add Staff</Btn>
       </div>
 
@@ -2394,12 +2394,12 @@ function Marketing({ campaigns, setCampaigns }) {
 // ── Sidebar nav ───────────────────────────────────────────────────────────────
 const TABS = [
   { id:"dashboard", label:"Dashboard",      icon:"🏠" },
+  { id:"hr",        label:"Staff & Elders",  icon:"👔" },
   { id:"admin",     label:"Administrative", icon:"📅" },
   { id:"family",     label:"Family Ministries", icon:"⛪" },
   { id:"lifegroups", label:"Life Groups",       icon:"👥" },
   { id:"deacons",    label:"Deacons",           icon:"🤝" },
   { id:"finance",   label:"Finance",        icon:"💰" },
-  { id:"hr",        label:"HR",             icon:"👔" },
   { id:"pr",        label:"PR & Comms",     icon:"📢" },
   { id:"marketing", label:"Marketing",      icon:"📣" },
 ];
