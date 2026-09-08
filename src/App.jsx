@@ -2415,8 +2415,17 @@ export default function ChurchOS() {
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Inter','Segoe UI',system-ui,sans-serif" }}>
       <aside style={{ width: open ? 240 : 64, background: C.surface, borderRight: `1px solid ${C.border}`, display: "flex", flexDirection: "column", transition: "width .22s", flexShrink: 0, position: "sticky", top: 0, height: "100vh", overflowY: "auto", overflowX: "hidden" }}>
-        <div style={{ padding: "18px 16px", borderBottom: `1px solid ${C.border}`, minHeight: 54 }}>
-          {open && <div style={{ fontSize: 17, fontWeight: 700, color: C.text, padding: "0 4px", letterSpacing: "-0.01em" }}>ChurchOS</div>}
+        <div style={{ padding: "16px 14px", borderBottom: `1px solid ${C.border}`, minHeight: 58, display: "flex", alignItems: "center", gap: 10 }}>
+          <svg width="30" height="30" viewBox="0 0 32 32" style={{ flexShrink: 0 }}>
+            <rect width="32" height="32" rx="7" fill={C.accent} />
+            <path d="M16 6 L21.5 22 L16 18.5 L10.5 22 Z" fill="#ffffff" />
+          </svg>
+          {open && (
+            <div style={{ lineHeight: 1.15 }}>
+              <div style={{ fontSize: 16.5, fontWeight: 800, color: C.accent, letterSpacing: "-0.01em" }}>NorthPointe</div>
+              <div style={{ fontSize: 9.5, fontWeight: 600, color: C.muted, letterSpacing: "0.28em", textTransform: "uppercase" }}>Church</div>
+            </div>
+          )}
         </div>
         <nav style={{ flex: 1, padding: "12px 8px" }}>
           {TABS.map(t => (
