@@ -1748,6 +1748,98 @@ function LifeGroupsPage({ lifeGroups, prayerRequests, setPrayerRequests }) {
   );
 }
 
+// ── Deacons ──────────────────────────────────────────────────────────────────
+const SEED_DEACONS = [
+  { id:1, name:"Harold Simmons",  role:"Chairman",  phone:"(817) 555-0181", email:"hsimmons@email.com",  area:"Widows & shut-ins",        families:14, onCall:true  },
+  { id:2, name:"Walter Green",    role:"Deacon",    phone:"(817) 555-0132", email:"wgreen@email.com",    area:"Hospital visitation",      families:11, onCall:false },
+  { id:3, name:"Frank Delgado",   role:"Deacon",    phone:"(817) 555-0164", email:"fdelgado@email.com",  area:"Benevolence requests",     families:12, onCall:false },
+  { id:4, name:"Curtis Boyd",     role:"Deacon",    phone:"(817) 555-0117", email:"cboyd@email.com",     area:"New member follow-up",     families:10, onCall:false },
+  { id:5, name:"Leon Ashworth",   role:"Deacon",    phone:"(817) 555-0149", email:"lashworth@email.com", area:"Building & grounds",       families:9,  onCall:false },
+  { id:6, name:"Ray Whitfield",   role:"Deacon",    phone:"(817) 555-0126", email:"rwhitfield@email.com",area:"Lord's Supper preparation",families:13, onCall:false },
+];
+
+function Deacons() {
+  const [deacons, setDeacons] = useStored("cos2-deacons", SEED_DEACONS);
+  const [modal, setModal] = useState(false);
+  const empty = { name:"", role:"Deacon", phone:"", email:"", area:"", families:"", onCall:false };
+  const [form, setForm] = useState(empty);
+
+  function save() {
+    if (!form.name) return;
+    if (form.id) setDeacons(d => d.map(x => x.id === form.id ? { ...form, families:+form.families||0 } : x));
+    else setDeacons(d => [...d, { ...form, id: Date.now(), families:+form.families||0 }]);
+    setModal(false);
+  }
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div>
+          <h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>Deacons</h1>
+          <p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>Deacon body, care assignments & family shepherding</p>
+        </div>
+        <Btn onClick={() => { setForm(empty); setModal(true); }}>+ Add Deacon</Btn>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12 }}>
+        <StatCard icon="🤝" label="Deacons"           value={deacons.length} color={C.accent} />
+        <StatCard icon="👥" label="Families Assigned" value={deacons.reduce((s, d) => s + (d.families || 0), 0)} color={C.green} />
+        <StatCard icon="📞" label="On Call Now"       value={deacons.find(d => d.onCall)?.name.split(" ")[0] || "—"} color={C.gold} />
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10 }}>
+        {deacons.map(d => (
+          <div key={d.id} onClick={() => { setForm({ ...d, families: String(d.families || "") }); setModal(true); }}
+            style={{ background: C.card, border: `1px solid ${d.onCall ? C.gold + "66" : C.border}`, borderRadius: 10, padding: "14px 16px", cursor: "pointer", transition: "border-color .15s", minWidth: 0 }}
+            onMouseEnter={e => e.currentTarget.style.borderColor = C.accent}
+            onMouseLeave={e => e.currentTarget.style.borderColor = d.onCall ? C.gold + "66" : C.border}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 6 }}>
+              <span style={{ fontWeight: 700, fontSize: 14.5, color: C.text }}>{d.name}</span>
+              <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                {d.onCall && <Badge label="On Call" color={C.gold} />}
+                {d.role === "Chairman" && <Badge label="Chairman" color={C.accent} />}
+              </div>
+            </div>
+            <div style={{ fontSize: 12.5, color: C.muted }}>{d.area}</div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+              <span style={{ fontSize: 12, color: C.dim }}>{d.phone} · {d.email}</span>
+              <span style={{ fontSize: 12, fontWeight: 700, color: C.green, flexShrink: 0 }}>{d.families} families</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {modal && (
+        <Modal title={form.id ? "Edit Deacon" : "Add Deacon"} onClose={() => setModal(false)}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <Inp label="Name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <Sel label="Role" value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))}>
+                <option>Deacon</option><option>Chairman</option><option>Deacon Emeritus</option>
+              </Sel>
+              <Inp label="Families Assigned" type="number" value={form.families} onChange={e => setForm(f => ({ ...f, families: e.target.value }))} />
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <Inp label="Phone" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} />
+              <Inp label="Email" type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
+            </div>
+            <Inp label="Care Area" value={form.area} onChange={e => setForm(f => ({ ...f, area: e.target.value }))} placeholder="Hospital visitation, benevolence, widows..." />
+            <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13.5, color: C.text, cursor: "pointer" }}>
+              <input type="checkbox" checked={!!form.onCall} onChange={e => setForm(f => ({ ...f, onCall: e.target.checked }))} />
+              On call this month
+            </label>
+            <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+              {form.id && <Btn outline color={C.red} onClick={() => { setDeacons(d => d.filter(x => x.id !== form.id)); setModal(false); }}>Remove</Btn>}
+              <Btn outline color={C.muted} onClick={() => setModal(false)}>Cancel</Btn>
+              <Btn onClick={save}>Save</Btn>
+            </div>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
 // ── Finance ───────────────────────────────────────────────────────────────────
 function Finance({ transactions, setTransactions }) {
   const [modal, setModal] = useState(false);
@@ -2305,6 +2397,7 @@ const TABS = [
   { id:"admin",     label:"Administrative", icon:"📅" },
   { id:"family",     label:"Family Ministries", icon:"⛪" },
   { id:"lifegroups", label:"Life Groups",       icon:"👥" },
+  { id:"deacons",    label:"Deacons",           icon:"🤝" },
   { id:"finance",   label:"Finance",        icon:"💰" },
   { id:"hr",        label:"HR",             icon:"👔" },
   { id:"pr",        label:"PR & Comms",     icon:"📢" },
@@ -2348,6 +2441,7 @@ export default function ChurchOS() {
         {tab === "admin"     && <Administrative events={events} setEvents={setEvents} />}
         {tab === "lifegroups" && <LifeGroupsPage lifeGroups={lifeGroups} prayerRequests={prayerRequests} setPrayerRequests={setPrayerRequests} />}
         {tab === "family"     && <FamilyMinistries />}
+        {tab === "deacons"    && <Deacons />}
         {tab === "finance"   && <Finance transactions={transactions} setTransactions={setTransactions} />}
         {tab === "hr"        && <HR staff={staff} setStaff={setStaff} />}
         {tab === "pr"        && <PRComms announcements={announcements} setAnnouncements={setAnnouncements} />}
