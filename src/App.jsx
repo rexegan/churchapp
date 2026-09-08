@@ -1921,7 +1921,7 @@ function Finance({ transactions, setTransactions }) {
             <Inp label="Amount ($)" type="number" value={form.amount} onChange={e => setForm(f => ({ ...f, amount: e.target.value }))} placeholder="0.00" />
             <Inp label="Description" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
             <Sel label="Account" value={form.account} onChange={e => setForm(f => ({ ...f, account: e.target.value }))}>
-              {["General Fund","Operations","Payroll","Children Fund","Youth Fund","Missions Fund","Marketing"].map(a => <option key={a}>{a}</option>)}
+              {["General Fund","Operations","Staff Support","Children Fund","Youth Fund","Missions Fund","Marketing"].map(a => <option key={a}>{a}</option>)}
             </Sel>
             <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
               <Btn outline color={C.muted} onClick={() => setModal(false)}>Cancel</Btn>
@@ -1938,13 +1938,13 @@ function Finance({ transactions, setTransactions }) {
 function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
   const col = colorFor(member.dept);
   const [editing, setEditing] = useState(false);
-  const [form, setForm] = useState({ ...member, salary: String(member.salary || "") });
+  const [form, setForm] = useState({ ...member });
   const initials = member.name.split(" ").map(n => n[0]).slice(0, 2).join("");
   const yearsServed = member.startDate ? Math.floor((new Date() - new Date(member.startDate)) / (365.25 * 24 * 60 * 60 * 1000)) : null;
 
   function save() {
     if (!form.name || !form.role) return;
-    onSave({ ...form, salary: +form.salary || 0 });
+    onSave({ ...form });
     setEditing(false);
   }
 
@@ -1998,7 +1998,6 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
               <Row label="Role / Title" value={member.role} />
               <Row label="Status"      value={member.status} />
               <Row label="Start Date"  value={member.startDate} />
-              <Row label="Salary"      value={member.salary > 0 ? fmt$(member.salary) + " / yr" : null} />
               <Row label="Employee ID" value={member.employeeId} />
 
               {/* Notes */}
@@ -2038,12 +2037,11 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
               <Inp label="Emergency Phone" value={form.emergencyPhone || ""} onChange={e => setForm(f => ({ ...f, emergencyPhone: e.target.value }))} />
 
               <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>Employment</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <Sel label="Status" value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>
-                  <option>Active</option><option>On Leave</option><option>Inactive</option>
+                  <option>Active</option><option>Inactive</option>
                 </Sel>
                 <Inp label="Start Date"  type="date"   value={form.startDate   || ""} onChange={e => setForm(f => ({ ...f, startDate:   e.target.value }))} />
-                <Inp label="Salary ($)"  type="number" value={form.salary      || ""} onChange={e => setForm(f => ({ ...f, salary:      e.target.value }))} />
               </div>
               <Inp label="Employee ID" value={form.employeeId || ""} onChange={e => setForm(f => ({ ...f, employeeId: e.target.value }))} />
 
@@ -2069,12 +2067,11 @@ function HR({ staff, setStaff }) {
   const [addModal, setAddModal]     = useState(false);
   const [addForm, setAddForm]       = useState({});
 
-  const empty = { name:"", role:"", dept:"", email:"", phone:"", address:"", status:"Active", startDate:today(), salary:"", notes:"", emergencyName:"", emergencyRel:"", emergencyPhone:"", employeeId:"" };
+  const empty = { name:"", role:"", dept:"", email:"", phone:"", address:"", status:"Active", startDate:today(), notes:"", emergencyName:"", emergencyRel:"", emergencyPhone:"", employeeId:"" };
   const depts = [...new Set(staff.map(s => s.dept))];
   const deptColors = [C.accent, C.purple, C.green, C.gold, C.pink, C.accent2, C.red];
   const colorFor = d => deptColors[depts.indexOf(d) % deptColors.length] || C.accent;
 
-  const totalPayroll = staff.reduce((s, x) => s + (x.salary || 0), 0);
   const selectedMember = staff.find(s => s.id === selectedId);
 
   const filtered = staff.filter(s => {
@@ -2085,7 +2082,7 @@ function HR({ staff, setStaff }) {
 
   function saveNew() {
     if (!addForm.name || !addForm.role) return;
-    setStaff(s => [...s, { ...addForm, id: Date.now(), salary: +addForm.salary || 0 }]);
+    setStaff(s => [...s, { ...addForm, id: Date.now() }]);
     setAddModal(false);
   }
 
@@ -2100,8 +2097,6 @@ function HR({ staff, setStaff }) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12 }}>
         <StatCard icon="👔" label="Total Staff"      value={staff.length}                                      color={C.accent} onClick={() => setFilter("All")}      />
         <StatCard icon="✅" label="Active"           value={staff.filter(s => s.status === "Active").length}   color={C.green}  onClick={() => setFilter("Active")}   />
-        <StatCard icon="🏖" label="On Leave"         value={staff.filter(s => s.status === "On Leave").length} color={C.gold}   onClick={() => setFilter("On Leave")} />
-        <StatCard icon="💰" label="Payroll (Annual)" value={fmt$(totalPayroll)}                                color={C.purple} onClick={() => setFilter("All")}      />
       </div>
 
       {/* Active filter chip */}
@@ -2146,11 +2141,10 @@ function HR({ staff, setStaff }) {
                     <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{s.role}</div>
                   </div>
                 </div>
-                <Badge label={s.status} color={s.status === "Active" ? C.green : s.status === "On Leave" ? C.gold : C.muted} />
+                <Badge label={s.status} color={s.status === "Active" ? C.green : C.muted} />
               </div>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <Badge label={s.dept} color={col} />
-                {s.salary > 0 && <Badge label={fmt$(s.salary) + "/yr"} color={C.purple} />}
               </div>
               <div style={{ fontSize: 13, color: C.muted }}>{s.email}</div>
               {s.startDate && <div style={{ fontSize: 13, color: C.muted }}>Since {s.startDate}</div>}
@@ -2184,12 +2178,11 @@ function HR({ staff, setStaff }) {
               <Inp label="Email" type="email" value={addForm.email || ""} onChange={e => setAddForm(f => ({ ...f, email: e.target.value }))} />
               <Inp label="Phone"              value={addForm.phone || ""} onChange={e => setAddForm(f => ({ ...f, phone: e.target.value }))} />
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <Sel label="Status" value={addForm.status || "Active"} onChange={e => setAddForm(f => ({ ...f, status: e.target.value }))}>
-                <option>Active</option><option>On Leave</option><option>Inactive</option>
+                <option>Active</option><option>Inactive</option>
               </Sel>
               <Inp label="Start Date" type="date"   value={addForm.startDate || ""} onChange={e => setAddForm(f => ({ ...f, startDate: e.target.value }))} />
-              <Inp label="Salary ($)" type="number" value={addForm.salary    || ""} onChange={e => setAddForm(f => ({ ...f, salary:    e.target.value }))} />
             </div>
             <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
               <Btn outline color={C.muted} onClick={() => setAddModal(false)}>Cancel</Btn>
