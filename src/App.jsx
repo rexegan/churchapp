@@ -2303,8 +2303,8 @@ function Marketing({ campaigns, setCampaigns }) {
 const TABS = [
   { id:"dashboard", label:"Dashboard",      icon:"🏠" },
   { id:"admin",     label:"Administrative", icon:"📅" },
-  { id:"lifegroups", label:"Life Groups",       icon:"👥" },
   { id:"family",     label:"Family Ministries", icon:"⛪" },
+  { id:"lifegroups", label:"Life Groups",       icon:"👥" },
   { id:"finance",   label:"Finance",        icon:"💰" },
   { id:"hr",        label:"HR",             icon:"👔" },
   { id:"pr",        label:"PR & Comms",     icon:"📢" },
