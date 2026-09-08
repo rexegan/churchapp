@@ -287,7 +287,7 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
 }
 
 // ── Administrative ────────────────────────────────────────────────────────────
-function Administrative({ events, setEvents }) {
+function Administrative({ events, setEvents, title = "Administrative", subtitle = "Church calendar, events & coordination" }) {
   const [modal, setModal] = useState(false);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
@@ -310,7 +310,7 @@ function Administrative({ events, setEvents }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div><h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>Administrative</h1><p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>Church calendar, events & coordination</p></div>
+        <div><h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>{title}</h1><p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>{subtitle}</p></div>
         <Btn onClick={() => { setForm(emptyForm); setModal(true); }}>+ Add Event</Btn>
       </div>
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
@@ -2399,6 +2399,7 @@ const TABS = [
   { id:"family",     label:"Family Ministries", icon:"⛪" },
   { id:"lifegroups", label:"Life Groups",       icon:"👥" },
   { id:"deacons",    label:"Deacons",           icon:"🤝" },
+  { id:"events",     label:"Events",            icon:"📅" },
   { id:"finance",   label:"Finance",        icon:"💰" },
   { id:"pr",        label:"PR & Comms",     icon:"📢" },
   { id:"marketing", label:"Marketing",      icon:"📣" },
@@ -2442,6 +2443,7 @@ export default function ChurchOS() {
         {tab === "lifegroups" && <LifeGroupsPage lifeGroups={lifeGroups} prayerRequests={prayerRequests} setPrayerRequests={setPrayerRequests} />}
         {tab === "family"     && <FamilyMinistries />}
         {tab === "deacons"    && <Deacons />}
+        {tab === "events"     && <Administrative events={events} setEvents={setEvents} title="Events" subtitle="All church events — schedule, coordinate & track attendance" />}
         {tab === "finance"   && <Finance transactions={transactions} setTransactions={setTransactions} />}
         {tab === "hr"        && <HR staff={staff} setStaff={setStaff} />}
         {tab === "pr"        && <PRComms announcements={announcements} setAnnouncements={setAnnouncements} />}
