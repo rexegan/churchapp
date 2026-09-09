@@ -39,6 +39,15 @@ const C = {
 const fmt$ = n => "$" + Number(n).toLocaleString();
 const fmtPct = (a, b) => b ? Math.round((a / b) * 100) + "%" : "0%";
 const today = () => new Date().toISOString().slice(0, 10);
+// All dates display as MM/DD/YYYY, always.
+const fmtDate = (d) => {
+  if (!d) return "";
+  const m = String(d).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (m) return `${m[2]}/${m[3]}/${m[1]}`;
+  const p = new Date(d);
+  if (isNaN(p)) return d;
+  return String(p.getMonth() + 1).padStart(2, "0") + "/" + String(p.getDate()).padStart(2, "0") + "/" + p.getFullYear();
+};
 
 function Badge({ label, color = C.accent }) {
   return (
@@ -212,7 +221,7 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
                   <div style={{ fontSize: 13, color: C.muted }}>{e.location}</div>
                 </div>
                 <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: 12, color: C.accent, fontWeight: 700 }}>{e.date}</div>
+                  <div style={{ fontSize: 12, color: C.accent, fontWeight: 700 }}>{fmtDate(e.date)}</div>
                   <div style={{ fontSize: 13, color: C.muted }}>{e.time}</div>
                 </div>
               </div>
@@ -326,7 +335,7 @@ function Administrative({ events, setEvents, title = "Administrative", subtitle 
           <div key={e.id} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: 20, display: "flex", flexDirection: "column", gap: 12 }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <Badge label={e.type} color={typeColor[e.type] || C.accent} />
-              <span style={{ fontSize: 13, color: C.muted }}>{e.date}</span>
+              <span style={{ fontSize: 13, color: C.muted }}>{fmtDate(e.date)}</span>
             </div>
             <div style={{ fontWeight: 600, fontSize: 15, color: C.text }}>{e.title}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
@@ -475,7 +484,7 @@ function MemberDetailPanel({ member, onClose, prayerRequests, meetings }) {
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {meetings.map((m, i) => !att.record[i] ? (
                   <div key={m.id} style={{ display: "flex", justifyContent: "space-between", padding: "8px 14px", background: C.card, borderRadius: 9, border: `1px solid ${C.border}` }}>
-                    <span style={{ fontSize: 13, color: C.dim }}>{m.date}</span>
+                    <span style={{ fontSize: 13, color: C.dim }}>{fmtDate(m.date)}</span>
                     <Badge label="Absent" color={C.red} />
                   </div>
                 ) : null)}
@@ -497,7 +506,7 @@ function MemberDetailPanel({ member, onClose, prayerRequests, meetings }) {
                       <Badge label={p.status} color={statusColor[p.status] || C.muted} />
                     </div>
                     <div style={{ fontSize: 13, color: C.dim, lineHeight: 1.6 }}>{p.request}</div>
-                    <div style={{ fontSize: 13, color: C.muted, marginTop: 6 }}>{p.date}</div>
+                    <div style={{ fontSize: 13, color: C.muted, marginTop: 6 }}>{fmtDate(p.date)}</div>
                     {p.followUpNote && (
                       <div style={{ marginTop: 8, padding: "8px 12px", background: C.green + "11", borderRadius: 8, fontSize: 12, color: C.dim }}>
                         <span style={{ color: C.green, fontWeight: 700 }}>Update: </span>{p.followUpNote}
@@ -521,7 +530,7 @@ function MeetingDetailModal({ meeting, groupMembers, onClose }) {
   const absent  = groupMembers.filter(m => !presentIds.has(m.id));
 
   return (
-    <Modal title={`Meeting: ${meeting.date}`} onClose={onClose} width={600}>
+    <Modal title={`Meeting: ${fmtDate(meeting.date)}`} onClose={onClose} width={600}>
       <div style={{ display: "flex", gap: 14, marginBottom: 20 }}>
         {[
           ["Present", present.length, C.green],
@@ -607,7 +616,7 @@ function LGQuickView({ group, prayerRequests, meetings, onNavigate }) {
               const pct = Math.round(m.count / group.members.length * 100);
               return (
                 <div key={m.id} style={{ display: "flex", justifyContent: "space-between", padding: "8px 12px", background: C.bg, borderRadius: 9, border: `1px solid ${C.border}` }}>
-                  <span style={{ fontSize: 14, color: C.text }}>{m.date}</span>
+                  <span style={{ fontSize: 14, color: C.text }}>{fmtDate(m.date)}</span>
                   <span style={{ fontSize: 13, fontWeight: 800, color: pct >= 75 ? C.green : pct >= 55 ? C.gold : C.red }}>{m.count}/{group.members.length} · {pct}%</span>
                 </div>
               );
@@ -663,7 +672,6 @@ function LGDeepDiveTab({ group }) {
     return la.localeCompare(lb) || a.name.localeCompare(b.name);
   };
   const lastFirst = n => { const p = n.trim().split(" "); return p.slice(-1)[0] + ", " + p.slice(0, -1).join(" "); };
-  const fmtLong = d => { const p = new Date(d + "T12:00:00"); return isNaN(p) ? d : p.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }); };
 
   // Today's marks if any exist; otherwise fall back to the most recent recorded meeting
   const latestMeeting = LG_MEETINGS[LG_MEETINGS.length - 1];
@@ -703,7 +711,7 @@ function LGDeepDiveTab({ group }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
-        <div style={{ fontSize: 15.5, fontWeight: 700, color: C.text }}>Deep Dive — {fmtLong(sourceDate)}</div>
+        <div style={{ fontSize: 15.5, fontWeight: 700, color: C.text }}>Deep Dive — {fmtDate(sourceDate)}</div>
         <div style={{ fontSize: 12.5, color: C.muted }}>
           {usingToday ? "Live from LG Today" : "Most recent recorded meeting"} · {here.length} of {group.members.length} present
         </div>
@@ -749,7 +757,7 @@ function LGTodayTab({ group }) {
             <Btn small color={C.green} onClick={() => setSaved(true)}>{saved ? "✓ Saved" : "Save Session"}</Btn>
           </div>
         </div>
-        {saved && <div style={{ marginTop: 10, fontSize: 13, color: C.green }}>✓ Attendance saved for {session.date}</div>}
+        {saved && <div style={{ marginTop: 10, fontSize: 13, color: C.green }}>✓ Attendance saved for {fmtDate(session.date)}</div>}
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 8 }}>
         {group.members.map(m => {
@@ -833,7 +841,7 @@ function LGJoinedUsTab({ group }) {
                 {v.notes && <div style={{ fontSize: 12, color: C.dim, marginTop: 6, fontStyle: "italic" }}>{v.notes}</div>}
               </div>
               <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
-                <Badge label={v.date} color={C.accent2} />
+                <Badge label={fmtDate(v.date)} color={C.accent2} />
                 <Btn small danger onClick={() => setVisitors(vs => vs.filter(x => x.id !== v.id))}>✕</Btn>
               </div>
             </div>
@@ -899,7 +907,7 @@ function LGPrayerTab({ group, prayerRequests, setPrayerRequests }) {
                   <Badge label={p.category} color={C.accent} />
                   <Badge label={p.status} color={statusColor[p.status]||C.muted} />
                 </div>
-                <span style={{ fontSize: 13, color: C.muted, flexShrink: 0 }}>{p.date}</span>
+                <span style={{ fontSize: 13, color: C.muted, flexShrink: 0 }}>{fmtDate(p.date)}</span>
               </div>
               <p style={{ fontSize: 13, color: C.dim, lineHeight: 1.6, margin: 0 }}>{p.request}</p>
               {p.followUpNote && (
@@ -1067,7 +1075,7 @@ function LGEventsTab({ group }) {
                       <span style={{ fontSize: 18 }}>{getType(ev.type).icon}</span>
                       <span style={{ fontWeight: 600, color: C.text, fontSize: 15 }}>{ev.title || "(Untitled)"}</span>
                     </div>
-                    <div style={{ fontSize: 13, color: C.muted }}>{ev.date}{ev.time ? " · "+ev.time : ""}{ev.location ? " · "+ev.location : ""}</div>
+                    <div style={{ fontSize: 13, color: C.muted }}>{fmtDate(ev.date)}{ev.time ? " · "+ev.time : ""}{ev.location ? " · "+ev.location : ""}</div>
                     {ev.rsvpList?.length > 0 && <div style={{ fontSize: 13, color: C.accent, marginTop: 2 }}>{ev.rsvpList.length} RSVP{ev.rsvpList.length !== 1 ? "s" : ""}</div>}
                   </div>
                   <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -1454,7 +1462,7 @@ function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
                     <div key={m.id} onClick={() => setMeetingDetail(m)}
                       style={{ padding: "14px 18px", background: C.card, borderRadius: 12, border: `1px solid ${C.border}`, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <div>
-                        <div style={{ fontWeight: 700, color: C.text, fontSize: 15 }}>{m.date}</div>
+                        <div style={{ fontWeight: 700, color: C.text, fontSize: 15 }}>{fmtDate(m.date)}</div>
                         <div style={{ fontSize: 13, color: C.muted, marginTop: 3 }}>{m.count} of {group.members.length} present · {group.members.length - m.count} absent</div>
                       </div>
                       <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
@@ -1897,7 +1905,7 @@ function Finance({ transactions, setTransactions }) {
             <div key={t.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 16px", background: C.bg, borderRadius: 10, border: `1px solid ${C.border}` }}>
               <div>
                 <div style={{ fontWeight: 600, color: C.text, fontSize: 15 }}>{t.description}</div>
-                <div style={{ fontSize: 13, color: C.muted }}>{t.category} · {t.account} · {t.date}</div>
+                <div style={{ fontSize: 13, color: C.muted }}>{t.category} · {t.account} · {fmtDate(t.date)}</div>
               </div>
               <span style={{ fontWeight: 800, fontSize: 16, color: t.type === "Income" ? C.green : C.red }}>
                 {t.type === "Income" ? "+" : "-"}{fmt$(t.amount)}
@@ -1997,7 +2005,7 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
               <Row label="Department"  value={member.dept} />
               <Row label="Role / Title" value={member.role} />
               <Row label="Status"      value={member.status} />
-              <Row label="Start Date"  value={member.startDate} />
+              <Row label="Start Date"  value={fmtDate(member.startDate)} />
               <Row label="Employee ID" value={member.employeeId} />
 
               {/* Notes */}
@@ -2147,7 +2155,7 @@ function HR({ staff, setStaff }) {
                 <Badge label={s.dept} color={col} />
               </div>
               <div style={{ fontSize: 13, color: C.muted }}>{s.email}</div>
-              {s.startDate && <div style={{ fontSize: 13, color: C.muted }}>Since {s.startDate}</div>}
+              {s.startDate && <div style={{ fontSize: 13, color: C.muted }}>Since {fmtDate(s.startDate)}</div>}
               <div style={{ fontSize: 12, color: C.accent, fontWeight: 700, marginTop: 2 }}>Open HR File →</div>
             </div>
           );
@@ -2233,7 +2241,7 @@ function PRComms({ announcements, setAnnouncements }) {
                 <Badge label={a.published ? "Published" : "Draft"} color={a.published ? C.green : C.gold} />
                 {a.channels.map(ch => <Badge key={ch} label={ch} color={C.muted} />)}
               </div>
-              <span style={{ fontSize: 13, color: C.muted, flexShrink: 0 }}>{a.date}</span>
+              <span style={{ fontSize: 13, color: C.muted, flexShrink: 0 }}>{fmtDate(a.date)}</span>
             </div>
             <h3 style={{ fontWeight: 600, fontSize: 15, color: C.text, marginBottom: 8 }}>{a.title}</h3>
             <p style={{ fontSize: 14, color: C.dim, lineHeight: 1.6 }}>{a.body}</p>
@@ -2327,8 +2335,8 @@ function Marketing({ campaigns, setCampaigns }) {
                 <p style={{ fontSize: 13.5, color: C.muted, marginTop: 4 }}>{c.description}</p>
               </div>
               <div style={{ textAlign: "right", minWidth: 90 }}>
-                <div style={{ fontSize: 13, color: C.muted }}>{c.startDate}</div>
-                {c.endDate !== c.startDate && <div style={{ fontSize: 13, color: C.muted }}>{c.endDate}</div>}
+                <div style={{ fontSize: 13, color: C.muted }}>{fmtDate(c.startDate)}</div>
+                {c.endDate !== c.startDate && <div style={{ fontSize: 13, color: C.muted }}>{fmtDate(c.endDate)}</div>}
               </div>
             </div>
             {c.reach > 0 && (
