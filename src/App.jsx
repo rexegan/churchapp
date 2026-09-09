@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import {
   SEED_STAFF, SEED_MINISTRIES, SEED_LIFE_GROUPS,
   SEED_PRAYER, SEED_EVENTS, SEED_TRANSACTIONS,
@@ -48,6 +48,20 @@ const fmtDate = (d) => {
   if (isNaN(p)) return d;
   return String(p.getMonth() + 1).padStart(2, "0") + "/" + String(p.getDate()).padStart(2, "0") + "/" + p.getFullYear();
 };
+
+// ── Universal person card: click any name, anywhere ──────────────────────────
+const PersonCtx = createContext(null);
+
+function PName({ name, style = {}, children }) {
+  const openPerson = useContext(PersonCtx);
+  if (!name || !openPerson) return <span style={style}>{children || name}</span>;
+  return (
+    <span className="pname" onClick={e => { e.stopPropagation(); openPerson(name); }}
+      style={{ cursor: "pointer", ...style }} title={"View " + name}>
+      {children || name}
+    </span>
+  );
+}
 
 function Badge({ label, color = C.accent }) {
   return (
@@ -240,7 +254,7 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
               <div key={p.id} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "10px 14px", background: C.bg, borderRadius: 10, border: `1px solid ${C.border}` }}>
                 <span style={{ flexShrink: 0, color: C.purple, display: "flex", paddingTop: 2 }}><Icon glyph="🙏" size={17} /></span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 600, color: C.text, fontSize: 14, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.member || p.name || "Member"}</div>
+                  <div style={{ fontWeight: 600, color: C.text, fontSize: 14, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><PName name={p.requester || p.member || p.name || "Member"} /></div>
                   <div style={{ fontSize: 13, color: C.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.request || p.title || ""}</div>
                 </div>
                 <span style={{ fontSize: 11, color: p.status === "Answered" ? C.green : C.accent, background: (p.status === "Answered" ? C.green : C.accent) + "18", padding: "2px 8px", borderRadius: 20, fontWeight: 700, flexShrink: 0 }}>{p.status}</span>
@@ -263,7 +277,7 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
                 <span style={{ fontWeight: 600, color: C.text, fontSize: 15 }}>{m.name}</span>
                 <Badge label={m.status} color={C.green} />
               </div>
-              <div style={{ fontSize: 13.5, color: C.muted }}>{m.leader}</div>
+              <div style={{ fontSize: 13.5, color: C.muted }}><PName name={m.leader} /></div>
               <div style={{ display: "flex", gap: 14, marginTop: 10 }}>
                 <div style={{ textAlign: "center" }}>
                   <div style={{ fontSize: 18, fontWeight: 800, color: C.accent }}>{m.members}</div>
@@ -340,7 +354,7 @@ function Administrative({ events, setEvents, title = "Administrative", subtitle 
             <div style={{ fontWeight: 600, fontSize: 15, color: C.text }}>{e.title}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
               <div style={{ fontSize: 13, color: C.dim }}>{e.time} · {e.location}</div>
-              <div style={{ fontSize: 13, color: C.dim }}>Lead: {e.lead}</div>
+              <div style={{ fontSize: 13, color: C.dim }}>Lead: <PName name={e.lead} /></div>
               {e.attendees > 0 && <div style={{ fontSize: 13, color: C.dim }}>{e.attendees} expected</div>}
               {e.notes && <div style={{ fontSize: 13, color: C.muted, fontStyle: "italic" }}>{e.notes}</div>}
             </div>
@@ -633,7 +647,7 @@ function LGQuickView({ group, prayerRequests, meetings, onNavigate }) {
               .slice(0, 5)
               .map(({ m, att }) => (
                 <div key={m.id} style={{ display: "flex", justifyContent: "space-between", padding: "8px 12px", background: C.bg, borderRadius: 9, border: `1px solid ${att.consecAbsent >= 4 ? C.red+"55" : C.gold+"44"}` }}>
-                  <span style={{ fontSize: 14, color: C.text }}>{m.name}</span>
+                  <span style={{ fontSize: 14, color: C.text }}><PName name={m.name} /></span>
                   <span style={{ fontSize: 12, fontWeight: 800, color: att.consecAbsent >= 4 ? C.red : C.gold }}>{att.consecAbsent}wk out</span>
                 </div>
               ))}
@@ -648,7 +662,7 @@ function LGQuickView({ group, prayerRequests, meetings, onNavigate }) {
             {groupPrayers.slice(0, 3).map(p => (
               <div key={p.id} style={{ padding: "10px 14px", background: C.bg, borderRadius: 10, border: `1px solid ${C.border}` }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ fontWeight: 600, color: C.text, fontSize: 14 }}>{p.requester}</span>
+                  <span style={{ fontWeight: 600, color: C.text, fontSize: 14 }}><PName name={p.requester} /></span>
                   <Badge label={p.category} color={C.purple} />
                 </div>
                 <div style={{ fontSize: 13, color: C.muted, lineHeight: 1.5 }}>{p.request.substring(0, 120)}{p.request.length > 120 ? "..." : ""}</div>
@@ -691,7 +705,7 @@ function LGDeepDiveTab({ group }) {
   const NameRow = ({ m, check }) => (
     <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 8px", background: C.bg, borderRadius: 6, border: `1px solid ${C.border}` }}>
       {check && <span style={{ fontSize: 11, fontWeight: 700, color: C.green, flexShrink: 0 }}>✓</span>}
-      <span style={{ fontSize: 12.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{lastFirst(m.name)}</span>
+      <span style={{ fontSize: 12.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}><PName name={m.name}>{lastFirst(m.name)}</PName></span>
     </div>
   );
 
@@ -835,7 +849,7 @@ function LGJoinedUsTab({ group }) {
           {visitors.map(v => (
             <div key={v.id} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
               <div>
-                <div style={{ fontWeight: 700, color: C.text, fontSize: 15 }}>{v.name}</div>
+                <div style={{ fontWeight: 700, color: C.text, fontSize: 15 }}><PName name={v.name} /></div>
                 {v.email && <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{v.email}</div>}
                 {v.phone && <div style={{ fontSize: 13, color: C.muted }}>{v.phone}</div>}
                 {v.notes && <div style={{ fontSize: 12, color: C.dim, marginTop: 6, fontStyle: "italic" }}>{v.notes}</div>}
@@ -903,7 +917,7 @@ function LGPrayerTab({ group, prayerRequests, setPrayerRequests }) {
             <div key={p.id} style={{ background: C.card, border: `1px solid ${p.status==="Answered"?C.green+"44":C.border}`, borderRadius: 12, padding: "16px 18px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-                  <span style={{ fontWeight: 700, color: C.text }}>{p.private ? "Anonymous" : p.requester}</span>
+                  <span style={{ fontWeight: 700, color: C.text }}>{p.private ? "Anonymous" : <PName name={p.requester} />}</span>
                   <Badge label={p.category} color={C.accent} />
                   <Badge label={p.status} color={statusColor[p.status]||C.muted} />
                 </div>
@@ -1678,7 +1692,7 @@ function AreaBreakout({ area }) {
           <div style={{ flex: 1, minWidth: 200 }}>
             <div style={{ fontSize: 19, fontWeight: 700, color: C.text }}>{area.name}</div>
             <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{area.description}</div>
-            <div style={{ fontSize: 12.5, color: C.dim, marginTop: 4 }}>{area.meets} · Led by {area.leader}</div>
+            <div style={{ fontSize: 12.5, color: C.dim, marginTop: 4 }}>{area.meets} · Led by <PName name={area.leader} /></div>
           </div>
           <div style={{ display: "flex", gap: 18 }}>
             {[["Members", area.members], ["Volunteers", area.volunteers]].map(([l, v]) => (
@@ -1696,7 +1710,7 @@ function AreaBreakout({ area }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {area.people.map(p => (
               <div key={p.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, padding: "8px 12px", background: C.bg, borderRadius: 8, border: `1px solid ${C.border}` }}>
-                <span style={{ fontSize: 13.5, fontWeight: 600, color: C.text }}>{p.name}</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: C.text }}><PName name={p.name} /></span>
                 <span style={{ fontSize: 12, color: C.muted, textAlign: "right" }}>{p.role}</span>
               </div>
             ))}
@@ -1802,7 +1816,7 @@ function Deacons() {
             onMouseEnter={e => e.currentTarget.style.borderColor = C.accent}
             onMouseLeave={e => e.currentTarget.style.borderColor = d.onCall ? C.gold + "66" : C.border}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span style={{ fontWeight: 700, fontSize: 14.5, color: C.text }}>{d.name}</span>
+              <span style={{ fontWeight: 700, fontSize: 14.5, color: C.text }}><PName name={d.name} /></span>
               <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
                 {d.onCall && <Badge label="On Call" color={C.gold} />}
                 {d.role === "Chairman" && <Badge label="Chairman" color={C.accent} />}
@@ -2145,7 +2159,7 @@ function HR({ staff, setStaff }) {
                     {s.name.split(" ").map(n => n[0]).slice(0, 2).join("")}
                   </div>
                   <div>
-                    <div style={{ fontWeight: 600, color: C.text, fontSize: 15 }}>{s.name}</div>
+                    <div style={{ fontWeight: 600, color: C.text, fontSize: 15 }}><PName name={s.name} /></div>
                     <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{s.role}</div>
                   </div>
                 </div>
@@ -2392,6 +2406,122 @@ function Marketing({ campaigns, setCampaigns }) {
   );
 }
 
+// ── Person card modal ─────────────────────────────────────────────────────────
+function PersonCardModal({ name, lifeGroups, staff, deacons, extras, onSaveExtras, onClose }) {
+  const key = name.toLowerCase();
+  const extra = extras[key] || {};
+  const [editing, setEditing] = useState(false);
+  const [form, setForm] = useState(extra);
+
+  // Merge everything known about this person from every corner of the app
+  const norm = s => (s || "").toLowerCase();
+  let lgMember = null, lgGroup = null;
+  for (const g of lifeGroups) {
+    const hit = g.members.find(m => norm(m.name) === key);
+    if (hit) { lgMember = hit; lgGroup = g; break; }
+  }
+  const staffHit  = staff.find(s => norm(s.name) === key || norm(s.name).includes(key));
+  const deaconHit = deacons.find(d => norm(d.name) === key);
+  let ministryRole = null, ministryArea = null;
+  for (const a of MINISTRY_AREAS) {
+    const hit = a.people.find(p => norm(p.name) === key);
+    if (hit) { ministryRole = hit.role; ministryArea = a.name; break; }
+    if (norm(a.leader) === key) { ministryRole = "Leader"; ministryArea = a.name; }
+  }
+  const att = lgMember ? LG_ATTENDANCE[String(lgMember.id)] : null;
+
+  const cell    = extra.cell    || lgMember?.phone || staffHit?.phone || deaconHit?.phone || "";
+  const email   = extra.email   || lgMember?.email || staffHit?.email || deaconHit?.email || "";
+  const initials = name.split(" ").filter(w => w[0] && w[0] === w[0].toUpperCase()).map(w => w[0]).slice(0, 2).join("") || name.slice(0, 2).toUpperCase();
+
+  function save() { onSaveExtras(key, form); setEditing(false); }
+
+  const Row = ({ label, value }) => (
+    <div style={{ display: "grid", gridTemplateColumns: "130px 1fr", gap: 8, padding: "7px 0", borderBottom: `1px solid ${C.border}` }}>
+      <span style={{ fontSize: 11.5, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em", paddingTop: 2 }}>{label}</span>
+      <span style={{ fontSize: 14, color: value ? C.text : C.muted, fontStyle: value ? "normal" : "italic" }}>{value || "—"}</span>
+    </div>
+  );
+  const Sect = ({ t }) => <div style={{ fontSize: 12, fontWeight: 700, color: C.text, textTransform: "uppercase", letterSpacing: "0.09em", marginTop: 16, marginBottom: 4 }}>{t}</div>;
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "#000b", zIndex: 1200, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "24px 16px", overflowY: "auto" }}
+      onClick={e => e.target === e.currentTarget && onClose()}>
+      <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, width: "100%", maxWidth: 560, boxShadow: "0 20px 60px rgba(0,0,0,0.20)" }}>
+        <div style={{ background: C.accent + "10", borderBottom: `1px solid ${C.accent}33`, borderRadius: "12px 12px 0 0", padding: "18px 22px", display: "flex", gap: 14, alignItems: "center" }}>
+          <div style={{ width: 48, height: 48, borderRadius: "50%", background: C.accent + "18", border: `2px solid ${C.accent}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 700, color: C.accent, flexShrink: 0 }}>{initials}</div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 18, fontWeight: 700, color: C.text }}>{name}</div>
+            <div style={{ display: "flex", gap: 6, marginTop: 6, flexWrap: "wrap" }}>
+              {staffHit  && <Badge label={staffHit.role} color={C.accent} />}
+              {deaconHit && <Badge label={deaconHit.role === "Chairman" ? "Deacon Chairman" : "Deacon"} color={C.gold} />}
+              {lgGroup   && <Badge label={lgGroup.name} color={C.green} />}
+              {ministryRole && <Badge label={ministryArea + " · " + ministryRole} color={C.purple} />}
+              {!staffHit && !deaconHit && !lgGroup && !ministryRole && <Badge label="Guest / Friend" color={C.muted} />}
+            </div>
+          </div>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: C.muted, fontSize: 20, cursor: "pointer", alignSelf: "flex-start" }}>×</button>
+        </div>
+
+        <div style={{ padding: "16px 22px 22px" }}>
+          {!editing ? (
+            <>
+              <Sect t="Contact" />
+              <Row label="Cell"  value={cell} />
+              <Row label="Email" value={email} />
+              <Row label="Address" value={extra.address} />
+
+              <Sect t="Personal" />
+              <Row label="Birthday" value={extra.birthday ? fmtDate(extra.birthday) : ""} />
+              <Row label="Spouse"   value={extra.spouse} />
+              <Row label="Children" value={extra.children} />
+              <Row label="Anniversary" value={extra.anniversary ? fmtDate(extra.anniversary) : ""} />
+
+              <Sect t="Church" />
+              <Row label="Joined Church" value={extra.joinedChurch ? fmtDate(extra.joinedChurch) : (staffHit ? "Staff since " + fmtDate(staffHit.startDate) : "")} />
+              {lgMember && <Row label="Joined LifeGroup" value={fmtDate(lgMember.joined)} />}
+              {att && <Row label="LG Attendance" value={att.pct + "% · " + (att.consecAbsent > 0 ? att.consecAbsent + " wk absent streak" : "current")} />}
+              {lgMember?.lastContact && <Row label="Last Contact" value={fmtDate(lgMember.lastContact)} />}
+              {deaconHit && <Row label="Deacon Care Area" value={deaconHit.area + " · " + deaconHit.families + " families"} />}
+
+              {extra.notes && (<><Sect t="Notes" /><div style={{ fontSize: 13.5, color: C.text, background: C.bg, borderRadius: 8, padding: "10px 14px", lineHeight: 1.6 }}>{extra.notes}</div></>)}
+
+              <div style={{ display: "flex", gap: 8, marginTop: 18, justifyContent: "flex-end", flexWrap: "wrap" }}>
+                {cell  && <a href={"sms:" + cell} style={{ background: C.bg, border: `1px solid ${C.border}`, color: C.text, borderRadius: 8, padding: "7px 14px", textDecoration: "none", fontSize: 13, fontWeight: 600 }}>💬 Text</a>}
+                {cell  && <a href={"tel:" + cell} style={{ background: C.bg, border: `1px solid ${C.border}`, color: C.text, borderRadius: 8, padding: "7px 14px", textDecoration: "none", fontSize: 13, fontWeight: 600 }}>📞 Call</a>}
+                {email && <a href={"mailto:" + email} style={{ background: C.bg, border: `1px solid ${C.border}`, color: C.text, borderRadius: 8, padding: "7px 14px", textDecoration: "none", fontSize: 13, fontWeight: 600 }}>✉ Email</a>}
+                <Btn small onClick={() => { setForm(extra); setEditing(true); }}>Edit Details</Btn>
+              </div>
+            </>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <Inp label="Cell"  value={form.cell  || cell}  onChange={e => setForm(f => ({ ...f, cell:  e.target.value }))} />
+                <Inp label="Email" value={form.email || email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
+              </div>
+              <Inp label="Address" value={form.address || ""} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} />
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <Inp label="Birthday"    type="date" value={form.birthday    || ""} onChange={e => setForm(f => ({ ...f, birthday:    e.target.value }))} />
+                <Inp label="Anniversary" type="date" value={form.anniversary || ""} onChange={e => setForm(f => ({ ...f, anniversary: e.target.value }))} />
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <Inp label="Spouse"   value={form.spouse   || ""} onChange={e => setForm(f => ({ ...f, spouse:   e.target.value }))} />
+                <Inp label="Children" value={form.children || ""} onChange={e => setForm(f => ({ ...f, children: e.target.value }))} />
+              </div>
+              <Inp label="Joined Church" type="date" value={form.joinedChurch || ""} onChange={e => setForm(f => ({ ...f, joinedChurch: e.target.value }))} />
+              <Txt label="Notes" value={form.notes || ""} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} placeholder="What makes them who they are — story, gifts, needs, how they came to the church…" />
+              <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+                <Btn outline color={C.muted} small onClick={() => setEditing(false)}>Cancel</Btn>
+                <Btn small onClick={save}>Save</Btn>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Sidebar nav ───────────────────────────────────────────────────────────────
 const TABS = [
   { id:"dashboard", label:"Dashboard",      icon:"🏠" },
@@ -2419,9 +2549,18 @@ export default function ChurchOS() {
   const [prayerRequests,setPrayerRequests]= useStored("cos2-prayer",        SEED_PRAYER);
   const [events,        setEvents]        = useStored("cos2-events",        SEED_EVENTS);
   const [open,          setOpen]          = useState(true);
+  const [personName,    setPersonName]    = useState(null);
+  const [peopleExtras,  setPeopleExtras]  = useStored("cos2-people", {});
+  const [deaconsDir]                      = useStored("cos2-deacons", SEED_DEACONS);
 
   return (
+    <PersonCtx.Provider value={setPersonName}>
     <div style={{ display: "flex", minHeight: "100vh", background: C.bg, color: C.text, fontFamily: "'Inter','Segoe UI',system-ui,sans-serif" }}>
+      {personName && (
+        <PersonCardModal name={personName} lifeGroups={lifeGroups} staff={staff} deacons={deaconsDir}
+          extras={peopleExtras} onSaveExtras={(k, v) => setPeopleExtras(p => ({ ...p, [k]: v }))}
+          onClose={() => setPersonName(null)} />
+      )}
       <aside style={{ width: open ? 240 : 64, background: C.surface, borderRight: `1px solid ${C.border}`, display: "flex", flexDirection: "column", transition: "width .22s", flexShrink: 0, position: "sticky", top: 0, height: "100vh", overflowY: "auto", overflowX: "hidden" }}>
         <div style={{ padding: "16px 14px", borderBottom: `1px solid ${C.border}`, minHeight: 58, display: "flex", alignItems: "center", gap: 10 }}>
           <svg width="30" height="30" viewBox="0 0 32 32" style={{ flexShrink: 0 }}>
@@ -2468,7 +2607,9 @@ export default function ChurchOS() {
         ::-webkit-scrollbar-track { background: ${C.bg}; }
         ::-webkit-scrollbar-thumb { background: ${C.border}; border-radius: 99px; }
         button:hover { opacity: .88; }
+        .pname:hover { text-decoration: underline; text-underline-offset: 3px; }
       `}</style>
     </div>
+    </PersonCtx.Provider>
   );
 }
