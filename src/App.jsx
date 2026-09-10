@@ -217,7 +217,7 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12 }}>
           <StatCard icon="👥" label="LifeGroup Members"  value={lgMembers}                                               color={C.accent}  onClick={() => setTab("lifegroups")} />
           <StatCard icon="⛪" label="Active Ministries"  value={ministries.filter(m => m.status === "Active").length}   color={C.green}   onClick={() => setTab("family")} />
-          <StatCard icon="🙏" label="Active Prayer Reqs" value={activePrayers}                                           color={C.purple}  onClick={() => setTab("lifegroups")} />
+          <StatCard icon="🙏" label="Active Prayer Requests" value={activePrayers}                                           color={C.purple}  onClick={() => setTab("lifegroups")} />
           <StatCard icon="👔" label="Active Staff"       value={staff.filter(s => s.status === "Active").length}        color={C.accent2} onClick={() => setTab("hr")} />
         </div>
       </div>
@@ -383,6 +383,7 @@ function Administrative({ events, setEvents, title = "Administrative", subtitle 
             <Inp label="Expected Attendees" type="number" value={form.attendees} onChange={e => setForm(f => ({ ...f, attendees: e.target.value }))} />
             <Txt label="Notes" value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} />
             <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+              {form.id && <Btn danger onClick={() => { setEvents(ev => ev.filter(x => x.id !== form.id)); setModal(false); setForm(emptyForm); }}>Delete Event</Btn>}
               <Btn outline color={C.muted} onClick={() => setModal(false)}>Cancel</Btn>
               <Btn onClick={save}>Save Event</Btn>
             </div>
@@ -2547,7 +2548,7 @@ export default function ChurchOS() {
   const [campaigns,     setCampaigns]     = useStored("cos2-campaigns",     SEED_CAMPAIGNS);
   const [announcements, setAnnouncements] = useStored("cos2-announcements", SEED_ANNOUNCEMENTS);
   const [prayerRequests,setPrayerRequests]= useStored("cos2-prayer",        SEED_PRAYER);
-  const [events,        setEvents]        = useStored("cos2-events",        SEED_EVENTS);
+  const [events,        setEvents]        = useStored("cos2-events-v2",    SEED_EVENTS);
   const [open,          setOpen]          = useState(true);
   const [personName,    setPersonName]    = useState(null);
   const [peopleExtras,  setPeopleExtras]  = useStored("cos2-people", {});

@@ -169,6 +169,15 @@ export const SEED_EVENTS = [
   { id:237, title:"Fall Planning All-Staff Meeting",date:"2026-07-29", time:"9:00 AM",  location:"Fellowship Hall",     type:"Meeting",  lead:"Pastor Russell",  attendees:10,  notes:"Vision for fall semester — new series, Life Group sign-ups" },
   { id:238, title:"Back-to-School Drive Distribution",date:"2026-08-02",time:"9:00 AM", location:"Lobby",              type:"Outreach", lead:"Outreach Team",   attendees:0,   notes:"Volunteer signup open" },
   { id:239, title:"Fall Kickoff Sunday",            date:"2026-09-06", time:"10:00 AM", location:"Main Sanctuary",     type:"Worship",  lead:"All Staff",       attendees:0,   notes:"New fall season launch — new series announcement" },
+
+  // UPCOMING — FALL 2026
+  { id:240, title:"Sunday Worship Service",         date:"2026-09-13", time:"10:00 AM", location:"Main Sanctuary",     type:"Worship",  lead:"Pastor Russell",  attendees:350, notes:"Week 2 of the fall series" },
+  { id:241, title:"Men's Prayer Breakfast",         date:"2026-09-16", time:"6:30 AM",  location:"Fellowship Hall",    type:"Study",    lead:"Michael Brown",   attendees:40,  notes:"Third-Wednesday men's gathering" },
+  { id:242, title:"Student Ministry Fall Retreat",  date:"2026-09-18", time:"5:00 PM",  location:"Camp Copass",        type:"Youth",    lead:"Josh Turner",     attendees:85,  notes:"High school & middle school combined weekend" },
+  { id:243, title:"Deacons Meeting",                date:"2026-09-22", time:"6:30 PM",  location:"Conf. Room A",       type:"Meeting",  lead:"Harold Simmons",  attendees:8,   notes:"Quarterly family-care assignments review" },
+  { id:244, title:"Community Food Drive",           date:"2026-09-26", time:"9:00 AM",  location:"Church Parking Lot", type:"Outreach", lead:"Pastor Russell",  attendees:60,  notes:"Partnering with Joshua food bank" },
+  { id:245, title:"LifeGroup Leaders Huddle",       date:"2026-09-29", time:"6:30 PM",  location:"Conf. Room A",       type:"Meeting",  lead:"Maria Thompson",  attendees:12,  notes:"Fall check-in — follow-up lists & new member assimilation" },
+  { id:246, title:"Fall Family Festival",           date:"2026-10-10", time:"4:00 PM",  location:"Church Grounds",     type:"Outreach", lead:"Sarah Williams",  attendees:400, notes:"Community-wide — games, food trucks, trunk-or-treat" },
 ];
 
 // ── Transactions — 13 weeks of giving (May – July) ────────────────────────────
