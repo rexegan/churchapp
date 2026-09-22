@@ -609,7 +609,7 @@ function LGQuickView({ group, prayerRequests, meetings, onNavigate }) {
           ["📊","Avg Attend.",avgPct+"%",attColor(avgPct),"deep dive"],
           ["🚨","At Risk",atRisk,C.red,"deep dive"],
           ["⭐","Consistent",consistent,C.gold,"deep dive"],
-          ["🙏","Prayers",groupPrayers.length,C.purple,"prayer"],
+          ["🙏","Prayer",groupPrayers.length,C.purple,"prayer"],
           ["📅","Meetings",meetings.length,C.accent2,"meetings"],
         ].map(([icon,label,value,color,dest]) => (
           <div key={label} onClick={() => onNavigate && onNavigate(dest)}
