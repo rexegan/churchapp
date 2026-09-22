@@ -94,6 +94,87 @@ export const SEED_LIFE_GROUPS = [
   { id:63, name:"David Young", phone:"555-2063", email:"david.young@email.com", joined:"2024-01-07", role:"Member", attendance:67, lastContact:"2026-07-13" }
     ]
   },
+  {
+    id:2, name:"Keaton LifeGroup", leader:"Paul & Debbie Keaton", day:"Tuesday", time:"7:00 PM",
+    location:"Keaton Home - Joshua", status:"Active",
+    members:[
+  { id:101, name:"Gary Pemberton", phone:"555-2101", email:"gary.pemberton@email.com", joined:"2025-03-13", role:"Member", attendance:96, lastContact:"2026-07-03" },
+  { id:102, name:"Linda Pemberton", phone:"555-2102", email:"linda.pemberton@email.com", joined:"2024-06-19", role:"Member", attendance:58, lastContact:"2026-09-07" },
+  { id:103, name:"Scott Reyes", phone:"555-2103", email:"scott.reyes@email.com", joined:"2024-02-14", role:"Member", attendance:81, lastContact:"2026-07-08" },
+  { id:104, name:"Maribel Reyes", phone:"555-2104", email:"maribel.reyes@email.com", joined:"2024-09-14", role:"Member", attendance:58, lastContact:"2026-09-04" },
+  { id:105, name:"Doug Hastings", phone:"555-2105", email:"doug.hastings@email.com", joined:"2024-11-21", role:"Member", attendance:92, lastContact:"2026-07-19" },
+  { id:106, name:"Carla Hastings", phone:"555-2106", email:"carla.hastings@email.com", joined:"2025-01-08", role:"Member", attendance:57, lastContact:"2026-09-05" },
+  { id:107, name:"Evan Pool", phone:"555-2107", email:"evan.pool@email.com", joined:"2025-07-05", role:"Member", attendance:89, lastContact:"2026-07-19" },
+  { id:108, name:"Tricia Pool", phone:"555-2108", email:"tricia.pool@email.com", joined:"2025-09-27", role:"Member", attendance:66, lastContact:"2026-07-19" },
+  { id:109, name:"Neal Cummings", phone:"555-2109", email:"neal.cummings@email.com", joined:"2024-06-04", role:"Member", attendance:90, lastContact:"2026-09-03" },
+  { id:110, name:"Rhonda Cummings", phone:"555-2110", email:"rhonda.cummings@email.com", joined:"2024-10-07", role:"Member", attendance:86, lastContact:"2026-09-18" },
+  { id:111, name:"Blake Ferris", phone:"555-2111", email:"blake.ferris@email.com", joined:"2025-06-15", role:"Member", attendance:92, lastContact:"2026-08-12" }
+    ]
+  },
+  {
+    id:3, name:"Travis LifeGroup", leader:"Andy Travis", day:"Wednesday", time:"6:30 PM",
+    location:"Church Campus - Rm 105", status:"Active",
+    members:[
+  { id:112, name:"Cole Bennett", phone:"555-2112", email:"cole.bennett@email.com", joined:"2025-04-26", role:"Member", attendance:66, lastContact:"2026-09-08" },
+  { id:113, name:"Jenna Bennett", phone:"555-2113", email:"jenna.bennett@email.com", joined:"2024-10-10", role:"Member", attendance:88, lastContact:"2026-08-11" },
+  { id:114, name:"Marcus Doyle", phone:"555-2114", email:"marcus.doyle@email.com", joined:"2025-05-20", role:"Member", attendance:59, lastContact:"2026-07-17" },
+  { id:115, name:"Felicia Doyle", phone:"555-2115", email:"felicia.doyle@email.com", joined:"2025-03-25", role:"Member", attendance:76, lastContact:"2026-07-16" },
+  { id:116, name:"Trent Albright", phone:"555-2116", email:"trent.albright@email.com", joined:"2025-01-22", role:"Member", attendance:59, lastContact:"2026-09-19" },
+  { id:117, name:"Shay Albright", phone:"555-2117", email:"shay.albright@email.com", joined:"2025-06-23", role:"Member", attendance:77, lastContact:"2026-09-16" },
+  { id:118, name:"Omar Vance", phone:"555-2118", email:"omar.vance@email.com", joined:"2025-02-27", role:"Member", attendance:60, lastContact:"2026-08-16" },
+  { id:119, name:"Nikki Vance", phone:"555-2119", email:"nikki.vance@email.com", joined:"2024-01-24", role:"Member", attendance:74, lastContact:"2026-09-19" },
+  { id:120, name:"Reid Calloway", phone:"555-2120", email:"reid.calloway@email.com", joined:"2025-05-23", role:"Member", attendance:79, lastContact:"2026-09-12" }
+    ]
+  },
+  {
+    id:4, name:"Holloway LifeGroup", leader:"Mark & Cindy Holloway", day:"Thursday", time:"7:00 PM",
+    location:"Holloway Home - Burleson", status:"Active",
+    members:[
+  { id:121, name:"Pete Ragland", phone:"555-2121", email:"pete.ragland@email.com", joined:"2024-08-12", role:"Member", attendance:65, lastContact:"2026-09-04" },
+  { id:122, name:"Joyce Ragland", phone:"555-2122", email:"joyce.ragland@email.com", joined:"2025-01-07", role:"Member", attendance:73, lastContact:"2026-07-08" },
+  { id:123, name:"Sam Whitley", phone:"555-2123", email:"sam.whitley@email.com", joined:"2025-07-28", role:"Member", attendance:86, lastContact:"2026-07-06" },
+  { id:124, name:"Dana Whitley", phone:"555-2124", email:"dana.whitley@email.com", joined:"2025-07-18", role:"Member", attendance:72, lastContact:"2026-07-14" },
+  { id:125, name:"Curt Espinoza", phone:"555-2125", email:"curt.espinoza@email.com", joined:"2025-12-14", role:"Member", attendance:77, lastContact:"2026-09-13" },
+  { id:126, name:"Elena Espinoza", phone:"555-2126", email:"elena.espinoza@email.com", joined:"2024-03-03", role:"Member", attendance:66, lastContact:"2026-07-08" },
+  { id:127, name:"Joel Prentice", phone:"555-2127", email:"joel.prentice@email.com", joined:"2024-01-16", role:"Member", attendance:92, lastContact:"2026-07-09" },
+  { id:128, name:"Amy Prentice", phone:"555-2128", email:"amy.prentice@email.com", joined:"2025-01-05", role:"Member", attendance:81, lastContact:"2026-09-12" },
+  { id:129, name:"Wes Dunbar", phone:"555-2129", email:"wes.dunbar@email.com", joined:"2025-03-23", role:"Member", attendance:87, lastContact:"2026-09-21" },
+  { id:130, name:"Katie Dunbar", phone:"555-2130", email:"katie.dunbar@email.com", joined:"2024-08-28", role:"Member", attendance:90, lastContact:"2026-08-13" }
+    ]
+  },
+  {
+    id:5, name:"Pruitt LifeGroup", leader:"Steve & Donna Pruitt", day:"Sunday", time:"5:00 PM",
+    location:"Church Campus - Rm 203", status:"Active",
+    members:[
+  { id:131, name:"Hank Mercer", phone:"555-2131", email:"hank.mercer@email.com", joined:"2025-07-04", role:"Member", attendance:85, lastContact:"2026-09-13" },
+  { id:132, name:"Lois Mercer", phone:"555-2132", email:"lois.mercer@email.com", joined:"2024-04-03", role:"Member", attendance:68, lastContact:"2026-08-06" },
+  { id:133, name:"Ty Beaumont", phone:"555-2133", email:"ty.beaumont@email.com", joined:"2024-06-20", role:"Member", attendance:58, lastContact:"2026-07-01" },
+  { id:134, name:"Robin Beaumont", phone:"555-2134", email:"robin.beaumont@email.com", joined:"2024-09-04", role:"Member", attendance:78, lastContact:"2026-09-01" },
+  { id:135, name:"Cal Jessup", phone:"555-2135", email:"cal.jessup@email.com", joined:"2024-04-20", role:"Member", attendance:79, lastContact:"2026-07-21" },
+  { id:136, name:"Faye Jessup", phone:"555-2136", email:"faye.jessup@email.com", joined:"2025-06-20", role:"Member", attendance:78, lastContact:"2026-08-04" },
+  { id:137, name:"Drew Langford", phone:"555-2137", email:"drew.langford@email.com", joined:"2024-08-15", role:"Member", attendance:85, lastContact:"2026-08-10" },
+  { id:138, name:"Patti Langford", phone:"555-2138", email:"patti.langford@email.com", joined:"2024-03-04", role:"Member", attendance:76, lastContact:"2026-09-09" },
+  { id:139, name:"Gil Rowden", phone:"555-2139", email:"gil.rowden@email.com", joined:"2025-12-06", role:"Member", attendance:88, lastContact:"2026-07-07" },
+  { id:140, name:"Sue Rowden", phone:"555-2140", email:"sue.rowden@email.com", joined:"2025-03-23", role:"Member", attendance:89, lastContact:"2026-07-17" },
+  { id:141, name:"Max Tinsley", phone:"555-2141", email:"max.tinsley@email.com", joined:"2025-11-28", role:"Member", attendance:60, lastContact:"2026-09-09" },
+  { id:142, name:"Vera Tinsley", phone:"555-2142", email:"vera.tinsley@email.com", joined:"2025-03-12", role:"Member", attendance:69, lastContact:"2026-09-18" }
+    ]
+  },
+  {
+    id:6, name:"Wade LifeGroup", leader:"Chris & Amber Wade", day:"Friday", time:"6:30 PM",
+    location:"Wade Home - Joshua", status:"Active",
+    members:[
+  { id:143, name:"Toby Neuman", phone:"555-2143", email:"toby.neuman@email.com", joined:"2025-11-08", role:"Member", attendance:94, lastContact:"2026-07-08" },
+  { id:144, name:"Jill Neuman", phone:"555-2144", email:"jill.neuman@email.com", joined:"2025-12-26", role:"Member", attendance:69, lastContact:"2026-07-17" },
+  { id:145, name:"Ray Stackhouse", phone:"555-2145", email:"ray.stackhouse@email.com", joined:"2025-06-24", role:"Member", attendance:56, lastContact:"2026-07-09" },
+  { id:146, name:"Mona Stackhouse", phone:"555-2146", email:"mona.stackhouse@email.com", joined:"2025-05-07", role:"Member", attendance:93, lastContact:"2026-08-15" },
+  { id:147, name:"Ben Corliss", phone:"555-2147", email:"ben.corliss@email.com", joined:"2025-06-03", role:"Member", attendance:69, lastContact:"2026-07-08" },
+  { id:148, name:"Ivy Corliss", phone:"555-2148", email:"ivy.corliss@email.com", joined:"2025-04-11", role:"Member", attendance:68, lastContact:"2026-08-20" },
+  { id:149, name:"Nate Pemble", phone:"555-2149", email:"nate.pemble@email.com", joined:"2024-08-21", role:"Member", attendance:77, lastContact:"2026-09-03" },
+  { id:150, name:"Gwen Pemble", phone:"555-2150", email:"gwen.pemble@email.com", joined:"2024-07-26", role:"Member", attendance:67, lastContact:"2026-08-06" },
+  { id:151, name:"Ross Devlin", phone:"555-2151", email:"ross.devlin@email.com", joined:"2025-11-11", role:"Member", attendance:60, lastContact:"2026-09-13" }
+    ]
+  },
 ];
 
 export const SEED_PRAYER = [

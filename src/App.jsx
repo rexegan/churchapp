@@ -208,14 +208,13 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
       <div>
         <h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>Dashboard</h1>
-        <p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>People first — click any card to open that section</p>
       </div>
 
       {/* People stats — full width, prominent */}
       <div>
         <div style={{ fontSize: 12, fontWeight: 600, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 12 }}>People & Community</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12 }}>
-          <StatCard icon="👥" label="LifeGroup Members"  value={lgMembers}                                               color={C.accent}  onClick={() => setTab("lifegroups")} />
+          <StatCard icon="👥" label="Life Groups"        value={lifeGroups.length}                                       color={C.accent}  onClick={() => setTab("lifegroups")} />
           <StatCard icon="⛪" label="Active Ministries"  value={ministries.filter(m => m.status === "Active").length}   color={C.green}   onClick={() => setTab("family")} />
           <StatCard icon="🙏" label="Active Prayer Requests" value={activePrayers}                                           color={C.purple}  onClick={() => setTab("lifegroups")} />
           <StatCard icon="👔" label="Active Staff"       value={staff.filter(s => s.status === "Active").length}        color={C.accent2} onClick={() => setTab("hr")} />
@@ -1331,6 +1330,16 @@ function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
         <StatCard icon="👥" label="Total Members" value={totalMembers}         color={C.green}   onClick={() => setLgTab("roster")} />
         {hasTracking && <StatCard icon="🚨" label="At Risk (3+ wk)" value={lifeGroups.find(g=>g.id===1)?.members.filter(m => (LG_ATTENDANCE[String(m.id)]?.consecAbsent||0) >= 3).length || 0} color={C.red} onClick={() => setLgTab("deep dive")} />}
         {hasTracking && <StatCard icon="⭐" label="Consistent" value={lifeGroups.find(g=>g.id===1)?.members.filter(m => (LG_ATTENDANCE[String(m.id)]?.pct||0) >= 90).length || 0} color={C.gold} onClick={() => setLgTab("deep dive")} />}
+      </div>
+
+      {/* Group switcher — one pill per life group, labeled by its leaders */}
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        {lifeGroups.map(g => (
+          <button key={g.id} onClick={() => { setSelectedGroup(g.id); setLgTab(g.id === 1 ? "quick view" : "roster"); }}
+            style={{ background: selectedGroup === g.id ? C.accent : C.card, color: selectedGroup === g.id ? "#fff" : C.muted, border: `1px solid ${selectedGroup === g.id ? C.accent : C.border}`, borderRadius: 8, padding: "8px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+            {g.leader}
+          </button>
+        ))}
       </div>
 
       <div style={{ display: "flex", gap: 16 }}>
@@ -2543,7 +2552,7 @@ export default function ChurchOS() {
   const tab = TABS.some(t => t.id === storedTab) ? storedTab : "dashboard"; // migrate away from removed tab ids
   const [staff,         setStaff]         = useStored("cos2-staff",         SEED_STAFF);
   const [ministries,    setMinistries]    = useStored("cos2-ministries",    SEED_MINISTRIES);
-  const [lifeGroups,    setLifeGroups]    = useStored("cos2-lifegroups",    SEED_LIFE_GROUPS);
+  const [lifeGroups,    setLifeGroups]    = useStored("cos2-lifegroups-v2", SEED_LIFE_GROUPS);
   const [transactions,  setTransactions]  = useStored("cos2-transactions",  SEED_TRANSACTIONS);
   const [campaigns,     setCampaigns]     = useStored("cos2-campaigns",     SEED_CAMPAIGNS);
   const [announcements, setAnnouncements] = useStored("cos2-announcements", SEED_ANNOUNCEMENTS);
