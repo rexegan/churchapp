@@ -37,6 +37,16 @@ const C = {
 
 
 const fmt$ = n => "$" + Number(n).toLocaleString();
+
+// Which deacon shepherds the families of each life group
+const GROUP_DEACON = {
+  "Russell LifeGroup":  "Harold Simmons",
+  "Keaton LifeGroup":   "Walter Green",
+  "Travis LifeGroup":   "Frank Delgado",
+  "Holloway LifeGroup": "Curtis Boyd",
+  "Pruitt LifeGroup":   "Leon Ashworth",
+  "Wade LifeGroup":     "Ray Whitfield",
+};
 const fmtPct = (a, b) => b ? Math.round((a / b) * 100) + "%" : "0%";
 const today = () => new Date().toISOString().slice(0, 10);
 // All dates display as MM/DD/YYYY, always.
@@ -202,7 +212,13 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
   const totalMembers = ministries.reduce((s, m) => s + m.members, 0);
   const lgMembers = lifeGroups.reduce((s, g) => s + g.members.length, 0);
   const activePrayers = prayerRequests.filter(p => p.status === "Active" || p.status === "Ongoing").length;
-  const recentPrayers = [...prayerRequests].sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 5);
+  // Active prayer requests grouped by life group (2 most recent per group), each with its deacon
+  const activeByGroup = lifeGroups
+    .map(g => [g.name, prayerRequests
+      .filter(p => (p.status === "Active" || p.status === "Ongoing") && p.group === g.name)
+      .sort((a, b) => (b.date || "").localeCompare(a.date || ""))
+      .slice(0, 2)])
+    .filter(([, list]) => list.length > 0);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -247,16 +263,26 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
             <h3 style={{ fontWeight: 600, color: C.text, fontSize: 15, margin: 0 }}>Prayer Requests</h3>
             <button onClick={() => setTab("lifegroups")} style={{ fontSize: 12, color: C.accent, background: "none", border: "none", cursor: "pointer", fontWeight: 700 }}>View all →</button>
           </div>
-          {recentPrayers.length === 0 && <p style={{ color: C.muted, fontSize: 13 }}>No prayer requests yet.</p>}
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {recentPrayers.map(p => (
-              <div key={p.id} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "10px 14px", background: C.bg, borderRadius: 10, border: `1px solid ${C.border}` }}>
-                <span style={{ flexShrink: 0, color: C.purple, display: "flex", paddingTop: 2 }}><Icon glyph="🙏" size={17} /></span>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 600, color: C.text, fontSize: 14, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}><PName name={p.requester || p.member || p.name || "Member"} /></div>
-                  <div style={{ fontSize: 13, color: C.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.request || p.title || ""}</div>
+          {activeByGroup.length === 0 && <p style={{ color: C.muted, fontSize: 13 }}>No active prayer requests.</p>}
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {activeByGroup.map(([gname, prayers]) => (
+              <div key={gname}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 12.5, fontWeight: 700, color: C.accent }}>{gname}</span>
+                  {GROUP_DEACON[gname] && <span style={{ fontSize: 11.5, color: C.muted }}>Deacon: <PName name={GROUP_DEACON[gname]} style={{ fontWeight: 600, color: C.dim }} /></span>}
                 </div>
-                <span style={{ fontSize: 11, color: p.status === "Answered" ? C.green : C.accent, background: (p.status === "Answered" ? C.green : C.accent) + "18", padding: "2px 8px", borderRadius: 20, fontWeight: 700, flexShrink: 0 }}>{p.status}</span>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {prayers.map(p => (
+                    <div key={p.id} style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "8px 12px", background: C.bg, borderRadius: 9, border: `1px solid ${C.border}` }}>
+                      <span style={{ flexShrink: 0, color: C.purple, display: "flex", paddingTop: 2 }}><Icon glyph="🙏" size={15} /></span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: 600, color: C.text, fontSize: 13.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.private ? "Anonymous" : <PName name={p.requester || "Member"} />}</div>
+                        <div style={{ fontSize: 12.5, color: C.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.request || p.title || ""}</div>
+                      </div>
+                      <span style={{ fontSize: 11, color: p.status === "Answered" ? C.green : C.accent, background: (p.status === "Answered" ? C.green : C.accent) + "18", padding: "2px 8px", borderRadius: 20, fontWeight: 700, flexShrink: 0 }}>{p.status}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
@@ -2556,7 +2582,7 @@ export default function ChurchOS() {
   const [transactions,  setTransactions]  = useStored("cos2-transactions",  SEED_TRANSACTIONS);
   const [campaigns,     setCampaigns]     = useStored("cos2-campaigns",     SEED_CAMPAIGNS);
   const [announcements, setAnnouncements] = useStored("cos2-announcements", SEED_ANNOUNCEMENTS);
-  const [prayerRequests,setPrayerRequests]= useStored("cos2-prayer",        SEED_PRAYER);
+  const [prayerRequests,setPrayerRequests]= useStored("cos2-prayer-v2",     SEED_PRAYER);
   const [events,        setEvents]        = useStored("cos2-events-v2",    SEED_EVENTS);
   const [open,          setOpen]          = useState(true);
   const [personName,    setPersonName]    = useState(null);
