@@ -1649,6 +1649,9 @@ const MINISTRY_AREAS = [
     leader: "Sarah Williams", meets: "Sundays · 9:30 AM · Family Center",
     members: 140, volunteers: 24,
     description: "Marriage, parenting, and whole-family discipleship.",
+    overseer: "Jeremy Dooley",
+    memberList: ["Olive Abbott", "Faith Abbott", "Blake Abbott", "Seth Abbott", "Faith Ashby", "Bella Ashby", "Cole Ashby", "Wade Ashby", "Uriah Ashby", "Vera Barrett", "Yara Barrett", "Finn Bowden", "Tobias Bowden", "Faith Bowden", "Isaac Bowden", "Noah Chandler", "Kara Chandler", "Bella Chandler", "Anna Crane", "Yara Crane", "Nina Crane", "Mia Dawson", "Lily Dawson", "Sadie Dawson", "Nina Dawson", "Violet Duffield", "Ivy Duffield", "Bella Eastman", "Quinn Eastman", "Sadie Ellison", "Tessa Ellison", "Aiden Falk", "Abby Falk", "Chloe Falk", "Uriah Falk", "Mason Fleming", "Isaac Fleming", "Olive Fleming", "Noah Fleming", "Kyle Gentry", "Abby Gentry", "Tessa Goss", "Noah Hargrove", "Dylan Hollis", "Kara Hollis", "Paige Hollis", "Vera Hollis", "Noah Ingram", "Jade Ingram", "Ruth Ingram", "Grace Irwin", "Jonah Irwin", "Blake Irwin", "Zoe Jarvis", "Mia Keller", "Finn Keller", "Chloe Keller", "Lily Keller", "Anna Keller", "Yara Keller", "Kyle Kemp", "Gavin Kemp", "Mason Lockhart", "Chloe Lockhart", "Ethan Loften", "Anna Mabry", "Caleb Mabry", "Mason Mabry", "Tessa Mercer", "Peyton Mercer", "Abby Mercer", "Tessa Nix", "Faith Nix", "Noah Nix", "Violet Norwood", "Ruth Norwood", "Caleb Norwood", "Paige Norwood", "Uriah Norwood", "Dylan Ogden", "Finn Ogden", "Nina Orr", "Yara Orr", "Ruth Pearce", "Gavin Pearce", "Owen Pearce", "Reese Pearce", "Gavin Pratt", "Jade Quigley", "Henry Quigley", "Aiden Quigley", "Ivy Quigley", "Peyton Quigley", "Nina Quigley", "Olive Rafferty", "Daisy Rafferty", "Kyle Rafferty", "Peyton Rhodes", "Mason Rhodes", "Kara Rhodes", "Nina Rhodes", "Uriah Sperry", "Zoe Sperry", "Ivy Sperry", "Peyton Sperry", "Yara Sperry", "Jade Tate", "Olive Tate", "Mia Thorne", "Levi Thorne", "Abby Thorne", "Grace Thorne", "Olive Underhill", "Kara Upton", "Willa Upton", "Faith Vaughn", "Paige Vaughn", "Aiden Vaughn", "Chloe Vick", "Ivy Vick", "Tobias Wray", "Sadie Wray", "Violet Wray", "Quinn Wray", "Caleb Yancey", "Faith York", "Gavin York", "Jade York", "Levi York", "Anna York", "Daisy York", "Henry Zeller", "Paige Zeller", "Sadie Zeller", "Jade Zeller", "Blake Zink", "Lily Zink", "Hope Zink", "Wyatt Zink", "Uriah Zink"],
+    volunteerList: ["Lily Ashby", "Zoe Ashby", "Hope Barrett", "Mason Barrett", "Yara Duffield", "Owen Eastman", "Owen Goss", "Jade Hargrove", "Olive Hollis", "Tessa Ingram", "Paige Irwin", "Caleb Jarvis", "Uriah Loften", "Seth Orr", "Ella Pearce", "Tessa Pearce", "Ella Quigley", "Henry Slater", "Ethan Upton", "Ella Upton", "Anna Vaughn", "Tobias Vaughn", "Owen Vick", "Willa Yancey"],
     people: [
       { name: "Sarah Williams", role: "Family Pastor" },
       { name: "James Patterson", role: "Marriage Ministry Lead" },
@@ -1668,6 +1671,9 @@ const MINISTRY_AREAS = [
     leader: "Robert Garcia", meets: "Thursdays · 7:00 PM · The Loft",
     members: 48, volunteers: 8,
     description: "Ages 18–25 — students, young professionals, and singles.",
+    overseer: "Dr. Drew Smith",
+    memberList: ["Caleb Abbott", "Nina Ashby", "Gavin Barrett", "Faith Bowden", "Anna Crane", "Ethan Duffield", "Anna Eastman", "Kara Eastman", "Mason Ellison", "Noah Fleming", "Kyle Gentry", "Owen Gentry", "Sadie Gentry", "Grace Hargrove", "Reese Hargrove", "Hope Hollis", "Levi Hollis", "Daisy Ingram", "Mia Irwin", "Hope Irwin", "Sadie Jarvis", "Violet Judd", "Jade Judd", "Wade Judd", "Gavin Keller", "Wyatt Kemp", "Jonah Mabry", "Kara Mabry", "Faith Mabry", "Jonah Nix", "Willa Nix", "Xander Nix", "Bella Norwood", "Ruth Norwood", "Caleb Orr", "Willa Orr", "Wade Pearce", "Peyton Pratt", "Willa Rafferty", "Bella Rhodes", "Seth Rhodes", "Wade Slater", "Noah Tate", "Tobias Thorne", "Abby Upton", "Vera Vick", "Mason Yancey", "Noah Zink"],
+    volunteerList: ["Vera Barrett", "Blake Gentry", "Xander Goss", "Daisy Hollis", "Olive Keller", "Jonah Nix", "Kyle Sperry", "Wyatt Zeller"],
     people: [
       { name: "Robert Garcia", role: "College Pastor" },
       { name: "Emily Chen", role: "Worship Lead" },
@@ -1686,7 +1692,11 @@ const MINISTRY_AREAS = [
     leader: "Josh Turner", meets: "Wednesdays · 6:30 PM · Student Building",
     members: 52, volunteers: 10,
     description: "Grades 9–12 — discipleship, camps, and student leadership.",
+    overseer: "Jeremy Dooley",
+    memberList: ["Abby Abbott", "Zoe Ashby", "Wyatt Ashby", "Ivy Ashby", "Wade Barrett", "Willa Barrett", "Henry Bowden", "Jade Eastman", "Faith Ellison", "Noah Fleming", "Tobias Fleming", "Violet Gentry", "Chloe Hargrove", "Caleb Irwin", "Tobias Irwin", "Jade Irwin", "Noah Irwin", "Kyle Judd", "Ivy Keller", "Tessa Lockhart", "Lily Mabry", "Nina Mabry", "Gavin Mabry", "Chloe Mercer", "Aiden Nix", "Abby Nix", "Reese Nix", "Yara Norwood", "Caleb Pearce", "Abby Quigley", "Jonah Quigley", "Grace Quimby", "Ivy Rafferty", "Kara Rafferty", "Tobias Rafferty", "Henry Rhodes", "Olive Tate", "Seth Tate", "Ruth Tate", "Willa Tate", "Nina Thorne", "Xander Thorne", "Faith Underhill", "Zoe Underhill", "Ruth Vaughn", "Levi Wheeler", "Tessa Wray", "Uriah Wray", "Abby Wray", "Cole Yancey", "Caleb York", "Jonah Zeller"],
+    volunteerList: ["Ruth Barrett", "Reese Ellison", "Xander Goss", "Xander Hollis", "Owen Irwin", "Olive Norwood", "Uriah Norwood", "Quinn Underhill", "Paige Upton", "Gavin Zeller"],
     people: [
+      { name: "Landon Winc", role: "Preteen & Student Ministries Coordinator" },
       { name: "Josh Turner", role: "High School Director" },
       { name: "Amber Wells", role: "Girls Discipleship Lead" },
       { name: "Chris Dalton", role: "Guys Discipleship Lead" },
@@ -1704,7 +1714,11 @@ const MINISTRY_AREAS = [
     leader: "Katie Sanders", meets: "Wednesdays · 6:30 PM · Room 200",
     members: 44, volunteers: 9,
     description: "Grades 6–8 — foundations of faith and belonging.",
+    overseer: "Jeremy Dooley",
+    memberList: ["Jade Ashby", "Ruth Barrett", "Ella Dawson", "Violet Duffield", "Mason Duffield", "Seth Eastman", "Caleb Eastman", "Reese Ellison", "Levi Fleming", "Gavin Gentry", "Wyatt Goss", "Ruth Hargrove", "Tessa Hargrove", "Cole Irwin", "Tessa Judd", "Ivy Keller", "Wade Keller", "Blake Kemp", "Abby Lockhart", "Mia Loften", "Dylan Loften", "Uriah Mabry", "Peyton Mabry", "Seth Nix", "Bella Orr", "Ivy Quimby", "Violet Rafferty", "Sadie Rafferty", "Tessa Rafferty", "Zoe Slater", "Finn Sperry", "Ivy Sperry", "Ruth Sperry", "Violet Underhill", "Chloe Upton", "Seth Vaughn", "Daisy Vick", "Seth Wray", "Nina Yancey", "Abby Zeller", "Vera Zeller", "Paige Zeller", "Paige Zink", "Abby Zink"],
+    volunteerList: ["Isaac Ellison", "Ivy Falk", "Bella Jarvis", "Hope Judd", "Finn Loften", "Seth Quigley", "Yara Vick", "Grace York", "Ivy Zeller"],
     people: [
+      { name: "Landon Winc", role: "Preteen & Student Ministries Coordinator" },
       { name: "Katie Sanders", role: "Middle School Director" },
       { name: "Ben Hoffman", role: "6th Grade Boys Lead" },
       { name: "Jill Marsh", role: "Small Group Coordinator" },
@@ -1722,7 +1736,12 @@ const MINISTRY_AREAS = [
     leader: "Melissa Grant", meets: "Sundays · both services · Kids Wing",
     members: 96, volunteers: 26,
     description: "K–5th grade — Sunday large group plus small groups.",
+    overseer: "Jeremy Dooley",
+    memberList: ["Violet Abbott", "Peyton Abbott", "Wade Ashby", "Kara Barrett", "Nina Barrett", "Seth Barrett", "Faith Chandler", "Blake Crane", "Reese Dawson", "Ruth Dawson", "Xander Dawson", "Jonah Dawson", "Seth Dawson", "Cole Eastman", "Ivy Ellison", "Jonah Falk", "Chloe Falk", "Sadie Falk", "Uriah Fleming", "Chloe Fleming", "Paige Goss", "Kyle Goss", "Jade Goss", "Sadie Goss", "Violet Goss", "Gavin Hollis", "Mia Hollis", "Reese Hollis", "Gavin Ingram", "Paige Ingram", "Peyton Ingram", "Ella Irwin", "Olive Irwin", "Cole Judd", "Blake Judd", "Uriah Judd", "Kyle Keller", "Daisy Keller", "Owen Keller", "Mia Keller", "Henry Kemp", "Owen Lockhart", "Finn Loften", "Sadie Loften", "Ruth Loften", "Daisy Loften", "Peyton Mabry", "Anna Mabry", "Yara Mabry", "Henry Mabry", "Jonah Mercer", "Cole Nix", "Isaac Norwood", "Chloe Norwood", "Quinn Ogden", "Grace Ogden", "Chloe Ogden", "Wade Orr", "Violet Orr", "Daisy Pearce", "Yara Quimby", "Zoe Quimby", "Bella Quimby", "Dylan Quimby", "Jade Rhodes", "Jonah Slater", "Mason Tate", "Abby Tate", "Nina Thorne", "Paige Thorne", "Isaac Thorne", "Quinn Thorne", "Zoe Underhill", "Gavin Underhill", "Willa Upton", "Ella Vaughn", "Paige Vaughn", "Owen Vaughn", "Kyle Vaughn", "Nina Vaughn", "Ethan Vick", "Willa Vick", "Tessa Vick", "Aiden Wheeler", "Aiden Wray", "Henry Wray", "Kyle Wray", "Henry Yancey", "Seth Yancey", "Zoe Yancey", "Caleb York", "Bella York", "Mason Zeller", "Jonah Zeller", "Henry Zink", "Ella Zink"],
+    volunteerList: ["Wyatt Ashby", "Noah Barrett", "Mason Barrett", "Yara Chandler", "Olive Crane", "Grace Falk", "Vera Fleming", "Levi Goss", "Faith Irwin", "Ethan Kemp", "Olive Mabry", "Willa Nix", "Jonah Orr", "Owen Quigley", "Wyatt Quigley", "Kyle Rafferty", "Gavin Rhodes", "Chloe Rhodes", "Ruth Thorne", "Aiden Underhill", "Owen Underhill", "Aiden Upton", "Violet Wray", "Caleb Yancey", "Anna Yancey", "Cole Zeller"],
     people: [
+      { name: "Stefanie Petkau", role: "Director of Kids & Preschool Ministries" },
+      { name: "Rachel Leger", role: "Kids Ministry Coordinator" },
       { name: "Melissa Grant", role: "Children's Director" },
       { name: "Tom Avery", role: "K-2 Coordinator" },
       { name: "Susan Lee", role: "3-5 Coordinator" },
@@ -1741,7 +1760,12 @@ const MINISTRY_AREAS = [
     leader: "Beth Caldwell", meets: "Sundays · both services · Nursery Suite",
     members: 38, volunteers: 18,
     description: "Birth through pre-K — safe, loving early care.",
+    overseer: "Jeremy Dooley",
+    memberList: ["Caleb Abbott", "Paige Abbott", "Hope Barrett", "Lily Barrett", "Wade Crane", "Lily Crane", "Hope Ellison", "Isaac Falk", "Levi Fleming", "Henry Gentry", "Ella Goss", "Jonah Hargrove", "Faith Hollis", "Tessa Hollis", "Wade Hollis", "Isaac Irwin", "Dylan Judd", "Gavin Nix", "Kara Nix", "Finn Nix", "Anna Norwood", "Reese Norwood", "Noah Orr", "Isaac Orr", "Ivy Pearce", "Aiden Quigley", "Kara Rhodes", "Jonah Slater", "Jade Tate", "Ruth Thorne", "Chloe Underhill", "Paige Underhill", "Mason Vaughn", "Ruth Vick", "Lily Vick", "Uriah Wray", "Ivy York", "Daisy Zeller"],
+    volunteerList: ["Dylan Hargrove", "Hope Hargrove", "Jonah Lockhart", "Chloe Lockhart", "Wade Loften", "Willa Nix", "Faith Norwood", "Jade Norwood", "Bella Pearce", "Levi Pratt", "Jade Rafferty", "Tessa Sperry", "Olive Sperry", "Abby Thorne", "Dylan Upton", "Olive York", "Quinn York", "Sadie Zink"],
     people: [
+      { name: "Stefanie Petkau", role: "Director of Kids & Preschool Ministries" },
+      { name: "Ashley Hasty", role: "Preschool Ministry Coordinator" },
       { name: "Beth Caldwell", role: "Nursery Director" },
       { name: "Angela Ruiz", role: "Infant Room Lead" },
       { name: "Monica Hayes", role: "Toddler Room Lead" },
@@ -1757,30 +1781,67 @@ const MINISTRY_AREAS = [
 ];
 
 function AreaBreakout({ area }) {
+  const [showList, setShowList] = useState(null); // "members" | "volunteers" | null
+  const memberList = area.memberList || [];
+  const volunteerList = area.volunteerList || [];
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       <div style={{ background: C.card, border: `1px solid ${area.color}44`, borderRadius: 12, padding: "18px 22px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
           <span style={{ fontSize: 28 }}>{area.icon}</span>
           <div style={{ flex: 1, minWidth: 200 }}>
-            <div style={{ fontSize: 19, fontWeight: 700, color: C.text }}>{area.name}</div>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+              <span style={{ fontSize: 19, fontWeight: 700, color: C.text }}>{area.name}</span>
+              {area.overseer && (
+                <span style={{ fontSize: 13, color: C.dim }}>
+                  In charge: <PName name={area.overseer} style={{ fontWeight: 700, color: C.accent }} />
+                </span>
+              )}
+            </div>
             <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{area.description}</div>
             <div style={{ fontSize: 12.5, color: C.dim, marginTop: 4 }}>{area.meets} · Led by <PName name={area.leader} /></div>
           </div>
-          <div style={{ display: "flex", gap: 18 }}>
-            {[["Members", area.members], ["Volunteers", area.volunteers]].map(([l, v]) => (
-              <div key={l} style={{ textAlign: "center" }}>
+          <div style={{ display: "flex", gap: 12 }}>
+            {[["Members", memberList.length || area.members, "members"], ["Volunteers", volunteerList.length || area.volunteers, "volunteers"]].map(([l, v, key]) => (
+              <div key={l} onClick={() => setShowList(showList === key ? null : key)}
+                style={{ textAlign: "center", cursor: "pointer", padding: "8px 14px", borderRadius: 10, background: showList === key ? area.color + "16" : "transparent", border: `1px solid ${showList === key ? area.color : "transparent"}`, transition: "all .15s" }}
+                onMouseEnter={e => { if (showList !== key) e.currentTarget.style.background = C.bg; }}
+                onMouseLeave={e => { if (showList !== key) e.currentTarget.style.background = "transparent"; }}>
                 <div style={{ fontSize: 20, fontWeight: 700, color: area.color }}>{v}</div>
                 <div style={{ fontSize: 11, color: C.muted, textTransform: "uppercase", letterSpacing: "0.06em" }}>{l}</div>
+                <div style={{ fontSize: 10.5, color: area.color, fontWeight: 700, marginTop: 2 }}>{showList === key ? "Hide" : "View"}</div>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      {/* Roster panel — opens when a count is clicked */}
+      {showList && (
+        <div style={{ background: C.card, border: `1px solid ${area.color}44`, borderRadius: 12, padding: 18 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: C.text, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 12 }}>
+            {area.name} — {showList === "members" ? "Members" : "Volunteers"} ({(showList === "members" ? memberList : volunteerList).length})
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))", gap: 5, maxHeight: 360, overflowY: "auto" }}>
+            {(showList === "members" ? memberList : volunteerList).map(n => (
+              <div key={n} style={{ padding: "5px 10px", background: C.bg, borderRadius: 7, border: `1px solid ${C.border}`, fontSize: 13, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                <PName name={n} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
         <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: 18 }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: C.text, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 12 }}>People</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {area.overseer && (
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, padding: "10px 12px", background: area.color + "10", borderRadius: 8, border: `1px solid ${area.color}44` }}>
+                <span style={{ fontSize: 13.5, fontWeight: 700, color: C.text }}><PName name={area.overseer} /></span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: area.color }}>In Charge</span>
+              </div>
+            )}
             {area.people.map(p => (
               <div key={p.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, padding: "8px 12px", background: C.bg, borderRadius: 8, border: `1px solid ${C.border}` }}>
                 <span style={{ fontSize: 13.5, fontWeight: 600, color: C.text }}><PName name={p.name} /></span>
