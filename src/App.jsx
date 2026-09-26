@@ -1408,7 +1408,7 @@ function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
                 ? ["quick view","lg today","deep dive","roster","joined us","follow-up","prayer","events","teaching","attendance","meetings"]
                 : ["roster","events","teaching"]
               ).map(t => (
-                <button key={t} onClick={() => setLgTab(t)} style={{ background: lgTab===t?C.accent:C.card, color: lgTab===t?"#fff":C.muted, border: `1px solid ${lgTab===t?C.accent:C.border}`, borderRadius: 8, padding: "7px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", textTransform: "capitalize" }}>{t}</button>
+                <button key={t} onClick={() => setLgTab(t)} style={{ background: lgTab===t?C.accent:C.card, color: lgTab===t?"#fff":C.muted, border: `1px solid ${lgTab===t?C.accent:C.border}`, borderRadius: 8, padding: "7px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", textTransform: "capitalize" }}>{t.startsWith("lg ") ? "LG" + t.slice(2) : t}</button>
               ))}
             </div>
 
