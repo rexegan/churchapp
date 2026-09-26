@@ -629,9 +629,25 @@ function MeetingDetailModal({ meeting, groupMembers, onClose }) {
 }
 
 // ── LG Quick View ────────────────────────────────────────────────────────────
+const LOOKBACKS = [
+  { label: "1 Week",   days: 7   },
+  { label: "2 Weeks",  days: 14  },
+  { label: "3 Weeks",  days: 21  },
+  { label: "4 Weeks",  days: 28  },
+  { label: "6 Weeks",  days: 42  },
+  { label: "2 Months", days: 61  },
+  { label: "90 Days",  days: 90  },
+  { label: "6 Months", days: 183 },
+  { label: "1 Year",   days: 365 },
+];
+
 function LGQuickView({ group, prayerRequests, meetings, onNavigate }) {
-  const attData = group.members.map(m => LG_ATTENDANCE[String(m.id)]).filter(Boolean);
-  const avgPct = attData.length ? Math.round(attData.reduce((s, a) => s + a.pct, 0) / attData.length) : 0;
+  const [lookback, setLookback] = useState(90);
+  const cutoff = new Date(Date.now() - lookback * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const windowMeetings = meetings.filter(m => m.date >= cutoff);
+  const avgPct = windowMeetings.length
+    ? Math.round(windowMeetings.reduce((s, m) => s + m.count / group.members.length, 0) / windowMeetings.length * 100)
+    : 0;
   const atRisk = group.members.filter(m => (LG_ATTENDANCE[String(m.id)]?.consecAbsent || 0) >= 3).length;
   const consistent = group.members.filter(m => (LG_ATTENDANCE[String(m.id)]?.pct || 0) >= 90).length;
   const groupPrayers = prayerRequests.filter(p =>
@@ -642,6 +658,14 @@ function LGQuickView({ group, prayerRequests, meetings, onNavigate }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <label style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>Look Back</label>
+        <select value={lookback} onChange={e => setLookback(+e.target.value)} style={{ ...inputStyle, width: 160 }}>
+          {LOOKBACKS.map(lb => <option key={lb.days} value={lb.days}>{lb.label}</option>)}
+        </select>
+        <span style={{ fontSize: 13, color: C.muted }}>{windowMeetings.length} Sunday meeting{windowMeetings.length !== 1 ? "s" : ""} in this window</span>
+      </div>
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))", gap: 12 }}>
         {[
           ["👥","Members",group.members.length,C.accent,"deep dive"],
@@ -649,7 +673,7 @@ function LGQuickView({ group, prayerRequests, meetings, onNavigate }) {
           ["🚨","At Risk",atRisk,C.red,"deep dive"],
           ["⭐","Consistent",consistent,C.gold,"deep dive"],
           ["🙏","Prayer",groupPrayers.length,C.purple,"prayer"],
-          ["📅","Meetings",meetings.length,C.accent2,"meetings"],
+          ["📅","Meetings",windowMeetings.length,C.accent2,"meetings"],
         ].map(([icon,label,value,color,dest]) => (
           <div key={label} onClick={() => onNavigate && onNavigate(dest)}
             style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: "14px 16px", cursor: "pointer", transition: "all 0.15s" }}
@@ -664,9 +688,9 @@ function LGQuickView({ group, prayerRequests, meetings, onNavigate }) {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
         <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: 18 }}>
-          <div style={{ fontWeight: 800, color: C.text, marginBottom: 12, fontSize: 14 }}>Recent Meetings</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {[...meetings].reverse().slice(0, 4).map(m => {
+          <div style={{ fontWeight: 800, color: C.text, marginBottom: 12, fontSize: 14 }}>Meetings — Last {LOOKBACKS.find(l => l.days === lookback)?.label}</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 320, overflowY: "auto" }}>
+            {[...windowMeetings].reverse().map(m => {
               const pct = Math.round(m.count / group.members.length * 100);
               return (
                 <div key={m.id} style={{ display: "flex", justifyContent: "space-between", padding: "8px 12px", background: C.bg, borderRadius: 9, border: `1px solid ${C.border}` }}>
