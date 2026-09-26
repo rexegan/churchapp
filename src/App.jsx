@@ -2198,21 +2198,22 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
   );
 }
 
-function HR({ staff, setStaff }) {
+function HR({ staff, setStaff, title = "Pastors, Elders, and Staff", subtitle = "Click any person to open their file", includeDepts = null, defaultDept = "" }) {
   const [search, setSearch]         = useState("");
   const [filterStatus, setFilter]   = useState("All");
   const [selectedId, setSelectedId] = useState(null);
   const [addModal, setAddModal]     = useState(false);
   const [addForm, setAddForm]       = useState({});
 
-  const empty = { name:"", role:"", dept:"", email:"", phone:"", address:"", status:"Active", startDate:today(), notes:"", emergencyName:"", emergencyRel:"", emergencyPhone:"", employeeId:"" };
-  const depts = [...new Set(staff.map(s => s.dept))];
+  const empty = { name:"", role:"", dept:defaultDept, email:"", phone:"", address:"", status:"Active", startDate:today(), notes:"", emergencyName:"", emergencyRel:"", emergencyPhone:"", employeeId:"" };
+  const people = includeDepts ? staff.filter(s => includeDepts.includes(s.dept)) : staff;
+  const depts = [...new Set(people.map(s => s.dept))];
   const deptColors = [C.accent, C.purple, C.green, C.gold, C.pink, C.accent2, C.red];
   const colorFor = d => deptColors[depts.indexOf(d) % deptColors.length] || C.accent;
 
-  const selectedMember = staff.find(s => s.id === selectedId);
+  const selectedMember = people.find(s => s.id === selectedId);
 
-  const filtered = staff.filter(s => {
+  const filtered = people.filter(s => {
     const matchStatus = filterStatus === "All" || s.status === filterStatus || (filterStatus === "Depts" );
     const matchSearch = !search || s.name.toLowerCase().includes(search.toLowerCase()) || s.role.toLowerCase().includes(search.toLowerCase()) || s.dept.toLowerCase().includes(search.toLowerCase());
     return matchStatus && matchSearch;
@@ -2227,14 +2228,12 @@ function HR({ staff, setStaff }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div><h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>Pastors, Elders, and Staff</h1><p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>Staff and elder body — click any stat to filter, click any person to open their file</p></div>
+        <div><h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>{title}</h1><p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>{subtitle}</p></div>
         <Btn onClick={() => { setAddForm(empty); setAddModal(true); }}>+ Add Staff</Btn>
       </div>
 
-      {/* Stat cards — each filters the list */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12 }}>
-        <StatCard icon="👔" label="Total Staff"      value={staff.length}                                      color={C.accent} onClick={() => setFilter("All")}      />
-        <StatCard icon="✅" label="Active"           value={staff.filter(s => s.status === "Active").length}   color={C.green}  onClick={() => setFilter("Active")}   />
+        <StatCard icon="👔" label={title} value={people.length} color={C.accent} onClick={() => setFilter("All")} />
       </div>
 
       {/* Active filter chip */}
@@ -2647,7 +2646,8 @@ function PersonCardModal({ name, lifeGroups, staff, deacons, extras, onSaveExtra
 // ── Sidebar nav ───────────────────────────────────────────────────────────────
 const TABS = [
   { id:"dashboard", label:"Dashboard",      icon:"🏠" },
-  { id:"hr",        label:"Pastors, Elders, and Staff",  icon:"👔" },
+  { id:"hr",        label:"Pastors & Elders",  icon:"👔" },
+  { id:"staff",     label:"Staff",             icon:"🧑‍💼" },
   { id:"admin",     label:"Administrative", icon:"📅" },
   { id:"family",     label:"Family Ministries", icon:"⛪" },
   { id:"lifegroups", label:"Life Groups",       icon:"👥" },
@@ -2716,7 +2716,8 @@ export default function ChurchOS() {
         {tab === "deacons"    && <Deacons />}
         {tab === "events"     && <Administrative events={events} setEvents={setEvents} title="Events" subtitle="All church events — schedule, coordinate & track attendance" />}
         {tab === "finance"   && <Finance transactions={transactions} setTransactions={setTransactions} />}
-        {tab === "hr"        && <HR staff={staff} setStaff={setStaff} />}
+        {tab === "hr"        && <HR staff={staff} setStaff={setStaff} title="Pastors & Elders" subtitle="Elder body — click any person to open their file" includeDepts={["Elder"]} defaultDept="Elder" />}
+        {tab === "staff"     && <HR staff={staff} setStaff={setStaff} title="Staff" subtitle="Church staff — click any person to open their file" includeDepts={["Staff", "Volunteer", "Life Group Leader"]} defaultDept="Staff" />}
         {tab === "pr"        && <PRComms announcements={announcements} setAnnouncements={setAnnouncements} />}
         {tab === "marketing" && <Marketing campaigns={campaigns} setCampaigns={setCampaigns} />}
       </main>
