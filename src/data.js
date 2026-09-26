@@ -1,16 +1,22 @@
 // ── 3-Month Seed Data (May – July 2026) ──────────────────────────────────────
 
 export const SEED_STAFF = [
-  { id:1,  name:"Pastor James Russell",   role:"Senior Pastor",        dept:"Leadership",  email:"james@church.org",    phone:"(817) 555-0101", status:"Active", startDate:"2015-03-01", salary:95000 },
-  { id:2,  name:"Maria Thompson",         role:"Executive Pastor",     dept:"Leadership",  email:"maria@church.org",    phone:"(817) 555-0102", status:"Active", startDate:"2016-06-15", salary:82000 },
-  { id:3,  name:"David Chen",             role:"Worship Director",     dept:"Worship",     email:"david@church.org",    phone:"(817) 555-0103", status:"Active", startDate:"2018-01-10", salary:68000 },
-  { id:4,  name:"Sarah Williams",         role:"Children's Director",  dept:"Children",    email:"sarah@church.org",    phone:"(817) 555-0104", status:"Active", startDate:"2019-04-22", salary:62000 },
-  { id:5,  name:"Michael Brown",          role:"Finance Director",     dept:"Finance",     email:"michael@church.org",  phone:"(817) 555-0105", status:"Active", startDate:"2017-09-01", salary:75000 },
-  { id:6,  name:"Jennifer Davis",         role:"Communications Dir.",  dept:"Marketing",   email:"jennifer@church.org", phone:"(817) 555-0106", status:"Active", startDate:"2020-02-14", salary:60000 },
-  { id:7,  name:"Robert Garcia",          role:"Youth Pastor",         dept:"Youth",       email:"robert@church.org",   phone:"(817) 555-0107", status:"Active", startDate:"2021-07-01", salary:58000 },
-  { id:8,  name:"Angela Martinez",        role:"Office Manager",       dept:"Admin",       email:"angela@church.org",   phone:"(817) 555-0108", status:"Active", startDate:"2018-11-01", salary:52000 },
-  { id:9,  name:"Dr. Karen Osei",         role:"Counseling Pastor",    dept:"Pastoral",    email:"karen@church.org",    phone:"(817) 555-0109", status:"Active", startDate:"2022-03-15", salary:64000 },
-  { id:10, name:"Marcus Lee",             role:"Tech & Media Dir.",    dept:"Tech",        email:"marcus@church.org",   phone:"(817) 555-0110", status:"Active", startDate:"2023-01-09", salary:55000 },
+  { id:1, name:"Landon Dees", role:"Lead Pastor & Elder", dept:"Elder", email:"", phone:"", status:"Active", startDate:"" },
+  { id:2, name:"Jeremy Dooley", role:"Family Pastor & Elder", dept:"Elder", email:"", phone:"", status:"Active", startDate:"" },
+  { id:3, name:"Dr. Drew Smith", role:"Discipleship Pastor & Elder", dept:"Elder", email:"", phone:"", status:"Active", startDate:"" },
+  { id:4, name:"Dr. Travis Dickinson", role:"Elder", dept:"Elder", email:"", phone:"", status:"Active", startDate:"" },
+  { id:5, name:"Dr. Andy Jennings", role:"Elder", dept:"Elder", email:"", phone:"", status:"Active", startDate:"" },
+  { id:6, name:"Paul Keaton", role:"Elder", dept:"Elder", email:"", phone:"", status:"Active", startDate:"" },
+  { id:7, name:"Kristin Dyer", role:"Communications Coordinator", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
+  { id:8, name:"Allison Harrell", role:"Director of Operations & Assistant to Lead Pastor", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
+  { id:9, name:"Ashley Hasty", role:"Preschool Ministry Coordinator", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
+  { id:10, name:"Megan Jones", role:"Event Coordinator & Assistant to Discipleship Pastor", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
+  { id:11, name:"Rachel Leger", role:"Kids Ministry Coordinator", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
+  { id:12, name:"Stefanie Petkau", role:"Director of Kids & Preschool Ministries & Asst. to Family Pastor", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
+  { id:13, name:"Zac Saathoff", role:"Graphic Designer", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
+  { id:14, name:"Mike Scarbrough", role:"Facilities Manager", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
+  { id:15, name:"Jacob Williams", role:"Business Administrator", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
+  { id:16, name:"Landon Winc", role:"Preteen & Student Ministries Coordinator", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
 ];
 
 export const SEED_MINISTRIES = [
