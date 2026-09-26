@@ -1640,7 +1640,7 @@ const MINISTRY_AREAS = [
     ],
   },
   {
-    id: "college", name: "College & Career", icon: "🎓", color: "#2c5282",
+    id: "college", name: "Young Adults", icon: "🎓", color: "#2c5282",
     leader: "Robert Garcia", meets: "Thursdays · 7:00 PM · The Loft",
     members: 48, volunteers: 8,
     description: "Ages 18–25 — students, young professionals, and singles.",
