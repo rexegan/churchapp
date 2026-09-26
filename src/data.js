@@ -118,7 +118,7 @@ export const SEED_LIFE_GROUPS = [
     ]
   },
   {
-    id:3, name:"Jennings LifeGroup", leader:"Andy Jennings", day:"Wednesday", time:"6:30 PM",
+    id:3, name:"Jennings LifeGroup", leader:"Andy & Lauren Jennings", day:"Wednesday", time:"6:30 PM",
     location:"Church Campus - Rm 105", status:"Active",
     members:[
   { id:112, name:"Cole Bennett", phone:"(817) 555-2112", email:"cole.bennett@email.com", joined:"2025-04-26", role:"Member", attendance:66, lastContact:"2026-09-08" },
