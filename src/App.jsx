@@ -246,7 +246,7 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
           <StatCard icon="👥" label="Life Groups"        value={lifeGroups.length}                                       color={C.accent}  onClick={() => setTab("lifegroups")} />
           <StatCard icon="⛪" label="Active Ministries"  value={ministries.filter(m => m.status === "Active").length}   color={C.green}   onClick={() => setTab("family")} />
           <StatCard icon="🙏" label="Active Prayer Requests" value={activePrayers}                                           color={C.purple}  onClick={() => setTab("lifegroups")} />
-          <StatCard icon="👔" label="Active Staff"       value={staff.filter(s => s.status === "Active").length}        color={C.accent2} onClick={() => setTab("hr")} />
+          <StatCard icon="👔" label="Pastors & Elders"   value={staff.filter(s => s.status === "Active" && /pastor|elder/i.test(s.role || "")).length} color={C.accent2} onClick={() => setTab("hr")} />
         </div>
       </div>
 
