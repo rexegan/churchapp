@@ -118,7 +118,7 @@ export const SEED_LIFE_GROUPS = [
     ]
   },
   {
-    id:3, name:"Travis LifeGroup", leader:"Andy Travis", day:"Wednesday", time:"6:30 PM",
+    id:3, name:"Jennings LifeGroup", leader:"Andy Jennings", day:"Wednesday", time:"6:30 PM",
     location:"Church Campus - Rm 105", status:"Active",
     members:[
   { id:112, name:"Cole Bennett", phone:"(817) 555-2112", email:"cole.bennett@email.com", joined:"2025-04-26", role:"Member", attendance:66, lastContact:"2026-09-08" },
@@ -133,7 +133,7 @@ export const SEED_LIFE_GROUPS = [
     ]
   },
   {
-    id:4, name:"Holloway LifeGroup", leader:"Mark & Cindy Holloway", day:"Thursday", time:"7:00 PM",
+    id:4, name:"Love LifeGroup", leader:"John & Julie Love", day:"Thursday", time:"7:00 PM",
     location:"Holloway Home - Burleson", status:"Active",
     members:[
   { id:121, name:"Pete Ragland", phone:"(817) 555-2121", email:"pete.ragland@email.com", joined:"2024-08-12", role:"Member", attendance:65, lastContact:"2026-09-04" },
@@ -149,7 +149,7 @@ export const SEED_LIFE_GROUPS = [
     ]
   },
   {
-    id:5, name:"Pruitt LifeGroup", leader:"Steve & Donna Pruitt", day:"Sunday", time:"5:00 PM",
+    id:5, name:"Barnes LifeGroup", leader:"Rick & Marilyn Barnes", day:"Sunday", time:"5:00 PM",
     location:"Church Campus - Rm 203", status:"Active",
     members:[
   { id:131, name:"Hank Mercer", phone:"(817) 555-2131", email:"hank.mercer@email.com", joined:"2025-07-04", role:"Member", attendance:85, lastContact:"2026-09-13" },
@@ -167,7 +167,7 @@ export const SEED_LIFE_GROUPS = [
     ]
   },
   {
-    id:6, name:"Wade LifeGroup", leader:"Chris & Amber Wade", day:"Friday", time:"6:30 PM",
+    id:6, name:"Snow LifeGroup", leader:"Richard & Brenda Snow", day:"Friday", time:"6:30 PM",
     location:"Wade Home - Joshua", status:"Active",
     members:[
   { id:143, name:"Toby Neuman", phone:"(817) 555-2143", email:"toby.neuman@email.com", joined:"2025-11-08", role:"Member", attendance:94, lastContact:"2026-07-08" },
@@ -181,6 +181,37 @@ export const SEED_LIFE_GROUPS = [
   { id:151, name:"Ross Devlin", phone:"(817) 555-2151", email:"ross.devlin@email.com", joined:"2025-11-11", role:"Member", attendance:60, lastContact:"2026-09-13" }
     ]
   },
+  {
+    id:7, name:"Dickinson LifeGroup", leader:"Travis & Shari Dickinson", day:"Tuesday", time:"6:30 PM",
+    location:"Dickinson Home - Burleson", status:"Active",
+    members:[
+  { id:161, name:"Grant Ostler", phone:"(817) 555-4161", email:"grant.ostler@email.com", joined:"2025-09-28", role:"Member", attendance:84, lastContact:"2026-08-17" },
+  { id:162, name:"Meredith Ostler", phone:"(817) 555-4162", email:"meredith.ostler@email.com", joined:"2024-03-26", role:"Member", attendance:87, lastContact:"2026-08-21" },
+  { id:163, name:"Phil Landry", phone:"(817) 555-4163", email:"phil.landry@email.com", joined:"2024-02-15", role:"Member", attendance:74, lastContact:"2026-07-03" },
+  { id:164, name:"Susan Landry", phone:"(817) 555-4164", email:"susan.landry@email.com", joined:"2024-10-13", role:"Member", attendance:83, lastContact:"2026-09-20" },
+  { id:165, name:"Jared Coker", phone:"(817) 555-4165", email:"jared.coker@email.com", joined:"2024-10-01", role:"Member", attendance:88, lastContact:"2026-07-02" },
+  { id:166, name:"Beth Coker", phone:"(817) 555-4166", email:"beth.coker@email.com", joined:"2024-04-08", role:"Member", attendance:93, lastContact:"2026-07-15" },
+  { id:167, name:"Ron Aldous", phone:"(817) 555-4167", email:"ron.aldous@email.com", joined:"2025-08-19", role:"Member", attendance:67, lastContact:"2026-09-08" },
+  { id:168, name:"Tina Aldous", phone:"(817) 555-4168", email:"tina.aldous@email.com", joined:"2025-08-01", role:"Member", attendance:60, lastContact:"2026-08-21" },
+  { id:169, name:"Kyle Brandt", phone:"(817) 555-4169", email:"kyle.brandt@email.com", joined:"2025-07-18", role:"Member", attendance:60, lastContact:"2026-09-09" },
+  { id:170, name:"Dana Brandt", phone:"(817) 555-4170", email:"dana.brandt@email.com", joined:"2025-04-17", role:"Member", attendance:73, lastContact:"2026-07-03" }
+    ]
+  },
+  {
+    id:8, name:"Saathoff LifeGroup", leader:"Zac & Laura Saathoff", day:"Thursday", time:"7:00 PM",
+    location:"Saathoff Home - Joshua", status:"Active",
+    members:[
+  { id:171, name:"Cody Marsh", phone:"(817) 555-4171", email:"cody.marsh@email.com", joined:"2024-07-04", role:"Member", attendance:73, lastContact:"2026-08-03" },
+  { id:172, name:"Erin Marsh", phone:"(817) 555-4172", email:"erin.marsh@email.com", joined:"2024-11-01", role:"Member", attendance:68, lastContact:"2026-07-02" },
+  { id:173, name:"Dustin Hale", phone:"(817) 555-4173", email:"dustin.hale@email.com", joined:"2025-07-23", role:"Member", attendance:80, lastContact:"2026-08-03" },
+  { id:174, name:"Kara Hale", phone:"(817) 555-4174", email:"kara.hale@email.com", joined:"2024-11-09", role:"Member", attendance:76, lastContact:"2026-07-10" },
+  { id:175, name:"Miles Turek", phone:"(817) 555-4175", email:"miles.turek@email.com", joined:"2025-01-14", role:"Member", attendance:62, lastContact:"2026-07-08" },
+  { id:176, name:"Jodi Turek", phone:"(817) 555-4176", email:"jodi.turek@email.com", joined:"2024-01-02", role:"Member", attendance:84, lastContact:"2026-08-06" },
+  { id:177, name:"Seth Bingham", phone:"(817) 555-4177", email:"seth.bingham@email.com", joined:"2024-08-17", role:"Member", attendance:67, lastContact:"2026-09-05" },
+  { id:178, name:"Lacey Bingham", phone:"(817) 555-4178", email:"lacey.bingham@email.com", joined:"2025-11-13", role:"Member", attendance:62, lastContact:"2026-08-14" },
+  { id:179, name:"Alan Voss", phone:"(817) 555-4179", email:"alan.voss@email.com", joined:"2024-01-09", role:"Member", attendance:92, lastContact:"2026-08-01" }
+    ]
+  },
 ];
 
 export const SEED_PRAYER = [
@@ -188,26 +219,26 @@ export const SEED_PRAYER = [
   { id:101, requester:"Linda Hawkins",       group:"Russell LifeGroup",   request:"Healing from knee replacement surgery — recovering at home",                              category:"Health",   status:"Answered", date:"2026-05-04", followUp:"2026-05-18", followUpNote:"Back on her feet! Attended service for the first time in 3 weeks.", private:false },
   { id:102, requester:"Tom & Amy Reed",      group:"Keaton LifeGroup",   request:"Tom received three job interviews after 4 months of searching",                          category:"Career",   status:"Answered", date:"2026-05-07", followUp:"2026-06-01", followUpNote:"Tom accepted a position as Project Manager at Hartwell Industries — praise God!", private:false },
   { id:103, requester:"Marcus Johnson",      group:"Keaton LifeGroup",   request:"Struggling with anxiety and loneliness since relocating from Atlanta",                   category:"Mental Health", status:"Active", date:"2026-05-12", followUp:"2026-06-12", followUpNote:"Connected with Dr. Osei for pastoral counseling — seeing progress.",private:false },
-  { id:104, requester:"Anonymous",           group:"Travis LifeGroup",  request:"Marriage under serious strain — spouse has suggested separation",                        category:"Family",   status:"Active",   date:"2026-05-14", followUp:null,          followUpNote:"", private:true  },
-  { id:105, requester:"Joseph Turner",       group:"Pruitt LifeGroup",      request:"Wife Mae diagnosed with early-stage diabetes — wisdom for dietary changes",               category:"Health",   status:"Answered", date:"2026-05-18", followUp:"2026-06-05", followUpNote:"Mae meeting weekly with nutritionist — blood sugar numbers improving significantly.", private:false },
-  { id:106, requester:"Youth Group",         group:"Wade LifeGroup",  request:"Safe travel & spiritual fruit on summer mission trip to Guatemala",                       category:"Missions", status:"Answered", date:"2026-05-20", followUp:"2026-07-05", followUpNote:"Team of 14 returned safely — built 2 classrooms and led 3 VBS sessions. Incredible fruit.", private:false },
+  { id:104, requester:"Anonymous",           group:"Jennings LifeGroup",  request:"Marriage under serious strain — spouse has suggested separation",                        category:"Family",   status:"Active",   date:"2026-05-14", followUp:null,          followUpNote:"", private:true  },
+  { id:105, requester:"Joseph Turner",       group:"Barnes LifeGroup",      request:"Wife Mae diagnosed with early-stage diabetes — wisdom for dietary changes",               category:"Health",   status:"Answered", date:"2026-05-18", followUp:"2026-06-05", followUpNote:"Mae meeting weekly with nutritionist — blood sugar numbers improving significantly.", private:false },
+  { id:106, requester:"Youth Group",         group:"Snow LifeGroup",  request:"Safe travel & spiritual fruit on summer mission trip to Guatemala",                       category:"Missions", status:"Answered", date:"2026-05-20", followUp:"2026-07-05", followUpNote:"Team of 14 returned safely — built 2 classrooms and led 3 VBS sessions. Incredible fruit.", private:false },
   { id:107, requester:"Felicia Grant",       group:"Russell LifeGroup",   request:"Custody battle over her daughter — court date June 12",                                  category:"Family",   status:"Answered", date:"2026-05-25", followUp:"2026-06-14", followUpNote:"Court ruled in her favor — full custody granted. Church family celebrated together Sunday.", private:false },
   // JUNE
   { id:108, requester:"Edwin Hawkins",       group:"Russell LifeGroup",   request:"Business struggling — considering closing his restaurant of 9 years",                    category:"Finances", status:"Active",   date:"2026-06-02", followUp:"2026-07-01", followUpNote:"Received a small business grant through the city — staying open through Q3.", private:false },
   { id:109, requester:"Diana Okafor",        group:"Russell LifeGroup",   request:"Mother in Nigeria critically ill — cannot travel due to visa issues",                    category:"Family",   status:"Answered", date:"2026-06-08", followUp:"2026-07-02", followUpNote:"Mother stabilized and discharged. Diana's visa approved — flew out July 3rd.", private:false },
-  { id:110, requester:"Uriel Castillo",      group:"Wade LifeGroup",  request:"First-generation college student — struggling academically, considering dropping out",   category:"Career",   status:"Active",   date:"2026-06-10", followUp:"2026-07-08", followUpNote:"Paired with Isaiah Brooks as mentor — passing all courses this semester.", private:false },
-  { id:111, requester:"Elijah James",        group:"Holloway LifeGroup",   request:"Prodigal son situation — oldest son walked away from faith 2 years ago",                 category:"Family",   status:"Active",   date:"2026-06-15", followUp:null,          followUpNote:"", private:false },
-  { id:112, requester:"Katherine Bell",      group:"Pruitt LifeGroup",      request:"Praise — 50th wedding anniversary! Thanksgiving to God for faithfulness",                category:"Praise",   status:"Answered", date:"2026-06-18", followUp:"2026-06-21", followUpNote:"Church family surprised them at Sunday service with a reception. Beautiful moment.", private:false },
+  { id:110, requester:"Uriel Castillo",      group:"Snow LifeGroup",  request:"First-generation college student — struggling academically, considering dropping out",   category:"Career",   status:"Active",   date:"2026-06-10", followUp:"2026-07-08", followUpNote:"Paired with Isaiah Brooks as mentor — passing all courses this semester.", private:false },
+  { id:111, requester:"Elijah James",        group:"Love LifeGroup",   request:"Prodigal son situation — oldest son walked away from faith 2 years ago",                 category:"Family",   status:"Active",   date:"2026-06-15", followUp:null,          followUpNote:"", private:false },
+  { id:112, requester:"Katherine Bell",      group:"Barnes LifeGroup",      request:"Praise — 50th wedding anniversary! Thanksgiving to God for faithfulness",                category:"Praise",   status:"Answered", date:"2026-06-18", followUp:"2026-06-21", followUpNote:"Church family surprised them at Sunday service with a reception. Beautiful moment.", private:false },
   { id:113, requester:"Priya Sharma",        group:"Keaton LifeGroup",   request:"Navigating faith conversation with unbelieving husband — wisdom and grace needed",       category:"Family",   status:"Active",   date:"2026-06-20", followUp:"2026-07-15", followUpNote:"Husband attended service for the first time on June 29 — heart is softening.", private:false },
   { id:114, requester:"Children's Ministry", group:"",                    request:"Three kids in our program currently in foster care — protection, stability, and love",    category:"Children", status:"Active",   date:"2026-06-22", followUp:null,          followUpNote:"", private:false },
-  { id:115, requester:"Ronald Shaw",         group:"Travis LifeGroup",  request:"Recovering from alcohol dependency — 60 days sober, needs accountability",              category:"Recovery", status:"Active",   date:"2026-06-25", followUp:"2026-07-20", followUpNote:"90 days sober as of July 25. Accountability partner assigned from Men's Ministry.", private:false },
+  { id:115, requester:"Ronald Shaw",         group:"Jennings LifeGroup",  request:"Recovering from alcohol dependency — 60 days sober, needs accountability",              category:"Recovery", status:"Active",   date:"2026-06-25", followUp:"2026-07-20", followUpNote:"90 days sober as of July 25. Accountability partner assigned from Men's Ministry.", private:false },
   // JULY
-  { id:116, requester:"Brianna Scott",       group:"Holloway LifeGroup",   request:"Accepted to nursing program — provision for tuition and confidence for the challenge",   category:"Career",   status:"Active",   date:"2026-07-01", followUp:null,          followUpNote:"", private:false },
+  { id:116, requester:"Brianna Scott",       group:"Love LifeGroup",   request:"Accepted to nursing program — provision for tuition and confidence for the challenge",   category:"Career",   status:"Active",   date:"2026-07-01", followUp:null,          followUpNote:"", private:false },
   { id:117, requester:"Hannah Kim",          group:"Russell LifeGroup",   request:"Grandmother's final days — family peace and a good passing",                            category:"Health",   status:"Answered", date:"2026-07-06", followUp:"2026-07-14", followUpNote:"Grandmother passed peacefully July 12. Family gathered; Pastor Russell officiated the service.", private:false },
-  { id:118, requester:"Olivia Mensah",       group:"Travis LifeGroup",  request:"Work environment is hostile — being passed over for promotion due to faith",             category:"Career",   status:"Active",   date:"2026-07-08", followUp:null,          followUpNote:"", private:false },
-  { id:119, requester:"Mildred Okafor",      group:"Pruitt LifeGroup",      request:"Praise — cancer screening came back clear after 2 years of monitoring!",                category:"Praise",   status:"Answered", date:"2026-07-10", followUp:"2026-07-13", followUpNote:"Shared her testimony in service July 13 — brought many to tears. Powerful moment.", private:false },
-  { id:120, requester:"Nathan Fox",          group:"Travis LifeGroup",  request:"Wife Claire 12 weeks pregnant after two miscarriages — peace and a healthy pregnancy",  category:"Health",   status:"Active",   date:"2026-07-14", followUp:null,          followUpNote:"", private:false },
-  { id:121, requester:"Yusuf Afolabi",       group:"Wade LifeGroup",  request:"Pursuing calling to ministry — wisdom about seminary and next steps",                   category:"Calling",  status:"Active",   date:"2026-07-17", followUp:null,          followUpNote:"", private:false },
+  { id:118, requester:"Olivia Mensah",       group:"Jennings LifeGroup",  request:"Work environment is hostile — being passed over for promotion due to faith",             category:"Career",   status:"Active",   date:"2026-07-08", followUp:null,          followUpNote:"", private:false },
+  { id:119, requester:"Mildred Okafor",      group:"Barnes LifeGroup",      request:"Praise — cancer screening came back clear after 2 years of monitoring!",                category:"Praise",   status:"Answered", date:"2026-07-10", followUp:"2026-07-13", followUpNote:"Shared her testimony in service July 13 — brought many to tears. Powerful moment.", private:false },
+  { id:120, requester:"Nathan Fox",          group:"Jennings LifeGroup",  request:"Wife Claire 12 weeks pregnant after two miscarriages — peace and a healthy pregnancy",  category:"Health",   status:"Active",   date:"2026-07-14", followUp:null,          followUpNote:"", private:false },
+  { id:121, requester:"Yusuf Afolabi",       group:"Snow LifeGroup",  request:"Pursuing calling to ministry — wisdom about seminary and next steps",                   category:"Calling",  status:"Active",   date:"2026-07-17", followUp:null,          followUpNote:"", private:false },
   { id:122, requester:"Anonymous",           group:"Russell LifeGroup",   request:"Dealing with grief after pregnancy loss — needs pastoral support",                      category:"Grief",    status:"Active",   date:"2026-07-20", followUp:null,          followUpNote:"", private:true  },
   { id:123, requester:"Grace Kim",           group:"Keaton LifeGroup",   request:"Praise — baby born healthy after high-risk pregnancy! Mother and baby doing great!",     category:"Praise",   status:"Answered", date:"2026-07-22", followUp:"2026-07-22", followUpNote:"Baby Eliana born July 21st, 7 lbs 4 oz. Church family blessed them Sunday.", private:false },
 ];

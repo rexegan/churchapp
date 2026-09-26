@@ -55,10 +55,12 @@ const fmtPhone = (raw) => {
 const GROUP_DEACON = {
   "Russell LifeGroup":  "Harold Simmons",
   "Keaton LifeGroup":   "Walter Green",
-  "Travis LifeGroup":   "Frank Delgado",
-  "Holloway LifeGroup": "Curtis Boyd",
-  "Pruitt LifeGroup":   "Leon Ashworth",
-  "Wade LifeGroup":     "Ray Whitfield",
+  "Jennings LifeGroup":  "Frank Delgado",
+  "Love LifeGroup":      "Curtis Boyd",
+  "Barnes LifeGroup":    "Leon Ashworth",
+  "Snow LifeGroup":      "Ray Whitfield",
+  "Dickinson LifeGroup": "Curtis Boyd",
+  "Saathoff LifeGroup":  "Leon Ashworth",
 };
 const fmtPct = (a, b) => b ? Math.round((a / b) * 100) + "%" : "0%";
 const today = () => new Date().toISOString().slice(0, 10);
@@ -2657,11 +2659,11 @@ export default function ChurchOS() {
   const tab = TABS.some(t => t.id === storedTab) ? storedTab : "dashboard"; // migrate away from removed tab ids
   const [staff,         setStaff]         = useStored("cos2-staff-v3",      SEED_STAFF);
   const [ministries,    setMinistries]    = useStored("cos2-ministries",    SEED_MINISTRIES);
-  const [lifeGroups,    setLifeGroups]    = useStored("cos2-lifegroups-v2", SEED_LIFE_GROUPS);
+  const [lifeGroups,    setLifeGroups]    = useStored("cos2-lifegroups-v3", SEED_LIFE_GROUPS);
   const [transactions,  setTransactions]  = useStored("cos2-transactions",  SEED_TRANSACTIONS);
   const [campaigns,     setCampaigns]     = useStored("cos2-campaigns",     SEED_CAMPAIGNS);
   const [announcements, setAnnouncements] = useStored("cos2-announcements", SEED_ANNOUNCEMENTS);
-  const [prayerRequests,setPrayerRequests]= useStored("cos2-prayer-v2",     SEED_PRAYER);
+  const [prayerRequests,setPrayerRequests]= useStored("cos2-prayer-v3",     SEED_PRAYER);
   const [events,        setEvents]        = useStored("cos2-events-v2",    SEED_EVENTS);
   const [open,          setOpen]          = useState(true);
   const [personName,    setPersonName]    = useState(null);
