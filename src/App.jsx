@@ -2009,13 +2009,25 @@ function Finance({ transactions, setTransactions }) {
 function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
   const col = colorFor(member.dept);
   const [editing, setEditing] = useState(false);
-  const [form, setForm] = useState({ ...member });
+  // Legacy single email/phone/address values fold into the multi-entry lists
+  const toLists = m => ({
+    emails:    m.emails?.length    ? m.emails    : (m.email   ? [m.email]                          : [""]),
+    phones:    m.phones?.length    ? m.phones    : (m.phone   ? [{ number: m.phone, tag: "Cell" }] : [{ number: "", tag: "Cell" }]),
+    addresses: m.addresses?.length ? m.addresses : (m.address ? [m.address]                        : [""]),
+  });
+  const [form, setForm] = useState({ ...member, ...toLists(member) });
+  const PHONE_TAGS = ["Cell", "Office", "Home", "Work"];
+  const ROLE_OPTIONS = ["Senior Pastor", "Elder", "Life Group Leader", "Volunteer"];
+  const DEPT_OPTIONS = ["Staff", "Elder", "Volunteer", "Life Group Leader"];
   const initials = member.name.split(" ").map(n => n[0]).slice(0, 2).join("");
   const yearsServed = member.startDate ? Math.floor((new Date() - new Date(member.startDate)) / (365.25 * 24 * 60 * 60 * 1000)) : null;
 
   function save() {
-    if (!form.name || !form.role) return;
-    onSave({ ...form });
+    if (!form.name) return;
+    const emails    = (form.emails    || []).map(s => s.trim()).filter(Boolean);
+    const phones    = (form.phones    || []).filter(p => (p.number || "").trim());
+    const addresses = (form.addresses || []).map(s => s.trim()).filter(Boolean);
+    onSave({ ...form, emails, phones, addresses, email: emails[0] || "", phone: phones[0]?.number || "", address: addresses[0] || "" });
     setEditing(false);
   }
 
@@ -2049,11 +2061,18 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
         <div style={{ padding: "20px 24px" }}>
           {!editing ? (
             <>
-              {/* Contact */}
-              <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Contact</div>
-              <Row label="Email"       value={member.email} />
-              <Row label="Phone"       value={fmtPhone(member.phone)} />
-              <Row label="Address"     value={member.address} />
+              {/* Contact Information */}
+              <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Contact Information</div>
+              {(member.emails?.length ? member.emails : (member.email ? [member.email] : [])).map((em, i) => (
+                <Row key={"em" + i} label={i === 0 ? "Email" : "Email " + (i + 1)} value={em} />
+              ))}
+              {(member.phones?.length ? member.phones : (member.phone ? [{ number: member.phone, tag: "Cell" }] : [])).map((p, i) => (
+                <Row key={"ph" + i} label={(p.tag || "Phone") + " Phone"} value={fmtPhone(p.number)} />
+              ))}
+              {(member.addresses?.length ? member.addresses : (member.address ? [member.address] : [])).map((ad, i) => (
+                <Row key={"ad" + i} label={i === 0 ? "Address" : "Address " + (i + 1)} value={ad} />
+              ))}
+              <Row label="Birthday" value={fmtDate(member.birthday)} />
 
               {/* Emergency contact */}
               {(member.emergencyName || member.emergencyPhone) && <>
@@ -2068,7 +2087,7 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
               <Row label="Department"  value={member.dept} />
               <Row label="Role / Title" value={member.role} />
               <Row label="Status"      value={member.status} />
-              <Row label="Start Date"  value={fmtDate(member.startDate)} />
+              <Row label="Date Started" value={fmtDate(member.startDate)} />
               <Row label="Employee ID" value={member.employeeId} />
 
               {/* Notes */}
@@ -2081,24 +2100,74 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
                 {member.email && <a href={`mailto:${member.email}`} style={{ background: C.bg, border: `1px solid ${C.border}`, color: C.text, borderRadius: 9, padding: "8px 16px", textDecoration: "none", fontSize: 13, fontWeight: 700 }}>✉ Email</a>}
                 {member.phone && <a href={`tel:${member.phone}`}   style={{ background: C.bg, border: `1px solid ${C.border}`, color: C.text, borderRadius: 9, padding: "8px 16px", textDecoration: "none", fontSize: 13, fontWeight: 700 }}>📞 Call</a>}
                 <Btn outline color={C.red}   small onClick={() => { if (window.confirm("Remove " + member.name + "?")) { onDelete(member.id); onClose(); } }}>Remove</Btn>
-                <Btn small onClick={() => setEditing(true)}>Edit File</Btn>
+                <Btn small onClick={() => { setForm({ ...member, ...toLists(member) }); setEditing(true); }}>Edit File</Btn>
               </div>
             </>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Basic Info</div>
+              <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Contact Information</div>
               <Inp label="Full Name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <Inp label="Role / Title" value={form.role}  onChange={e => setForm(f => ({ ...f, role: e.target.value }))} />
-                <Inp label="Department"   value={form.dept}  onChange={e => setForm(f => ({ ...f, dept: e.target.value }))} />
+                <Sel label="Role / Title" value={form.role || ""} onChange={e => setForm(f => ({ ...f, role: e.target.value }))}>
+                  <option value="">Select…</option>
+                  {ROLE_OPTIONS.map(r => <option key={r}>{r}</option>)}
+                </Sel>
+                <Sel label="Department" value={form.dept || ""} onChange={e => setForm(f => ({ ...f, dept: e.target.value }))}>
+                  <option value="">Select…</option>
+                  {DEPT_OPTIONS.map(d => <option key={d}>{d}</option>)}
+                </Sel>
               </div>
 
-              <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>Contact</div>
+              <Field label="Email">
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {(form.emails || []).map((em, i) => (
+                    <div key={i} style={{ display: "flex", gap: 8 }}>
+                      <input type="email" value={em} placeholder="name@email.com" style={inputStyle}
+                        onChange={e => setForm(f => ({ ...f, emails: f.emails.map((x, j) => j === i ? e.target.value : x) }))} />
+                      {form.emails.length > 1 && <button onClick={() => setForm(f => ({ ...f, emails: f.emails.filter((_, j) => j !== i) }))} style={{ background: "none", border: "none", color: C.muted, fontSize: 18, cursor: "pointer" }}>×</button>}
+                    </div>
+                  ))}
+                  <button onClick={() => setForm(f => ({ ...f, emails: [...(f.emails || []), ""] }))}
+                    style={{ alignSelf: "flex-start", background: "none", border: "none", color: C.accent, fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0 }}>+ Add Email</button>
+                </div>
+              </Field>
+
+              <Field label="Phone Numbers">
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {(form.phones || []).map((p, i) => (
+                    <div key={i} style={{ display: "flex", gap: 8 }}>
+                      <input value={fmtPhone(p.number)} placeholder="(817) 555-1234" style={{ ...inputStyle, flex: 1 }}
+                        onChange={e => setForm(f => ({ ...f, phones: f.phones.map((x, j) => j === i ? { ...x, number: fmtPhone(e.target.value) } : x) }))} />
+                      <select value={p.tag || "Cell"} style={{ ...inputStyle, width: 110, flex: "none" }}
+                        onChange={e => setForm(f => ({ ...f, phones: f.phones.map((x, j) => j === i ? { ...x, tag: e.target.value } : x) }))}>
+                        {PHONE_TAGS.map(t => <option key={t}>{t}</option>)}
+                      </select>
+                      {form.phones.length > 1 && <button onClick={() => setForm(f => ({ ...f, phones: f.phones.filter((_, j) => j !== i) }))} style={{ background: "none", border: "none", color: C.muted, fontSize: 18, cursor: "pointer" }}>×</button>}
+                    </div>
+                  ))}
+                  <button onClick={() => setForm(f => ({ ...f, phones: [...(f.phones || []), { number: "", tag: "Cell" }] }))}
+                    style={{ alignSelf: "flex-start", background: "none", border: "none", color: C.accent, fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0 }}>+ Add Phone Number</button>
+                </div>
+              </Field>
+
+              <Field label="Address">
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {(form.addresses || []).map((ad, i) => (
+                    <div key={i} style={{ display: "flex", gap: 8 }}>
+                      <input value={ad} placeholder="Street, city, state, zip" style={inputStyle}
+                        onChange={e => setForm(f => ({ ...f, addresses: f.addresses.map((x, j) => j === i ? e.target.value : x) }))} />
+                      {form.addresses.length > 1 && <button onClick={() => setForm(f => ({ ...f, addresses: f.addresses.filter((_, j) => j !== i) }))} style={{ background: "none", border: "none", color: C.muted, fontSize: 18, cursor: "pointer" }}>×</button>}
+                    </div>
+                  ))}
+                  <button onClick={() => setForm(f => ({ ...f, addresses: [...(f.addresses || []), ""] }))}
+                    style={{ alignSelf: "flex-start", background: "none", border: "none", color: C.accent, fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0 }}>+ Add Address</button>
+                </div>
+              </Field>
+
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <Inp label="Email" type="email" value={form.email || ""} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
-                <Inp label="Phone"              value={fmtPhone(form.phone || "")} onChange={e => setForm(f => ({ ...f, phone: fmtPhone(e.target.value) }))} placeholder="(817) 555-1234" />
+                <Inp label="Birthday"     type="date" value={form.birthday  || ""} onChange={e => setForm(f => ({ ...f, birthday:  e.target.value }))} />
+                <Inp label="Date Started" type="date" value={form.startDate || ""} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} />
               </div>
-              <Inp label="Address" value={form.address || ""} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} />
 
               <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>Emergency Contact</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
@@ -2112,16 +2181,14 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
                 <Sel label="Status" value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>
                   <option>Active</option><option>Inactive</option>
                 </Sel>
-                <Inp label="Start Date"  type="date"   value={form.startDate   || ""} onChange={e => setForm(f => ({ ...f, startDate:   e.target.value }))} />
+                <Inp label="Employee ID" value={form.employeeId || ""} onChange={e => setForm(f => ({ ...f, employeeId: e.target.value }))} />
               </div>
-              <Inp label="Employee ID" value={form.employeeId || ""} onChange={e => setForm(f => ({ ...f, employeeId: e.target.value }))} />
-
               <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>HR Notes</div>
               <Txt label="" value={form.notes || ""} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} placeholder="Performance notes, review dates, special circumstances…" />
 
-              <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 8 }}>
-                <Btn outline color={C.muted} small onClick={() => setEditing(false)}>Cancel</Btn>
-                <Btn small onClick={save}>Save File</Btn>
+              <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
+                <Btn outline color={C.muted} onClick={() => setEditing(false)} style={{ flex: "none" }}>Cancel</Btn>
+                <Btn onClick={save} style={{ flex: 1, textAlign: "center" }}>Save</Btn>
               </div>
             </div>
           )}
@@ -2242,8 +2309,14 @@ function HR({ staff, setStaff }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <Inp label="Full Name" value={addForm.name || ""} onChange={e => setAddForm(f => ({ ...f, name: e.target.value }))} />
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              <Inp label="Role / Title" value={addForm.role || ""} onChange={e => setAddForm(f => ({ ...f, role: e.target.value }))} />
-              <Inp label="Department"   value={addForm.dept || ""} onChange={e => setAddForm(f => ({ ...f, dept: e.target.value }))} />
+              <Sel label="Role / Title" value={addForm.role || ""} onChange={e => setAddForm(f => ({ ...f, role: e.target.value }))}>
+                <option value="">Select…</option>
+                {["Senior Pastor", "Elder", "Life Group Leader", "Volunteer"].map(r => <option key={r}>{r}</option>)}
+              </Sel>
+              <Sel label="Department" value={addForm.dept || ""} onChange={e => setAddForm(f => ({ ...f, dept: e.target.value }))}>
+                <option value="">Select…</option>
+                {["Staff", "Elder", "Volunteer", "Life Group Leader"].map(d => <option key={d}>{d}</option>)}
+              </Sel>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <Inp label="Email" type="email" value={addForm.email || ""} onChange={e => setAddForm(f => ({ ...f, email: e.target.value }))} />
