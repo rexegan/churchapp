@@ -1328,7 +1328,7 @@ function LGTeachingTab({ group }) {
 
 // ── Life Groups View ──────────────────────────────────────────────────────────
 function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
-  const [selectedGroup, setSelectedGroup] = useState(lifeGroups[0]?.id || null);
+  const [selectedGroup, setSelectedGroup] = useState(lifeGroups.find(g => g.name === "Russell LifeGroup")?.id ?? lifeGroups[0]?.id ?? null);
   const [lgTab, setLgTab] = useState("quick view");  // quick view | lg today | roster | joined us | follow-up | prayer | events | teaching | attendance | meetings
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("name");
