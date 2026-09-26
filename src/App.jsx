@@ -2659,7 +2659,7 @@ export default function ChurchOS() {
   const tab = TABS.some(t => t.id === storedTab) ? storedTab : "dashboard"; // migrate away from removed tab ids
   const [staff,         setStaff]         = useStored("cos2-staff-v3",      SEED_STAFF);
   const [ministries,    setMinistries]    = useStored("cos2-ministries",    SEED_MINISTRIES);
-  const [lifeGroups,    setLifeGroups]    = useStored("cos2-lifegroups-v4", SEED_LIFE_GROUPS);
+  const [lifeGroups,    setLifeGroups]    = useStored("cos2-lifegroups-v5", SEED_LIFE_GROUPS);
   const [transactions,  setTransactions]  = useStored("cos2-transactions",  SEED_TRANSACTIONS);
   const [campaigns,     setCampaigns]     = useStored("cos2-campaigns",     SEED_CAMPAIGNS);
   const [announcements, setAnnouncements] = useStored("cos2-announcements", SEED_ANNOUNCEMENTS);
