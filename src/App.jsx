@@ -244,8 +244,8 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
         <div style={{ fontSize: 12, fontWeight: 600, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 12 }}>People & Community</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12 }}>
           <StatCard icon="👥" label="Life Groups"        value={lifeGroups.length}                                       color={C.accent}  onClick={() => setTab("lifegroups")} />
-          <StatCard icon="⛪" label="Active Ministries"  value={ministries.filter(m => m.status === "Active").length}   color={C.green}   onClick={() => setTab("family")} />
-          <StatCard icon="🙏" label="Active Prayer Requests" value={activePrayers}                                           color={C.purple}  onClick={() => setTab("lifegroups")} />
+          <StatCard icon="⛪" label="Ministries"         value={ministries.filter(m => m.status === "Active").length}   color={C.green}   onClick={() => setTab("family")} />
+          <StatCard icon="🙏" label="Prayer Requests" value={activePrayers}                                           color={C.purple}  onClick={() => setTab("lifegroups")} />
           <StatCard icon="👔" label="Pastors & Elders"   value={staff.filter(s => s.status === "Active" && /pastor|elder/i.test(s.role || "")).length} color={C.accent2} onClick={() => setTab("hr")} />
         </div>
       </div>
@@ -292,7 +292,6 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
                         <div style={{ fontWeight: 600, color: C.text, fontSize: 13.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.private ? "Anonymous" : <PName name={p.requester || "Member"} />}</div>
                         <div style={{ fontSize: 12.5, color: C.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.request || p.title || ""}</div>
                       </div>
-                      <span style={{ fontSize: 11, color: p.status === "Answered" ? C.green : C.accent, background: (p.status === "Answered" ? C.green : C.accent) + "18", padding: "2px 8px", borderRadius: 20, fontWeight: 700, flexShrink: 0 }}>{p.status}</span>
                     </div>
                   ))}
                 </div>
@@ -313,7 +312,6 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
             <div key={m.id} style={{ padding: "14px 16px", background: C.bg, borderRadius: 12, border: `1px solid ${C.border}` }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
                 <span style={{ fontWeight: 600, color: C.text, fontSize: 15 }}>{m.name}</span>
-                <Badge label={m.status} color={C.green} />
               </div>
               <div style={{ fontSize: 13.5, color: C.muted }}><PName name={m.leader} /></div>
               <div style={{ display: "flex", gap: 14, marginTop: 10 }}>
@@ -1396,7 +1394,6 @@ function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
                 {hasTracking && (
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     <Badge label={`${LG_MEETINGS.length} meetings logged`} color={C.accent} />
-                    <Badge label="Tracking Active" color={C.green} />
                   </div>
                 )}
               </div>
@@ -2051,7 +2048,6 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
             <div style={{ fontSize: 18, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>{member.name}</div>
             <div style={{ fontSize: 13, color: C.muted, marginTop: 3 }}>{member.role} · {member.dept}</div>
             <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
-              <Badge label={member.status} color={member.status === "Active" ? C.green : C.muted} />
               {yearsServed !== null && <Badge label={yearsServed === 0 ? "< 1 yr" : yearsServed + (yearsServed === 1 ? " yr" : " yrs")} color={C.accent} />}
             </div>
           </div>
@@ -2277,7 +2273,6 @@ function HR({ staff, setStaff, title = "Pastors, Elders, and Staff", subtitle = 
                     <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{s.role}</div>
                   </div>
                 </div>
-                <Badge label={s.status} color={s.status === "Active" ? C.green : C.muted} />
               </div>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <Badge label={s.dept} color={col} />
@@ -2451,7 +2446,6 @@ function Marketing({ campaigns, setCampaigns }) {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12 }}>
         <StatCard icon="📣" label="Total Campaigns" value={campaigns.length}                                   color={C.pink}   />
-        <StatCard icon="🟢" label="Active"          value={campaigns.filter(c => c.status === "Active").length} color={C.green}  />
         <StatCard icon="👁" label="Total Reach"     value={totalReach.toLocaleString()}                        color={C.accent} />
         <StatCard icon="📧" label="Avg Open Rate"   value={avgOpen + "%"}                                      color={C.gold}   />
       </div>
