@@ -198,6 +198,22 @@ export const SEED_LIFE_GROUPS = [
     ]
   },
   {
+    id:9, name:"Smith LifeGroup", leader:"Drew & Kate Smith", day:"Monday", time:"7:00 PM",
+    location:"Smith Home - Burleson", status:"Active",
+    members:[
+  { id:181, name:"Brett Colvin", phone:"(817) 555-4181", email:"brett.colvin@email.com", joined:"2025-02-01", role:"Member", attendance:92, lastContact:"2026-08-14" },
+  { id:182, name:"Amy Colvin", phone:"(817) 555-4182", email:"amy.colvin@email.com", joined:"2025-09-12", role:"Member", attendance:63, lastContact:"2026-09-07" },
+  { id:183, name:"Shane Kirby", phone:"(817) 555-4183", email:"shane.kirby@email.com", joined:"2025-08-01", role:"Member", attendance:69, lastContact:"2026-09-15" },
+  { id:184, name:"Renee Kirby", phone:"(817) 555-4184", email:"renee.kirby@email.com", joined:"2024-02-03", role:"Member", attendance:86, lastContact:"2026-08-01" },
+  { id:185, name:"Judd Whitmore", phone:"(817) 555-4185", email:"judd.whitmore@email.com", joined:"2025-06-25", role:"Member", attendance:58, lastContact:"2026-07-02" },
+  { id:186, name:"Cara Whitmore", phone:"(817) 555-4186", email:"cara.whitmore@email.com", joined:"2025-11-06", role:"Member", attendance:94, lastContact:"2026-07-12" },
+  { id:187, name:"Eli Prater", phone:"(817) 555-4187", email:"eli.prater@email.com", joined:"2025-10-10", role:"Member", attendance:75, lastContact:"2026-09-03" },
+  { id:188, name:"Molly Prater", phone:"(817) 555-4188", email:"molly.prater@email.com", joined:"2025-03-23", role:"Member", attendance:85, lastContact:"2026-09-15" },
+  { id:189, name:"Dean Ashford", phone:"(817) 555-4189", email:"dean.ashford@email.com", joined:"2024-03-26", role:"Member", attendance:66, lastContact:"2026-09-11" },
+  { id:190, name:"Nora Ashford", phone:"(817) 555-4190", email:"nora.ashford@email.com", joined:"2024-10-04", role:"Member", attendance:60, lastContact:"2026-07-14" }
+    ]
+  },
+  {
     id:6, name:"Snow LifeGroup", leader:"Richard & Brenda Snow", day:"Friday", time:"6:30 PM",
     location:"Wade Home - Joshua", status:"Active",
     members:[
