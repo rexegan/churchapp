@@ -2227,7 +2227,7 @@ function HR({ staff, setStaff }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div><h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>Staff & Elders</h1><p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>Staff and elder body — click any stat to filter, click any person to open their file</p></div>
+        <div><h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>Pastors, Elders, and Staff</h1><p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>Staff and elder body — click any stat to filter, click any person to open their file</p></div>
         <Btn onClick={() => { setAddForm(empty); setAddModal(true); }}>+ Add Staff</Btn>
       </div>
 
@@ -2647,7 +2647,7 @@ function PersonCardModal({ name, lifeGroups, staff, deacons, extras, onSaveExtra
 // ── Sidebar nav ───────────────────────────────────────────────────────────────
 const TABS = [
   { id:"dashboard", label:"Dashboard",      icon:"🏠" },
-  { id:"hr",        label:"Staff & Elders",  icon:"👔" },
+  { id:"hr",        label:"Pastors, Elders, and Staff",  icon:"👔" },
   { id:"admin",     label:"Administrative", icon:"📅" },
   { id:"family",     label:"Family Ministries", icon:"⛪" },
   { id:"lifegroups", label:"Life Groups",       icon:"👥" },
