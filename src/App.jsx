@@ -2026,8 +2026,8 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
     if (!form.name) return;
     const emails    = (form.emails    || []).map(s => s.trim()).filter(Boolean);
     const phones    = (form.phones    || []).filter(p => (p.number || "").trim());
-    const addresses = (form.addresses || []).map(s => s.trim()).filter(Boolean);
-    onSave({ ...form, emails, phones, addresses, email: emails[0] || "", phone: phones[0]?.number || "", address: addresses[0] || "" });
+    const addresses = (form.addresses || []).filter(a => (a.text || "").trim());
+    onSave({ ...form, emails, phones, addresses, email: emails[0] || "", phone: phones[0]?.number || "", address: addresses[0]?.text || "" });
     setEditing(false);
   }
 
@@ -2070,7 +2070,7 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
                 <Row key={"ph" + i} label={(p.tag || "Phone") + " Phone"} value={fmtPhone(p.number)} />
               ))}
               {(member.addresses?.length ? member.addresses : (member.address ? [member.address] : [])).map((ad, i) => (
-                <Row key={"ad" + i} label={i === 0 ? "Address" : "Address " + (i + 1)} value={ad} />
+                <Row key={"ad" + i} label={(typeof ad === "string" ? "Home" : (ad.tag || "Home")) + " Address"} value={typeof ad === "string" ? ad : ad.text} />
               ))}
               <Row label="Birthday" value={fmtDate(member.birthday)} />
 
@@ -2084,10 +2084,9 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
 
               {/* Employment */}
               <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 20, marginBottom: 8 }}>Employment</div>
-              <Row label="Department"  value={member.dept} />
+              <Row label="Area of Service" value={member.dept} />
               <Row label="Role / Title" value={member.role} />
-              <Row label="Status"      value={member.status} />
-              <Row label="Date Started" value={fmtDate(member.startDate)} />
+                            <Row label="Date Started" value={fmtDate(member.startDate)} />
               <Row label="Employee ID" value={member.employeeId} />
 
               {/* Notes */}
@@ -2101,6 +2100,7 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
                 {member.phone && <a href={`tel:${member.phone}`}   style={{ background: C.bg, border: `1px solid ${C.border}`, color: C.text, borderRadius: 9, padding: "8px 16px", textDecoration: "none", fontSize: 13, fontWeight: 700 }}>📞 Call</a>}
                 <Btn outline color={C.red}   small onClick={() => { if (window.confirm("Remove " + member.name + "?")) { onDelete(member.id); onClose(); } }}>Remove</Btn>
                 <Btn small onClick={() => { setForm({ ...member, ...toLists(member) }); setEditing(true); }}>Edit File</Btn>
+                <Btn small color={C.green} onClick={() => { onSave({ ...member }); onClose(); }}>Save</Btn>
               </div>
             </>
           ) : (
@@ -2112,7 +2112,7 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
                   <option value="">Select…</option>
                   {ROLE_OPTIONS.map(r => <option key={r}>{r}</option>)}
                 </Sel>
-                <Sel label="Department" value={form.dept || ""} onChange={e => setForm(f => ({ ...f, dept: e.target.value }))}>
+                <Sel label="Area of Service" value={form.dept || ""} onChange={e => setForm(f => ({ ...f, dept: e.target.value }))}>
                   <option value="">Select…</option>
                   {DEPT_OPTIONS.map(d => <option key={d}>{d}</option>)}
                 </Sel>
@@ -2154,12 +2154,16 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {(form.addresses || []).map((ad, i) => (
                     <div key={i} style={{ display: "flex", gap: 8 }}>
-                      <input value={ad} placeholder="Street, city, state, zip" style={inputStyle}
-                        onChange={e => setForm(f => ({ ...f, addresses: f.addresses.map((x, j) => j === i ? e.target.value : x) }))} />
+                      <input value={ad.text || ""} placeholder="Street, city, state, zip" style={{ ...inputStyle, flex: 1 }}
+                        onChange={e => setForm(f => ({ ...f, addresses: f.addresses.map((x, j) => j === i ? { ...x, text: e.target.value } : x) }))} />
+                      <select value={ad.tag || "Home"} style={{ ...inputStyle, width: 110, flex: "none" }}
+                        onChange={e => setForm(f => ({ ...f, addresses: f.addresses.map((x, j) => j === i ? { ...x, tag: e.target.value } : x) }))}>
+                        {ADDRESS_TAGS.map(t => <option key={t}>{t}</option>)}
+                      </select>
                       {form.addresses.length > 1 && <button onClick={() => setForm(f => ({ ...f, addresses: f.addresses.filter((_, j) => j !== i) }))} style={{ background: "none", border: "none", color: C.muted, fontSize: 18, cursor: "pointer" }}>×</button>}
                     </div>
                   ))}
-                  <button onClick={() => setForm(f => ({ ...f, addresses: [...(f.addresses || []), ""] }))}
+                  <button onClick={() => setForm(f => ({ ...f, addresses: [...(f.addresses || []), { text: "", tag: "Home" }] }))}
                     style={{ alignSelf: "flex-start", background: "none", border: "none", color: C.accent, fontSize: 13, fontWeight: 700, cursor: "pointer", padding: 0 }}>+ Add Address</button>
                 </div>
               </Field>
@@ -2177,12 +2181,7 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
               <Inp label="Emergency Phone" value={fmtPhone(form.emergencyPhone || "")} onChange={e => setForm(f => ({ ...f, emergencyPhone: fmtPhone(e.target.value) }))} placeholder="(817) 555-1234" />
 
               <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>Employment</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <Sel label="Status" value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>
-                  <option>Active</option><option>Inactive</option>
-                </Sel>
-                <Inp label="Employee ID" value={form.employeeId || ""} onChange={e => setForm(f => ({ ...f, employeeId: e.target.value }))} />
-              </div>
+              <Inp label="Employee ID" value={form.employeeId || ""} onChange={e => setForm(f => ({ ...f, employeeId: e.target.value }))} />
               <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>HR Notes</div>
               <Txt label="" value={form.notes || ""} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} placeholder="Performance notes, review dates, special circumstances…" />
 
@@ -2312,7 +2311,7 @@ function HR({ staff, setStaff, title = "Pastors, Elders, and Staff", subtitle = 
                 <option value="">Select…</option>
                 {["Lead Teaching Pastor", "Elder", "Life Group Leader", "Volunteer"].map(r => <option key={r}>{r}</option>)}
               </Sel>
-              <Sel label="Department" value={addForm.dept || ""} onChange={e => setAddForm(f => ({ ...f, dept: e.target.value }))}>
+              <Sel label="Area of Service" value={addForm.dept || ""} onChange={e => setAddForm(f => ({ ...f, dept: e.target.value }))}>
                 <option value="">Select…</option>
                 {["Staff", "Elder", "Volunteer", "Life Group Leader"].map(d => <option key={d}>{d}</option>)}
               </Sel>
