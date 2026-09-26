@@ -38,6 +38,19 @@ const C = {
 
 const fmt$ = n => "$" + Number(n).toLocaleString();
 
+// Phone numbers always display as (XXX) XXX-XXXX; formats progressively while typing.
+const fmtPhone = (raw) => {
+  if (!raw) return "";
+  let digits = String(raw).replace(/\D/g, "");
+  if (digits.length === 11 && digits[0] === "1") digits = digits.slice(1);
+  if (digits.length === 7) digits = "817" + digits; // legacy numbers stored without area code
+  digits = digits.slice(0, 10);
+  if (digits.length === 0) return "";
+  if (digits.length <= 3) return "(" + digits;
+  if (digits.length <= 6) return "(" + digits.slice(0, 3) + ") " + digits.slice(3);
+  return "(" + digits.slice(0, 3) + ") " + digits.slice(3, 6) + "-" + digits.slice(6);
+};
+
 // Which deacon shepherds the families of each life group
 const GROUP_DEACON = {
   "Russell LifeGroup":  "Harold Simmons",
@@ -466,7 +479,7 @@ function MemberDetailPanel({ member, onClose, prayerRequests, meetings }) {
           <div style={{ background: C.card, borderRadius: 12, padding: "14px 18px", display: "flex", flexDirection: "column", gap: 6 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Contact</div>
             <div style={{ fontSize: 13, color: C.dim }}>{member.email}</div>
-            <div style={{ fontSize: 13, color: C.dim }}>{member.phone}</div>
+            <div style={{ fontSize: 13, color: C.dim }}>{fmtPhone(member.phone)}</div>
             <div style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>Last contact: {member.lastContact}</div>
           </div>
 
@@ -853,7 +866,7 @@ function LGJoinedUsTab({ group }) {
             <Inp label="Name *" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Full name" />
             <Inp label="Date" type="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
             <Inp label="Email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
-            <Inp label="Phone" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} />
+            <Inp label="Phone" value={fmtPhone(form.phone)} onChange={e => setForm(f => ({ ...f, phone: fmtPhone(e.target.value) }))} placeholder="(817) 555-1234" />
             <div style={{ gridColumn: "1/-1" }}>
               <Txt label="Notes" value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} placeholder="How they heard about us, connections, prayer needs..." />
             </div>
@@ -877,7 +890,7 @@ function LGJoinedUsTab({ group }) {
               <div>
                 <div style={{ fontWeight: 700, color: C.text, fontSize: 15 }}><PName name={v.name} /></div>
                 {v.email && <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{v.email}</div>}
-                {v.phone && <div style={{ fontSize: 13, color: C.muted }}>{v.phone}</div>}
+                {v.phone && <div style={{ fontSize: 13, color: C.muted }}>{fmtPhone(v.phone)}</div>}
                 {v.notes && <div style={{ fontSize: 12, color: C.dim, marginTop: 6, fontStyle: "italic" }}>{v.notes}</div>}
               </div>
               <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
@@ -1545,7 +1558,7 @@ function LifeGroupsView({ lifeGroups, prayerRequests, setPrayerRequests }) {
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                         <div>
                           <div style={{ fontWeight: 600, color: C.text, fontSize: 15, marginBottom: 4 }}>{m.name}</div>
-                          <div style={{ fontSize: 13, color: C.muted }}>{m.email} · {m.phone}</div>
+                          <div style={{ fontSize: 13, color: C.muted }}>{m.email} · {fmtPhone(m.phone)}</div>
                         </div>
                         <div style={{ textAlign: "right" }}>
                           <div style={{ fontWeight: 700, fontSize: 18, color: att.consecAbsent >= 4 ? C.red : C.gold }}>{att.consecAbsent} wk</div>
@@ -1860,7 +1873,7 @@ function Deacons() {
             </div>
             <div style={{ fontSize: 12.5, color: C.muted }}>{d.area}</div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
-              <span style={{ fontSize: 12, color: C.dim }}>{d.phone} · {d.email}</span>
+              <span style={{ fontSize: 12, color: C.dim }}>{fmtPhone(d.phone)} · {d.email}</span>
               <span style={{ fontSize: 12, fontWeight: 700, color: C.green, flexShrink: 0 }}>{d.families} families</span>
             </div>
           </div>
@@ -1878,7 +1891,7 @@ function Deacons() {
               <Inp label="Families Assigned" type="number" value={form.families} onChange={e => setForm(f => ({ ...f, families: e.target.value }))} />
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              <Inp label="Phone" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} />
+              <Inp label="Phone" value={fmtPhone(form.phone)} onChange={e => setForm(f => ({ ...f, phone: fmtPhone(e.target.value) }))} placeholder="(817) 555-1234" />
               <Inp label="Email" type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
             </div>
             <Inp label="Care Area" value={form.area} onChange={e => setForm(f => ({ ...f, area: e.target.value }))} placeholder="Hospital visitation, benevolence, widows..." />
@@ -2039,7 +2052,7 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
               {/* Contact */}
               <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Contact</div>
               <Row label="Email"       value={member.email} />
-              <Row label="Phone"       value={member.phone} />
+              <Row label="Phone"       value={fmtPhone(member.phone)} />
               <Row label="Address"     value={member.address} />
 
               {/* Emergency contact */}
@@ -2047,7 +2060,7 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
                 <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 20, marginBottom: 8 }}>Emergency Contact</div>
                 <Row label="Name"         value={member.emergencyName} />
                 <Row label="Relationship" value={member.emergencyRel} />
-                <Row label="Phone"        value={member.emergencyPhone} />
+                <Row label="Phone"        value={fmtPhone(member.emergencyPhone)} />
               </>}
 
               {/* Employment */}
@@ -2083,7 +2096,7 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
               <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>Contact</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <Inp label="Email" type="email" value={form.email || ""} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
-                <Inp label="Phone"              value={form.phone || ""} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} />
+                <Inp label="Phone"              value={fmtPhone(form.phone || "")} onChange={e => setForm(f => ({ ...f, phone: fmtPhone(e.target.value) }))} placeholder="(817) 555-1234" />
               </div>
               <Inp label="Address" value={form.address || ""} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} />
 
@@ -2092,7 +2105,7 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
                 <Inp label="Name"         value={form.emergencyName  || ""} onChange={e => setForm(f => ({ ...f, emergencyName:  e.target.value }))} />
                 <Inp label="Relationship" value={form.emergencyRel   || ""} onChange={e => setForm(f => ({ ...f, emergencyRel:   e.target.value }))} />
               </div>
-              <Inp label="Emergency Phone" value={form.emergencyPhone || ""} onChange={e => setForm(f => ({ ...f, emergencyPhone: e.target.value }))} />
+              <Inp label="Emergency Phone" value={fmtPhone(form.emergencyPhone || "")} onChange={e => setForm(f => ({ ...f, emergencyPhone: fmtPhone(e.target.value) }))} placeholder="(817) 555-1234" />
 
               <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>Employment</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
@@ -2234,7 +2247,7 @@ function HR({ staff, setStaff }) {
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <Inp label="Email" type="email" value={addForm.email || ""} onChange={e => setAddForm(f => ({ ...f, email: e.target.value }))} />
-              <Inp label="Phone"              value={addForm.phone || ""} onChange={e => setAddForm(f => ({ ...f, phone: e.target.value }))} />
+              <Inp label="Phone"              value={fmtPhone(addForm.phone || "")} onChange={e => setAddForm(f => ({ ...f, phone: fmtPhone(e.target.value) }))} placeholder="(817) 555-1234" />
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <Sel label="Status" value={addForm.status || "Active"} onChange={e => setAddForm(f => ({ ...f, status: e.target.value }))}>
@@ -2503,7 +2516,7 @@ function PersonCardModal({ name, lifeGroups, staff, deacons, extras, onSaveExtra
           {!editing ? (
             <>
               <Sect t="Contact" />
-              <Row label="Cell"  value={cell} />
+              <Row label="Cell"  value={fmtPhone(cell)} />
               <Row label="Email" value={email} />
               <Row label="Address" value={extra.address} />
 
@@ -2532,7 +2545,7 @@ function PersonCardModal({ name, lifeGroups, staff, deacons, extras, onSaveExtra
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <Inp label="Cell"  value={form.cell  || cell}  onChange={e => setForm(f => ({ ...f, cell:  e.target.value }))} />
+                <Inp label="Cell"  value={fmtPhone(form.cell  || cell)}  onChange={e => setForm(f => ({ ...f, cell:  fmtPhone(e.target.value) }))} placeholder="(817) 555-1234" />
                 <Inp label="Email" value={form.email || email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
               </div>
               <Inp label="Address" value={form.address || ""} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} />
