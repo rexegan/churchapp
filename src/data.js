@@ -311,6 +311,7 @@ export const SEED_EVENTS = [
   { id:243, title:"Deacons Meeting",                date:"2026-09-22", time:"6:30 PM",  location:"Conf. Room A",       type:"Meeting",  lead:"Harold Simmons",  attendees:8,   notes:"Quarterly family-care assignments review" },
   { id:244, title:"Community Food Drive",           date:"2026-09-26", time:"9:00 AM",  location:"Church Parking Lot", type:"Outreach", lead:"Pastor Russell",  attendees:60,  notes:"Partnering with Joshua food bank" },
   { id:245, title:"LifeGroup Leaders Huddle",       date:"2026-09-29", time:"6:30 PM",  location:"Conf. Room A",       type:"Meeting",  lead:"Maria Thompson",  attendees:12,  notes:"Fall check-in — follow-up lists & new member assimilation" },
+  { id:247, title:"Women's Bible Study: Deuteronomy", date:"2026-09-30", time:"9:30 AM", location:"NorthPointe Campus", type:"Study", lead:"Katie McCoy (author)", attendees:0, notes:"Forever for Our Good by Katie J. McCoy — 8-session study through Deuteronomy. Two options: Monday evenings 6:15-8:15 PM and Wednesday mornings 9:30-11:30 AM. Childcare provided Wednesday mornings only. Book $22 (includes digital access to lessons); pay by card via the form, or cash/check. Registered by Sept 9 = book ready for pickup before the study began on the 14th." },
   { id:246, title:"Fall Family Festival",           date:"2026-10-10", time:"4:00 PM",  location:"Church Grounds",     type:"Outreach", lead:"Sarah Williams",  attendees:400, notes:"Community-wide — games, food trucks, trunk-or-treat" },
 ];
 
