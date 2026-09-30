@@ -32,8 +32,8 @@ export const SEED_MINISTRIES = [
 
 export const SEED_LIFE_GROUPS = [
   {
-    id:5, name:"Barnes LifeGroup", leader:"Rick & Marilyn Barnes", day:"Sunday", time:"5:00 PM",
-    location:"Church Campus - Rm 203", status:"Active",
+    id:5, name:"Barnes LifeGroup", leader:"Rick & Marilyn Barnes", day:"Sunday Morning", time:"9:45 AM",
+    location:"NorthPointe Campus – Rm 101", status:"Active",
     members:[
   { id:131, name:"Hank Mercer", phone:"(817) 555-2131", email:"hank.mercer@email.com", joined:"2025-07-04", role:"Member", attendance:85, lastContact:"2026-09-13" },
   { id:132, name:"Lois Mercer", phone:"(817) 555-2132", email:"lois.mercer@email.com", joined:"2024-04-03", role:"Member", attendance:68, lastContact:"2026-08-06" },
@@ -50,8 +50,8 @@ export const SEED_LIFE_GROUPS = [
     ]
   },
   {
-    id:7, name:"Dickinson LifeGroup", leader:"Travis & Shari Dickinson", day:"Tuesday", time:"6:30 PM",
-    location:"Dickinson Home - Burleson", status:"Active",
+    id:7, name:"Dickinson LifeGroup", leader:"Travis & Shari Dickinson", day:"Sunday Morning", time:"9:45 AM",
+    location:"NorthPointe Campus – Rm 102", status:"Active",
     members:[
   { id:161, name:"Grant Ostler", phone:"(817) 555-4161", email:"grant.ostler@email.com", joined:"2025-09-28", role:"Member", attendance:84, lastContact:"2026-08-17" },
   { id:162, name:"Meredith Ostler", phone:"(817) 555-4162", email:"meredith.ostler@email.com", joined:"2024-03-26", role:"Member", attendance:87, lastContact:"2026-08-21" },
@@ -66,8 +66,8 @@ export const SEED_LIFE_GROUPS = [
     ]
   },
   {
-    id:3, name:"Jennings LifeGroup", leader:"Andy & Lauren Jennings", day:"Wednesday", time:"6:30 PM",
-    location:"Church Campus - Rm 105", status:"Active",
+    id:3, name:"Jennings LifeGroup", leader:"Andy & Lauren Jennings", day:"Sunday Morning", time:"9:45 AM",
+    location:"NorthPointe Campus – Rm 103", status:"Active",
     members:[
   { id:112, name:"Cole Bennett", phone:"(817) 555-2112", email:"cole.bennett@email.com", joined:"2025-04-26", role:"Member", attendance:66, lastContact:"2026-09-08" },
   { id:113, name:"Jenna Bennett", phone:"(817) 555-2113", email:"jenna.bennett@email.com", joined:"2024-10-10", role:"Member", attendance:88, lastContact:"2026-08-11" },
@@ -81,8 +81,8 @@ export const SEED_LIFE_GROUPS = [
     ]
   },
   {
-    id:2, name:"Keaton LifeGroup", leader:"Paul & Debbie Keaton", day:"Tuesday", time:"7:00 PM",
-    location:"Keaton Home - Joshua", status:"Active",
+    id:2, name:"Keaton LifeGroup", leader:"Paul & Debbie Keaton", day:"Sunday Morning", time:"9:45 AM",
+    location:"NorthPointe Campus – Rm 105", status:"Active",
     members:[
   { id:101, name:"Gary Pemberton", phone:"(817) 555-2101", email:"gary.pemberton@email.com", joined:"2025-03-13", role:"Member", attendance:96, lastContact:"2026-07-03" },
   { id:102, name:"Linda Pemberton", phone:"(817) 555-2102", email:"linda.pemberton@email.com", joined:"2024-06-19", role:"Member", attendance:58, lastContact:"2026-09-07" },
@@ -98,8 +98,8 @@ export const SEED_LIFE_GROUPS = [
     ]
   },
   {
-    id:4, name:"Love LifeGroup", leader:"John & Julie Love", day:"Thursday", time:"7:00 PM",
-    location:"Holloway Home - Burleson", status:"Active",
+    id:4, name:"Love LifeGroup", leader:"John & Julie Love", day:"Sunday Morning", time:"9:45 AM",
+    location:"NorthPointe Campus – Rm 106", status:"Active",
     members:[
   { id:121, name:"Pete Ragland", phone:"(817) 555-2121", email:"pete.ragland@email.com", joined:"2024-08-12", role:"Member", attendance:65, lastContact:"2026-09-04" },
   { id:122, name:"Joyce Ragland", phone:"(817) 555-2122", email:"joyce.ragland@email.com", joined:"2025-01-07", role:"Member", attendance:73, lastContact:"2026-07-08" },
@@ -183,8 +183,8 @@ export const SEED_LIFE_GROUPS = [
     ]
   },
   {
-    id:8, name:"Saathoff LifeGroup", leader:"Zac & Laura Saathoff", day:"Thursday", time:"7:00 PM",
-    location:"Saathoff Home - Joshua", status:"Active",
+    id:8, name:"Saathoff LifeGroup", leader:"Zac & Laura Saathoff", day:"Sunday Morning", time:"9:45 AM",
+    location:"NorthPointe Campus – Rm 202", status:"Active",
     members:[
   { id:171, name:"Cody Marsh", phone:"(817) 555-4171", email:"cody.marsh@email.com", joined:"2024-07-04", role:"Member", attendance:73, lastContact:"2026-08-03" },
   { id:172, name:"Erin Marsh", phone:"(817) 555-4172", email:"erin.marsh@email.com", joined:"2024-11-01", role:"Member", attendance:68, lastContact:"2026-07-02" },
@@ -198,8 +198,8 @@ export const SEED_LIFE_GROUPS = [
     ]
   },
   {
-    id:9, name:"Smith LifeGroup", leader:"Drew & Kate Smith", day:"Monday", time:"7:00 PM",
-    location:"Smith Home - Burleson", status:"Active",
+    id:9, name:"Smith LifeGroup", leader:"Drew & Kate Smith", day:"Sunday Morning", time:"9:45 AM",
+    location:"NorthPointe Campus – Rm 203", status:"Active",
     members:[
   { id:181, name:"Brett Colvin", phone:"(817) 555-4181", email:"brett.colvin@email.com", joined:"2025-02-01", role:"Member", attendance:92, lastContact:"2026-08-14" },
   { id:182, name:"Amy Colvin", phone:"(817) 555-4182", email:"amy.colvin@email.com", joined:"2025-09-12", role:"Member", attendance:63, lastContact:"2026-09-07" },
@@ -214,8 +214,8 @@ export const SEED_LIFE_GROUPS = [
     ]
   },
   {
-    id:6, name:"Snow LifeGroup", leader:"Richard & Brenda Snow", day:"Friday", time:"6:30 PM",
-    location:"Wade Home - Joshua", status:"Active",
+    id:6, name:"Snow LifeGroup", leader:"Richard & Brenda Snow", day:"Sunday Morning", time:"9:45 AM",
+    location:"NorthPointe Campus – Rm 204", status:"Active",
     members:[
   { id:143, name:"Toby Neuman", phone:"(817) 555-2143", email:"toby.neuman@email.com", joined:"2025-11-08", role:"Member", attendance:94, lastContact:"2026-07-08" },
   { id:144, name:"Jill Neuman", phone:"(817) 555-2144", email:"jill.neuman@email.com", joined:"2025-12-26", role:"Member", attendance:69, lastContact:"2026-07-17" },
