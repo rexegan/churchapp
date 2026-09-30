@@ -114,8 +114,8 @@ export const SEED_LIFE_GROUPS = [
     ]
   },
   {
-    id:1, name:"Russell LifeGroup", leader:"Rex & Jeanene Russell", day:"Sunday", time:"6:00 PM",
-    location:"Church Campus – Rm 201", status:"Active",
+    id:1, name:"Russell LifeGroup", leader:"Rex & Jeanene Russell", day:"Sunday Morning", time:"9:45 AM",
+    location:"NorthPointe Campus – Rm 201", status:"Active",
     members:[
   { id: 1, name:"Kathy Aylwin", phone:"(817) 555-2001", email:"kathy.aylwin@email.com", joined:"2024-11-03", role:"Member", attendance:67, lastContact:"2026-07-20" },
   { id: 2, name:"Richard Aylwin", phone:"(817) 555-2002", email:"richard.aylwin@email.com", joined:"2024-12-08", role:"Member", attendance:77, lastContact:"2026-07-18" },
