@@ -1671,7 +1671,7 @@ const MINISTRY_AREAS = [
     leader: "Robert Garcia", meets: "Thursdays · 7:00 PM · The Loft",
     members: 48, volunteers: 8,
     description: "Ages 18–25 — students, young professionals, and singles.",
-    overseer: "Dr. Drew Smith",
+    overseer: "Dr. Travis Dickinson",
     memberList: ["Caleb Abbott", "Nina Ashby", "Gavin Barrett", "Faith Bowden", "Anna Crane", "Ethan Duffield", "Anna Eastman", "Kara Eastman", "Mason Ellison", "Noah Fleming", "Kyle Gentry", "Owen Gentry", "Sadie Gentry", "Grace Hargrove", "Reese Hargrove", "Hope Hollis", "Levi Hollis", "Daisy Ingram", "Mia Irwin", "Hope Irwin", "Sadie Jarvis", "Violet Judd", "Jade Judd", "Wade Judd", "Gavin Keller", "Wyatt Kemp", "Jonah Mabry", "Kara Mabry", "Faith Mabry", "Jonah Nix", "Willa Nix", "Xander Nix", "Bella Norwood", "Ruth Norwood", "Caleb Orr", "Willa Orr", "Wade Pearce", "Peyton Pratt", "Willa Rafferty", "Bella Rhodes", "Seth Rhodes", "Wade Slater", "Noah Tate", "Tobias Thorne", "Abby Upton", "Vera Vick", "Mason Yancey", "Noah Zink"],
     volunteerList: ["Vera Barrett", "Blake Gentry", "Xander Goss", "Daisy Hollis", "Olive Keller", "Jonah Nix", "Kyle Sperry", "Wyatt Zeller"],
     people: [
@@ -1795,12 +1795,12 @@ function AreaBreakout({ area }) {
               <span style={{ fontSize: 19, fontWeight: 700, color: C.text }}>{area.name}</span>
               {area.overseer && (
                 <span style={{ fontSize: 13, color: C.dim }}>
-                  In charge: <PName name={area.overseer} style={{ fontWeight: 700, color: C.accent }} />
+                  Led by <PName name={area.overseer} style={{ fontWeight: 700, color: C.accent }} />
                 </span>
               )}
             </div>
             <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{area.description}</div>
-            <div style={{ fontSize: 12.5, color: C.dim, marginTop: 4 }}>{area.meets} · Led by <PName name={area.leader} /></div>
+            <div style={{ fontSize: 12.5, color: C.dim, marginTop: 4 }}>{area.meets}</div>
           </div>
           <div style={{ display: "flex", gap: 12 }}>
             {[["Members", memberList.length || area.members, "members"], ["Volunteers", volunteerList.length || area.volunteers, "volunteers"]].map(([l, v, key]) => (
@@ -1839,7 +1839,7 @@ function AreaBreakout({ area }) {
             {area.overseer && (
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, padding: "10px 12px", background: area.color + "10", borderRadius: 8, border: `1px solid ${area.color}44` }}>
                 <span style={{ fontSize: 13.5, fontWeight: 700, color: C.text }}><PName name={area.overseer} /></span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: area.color }}>In Charge</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: area.color }}>Led By</span>
               </div>
             )}
             {area.people.map(p => (
