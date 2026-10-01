@@ -1742,11 +1742,6 @@ const MINISTRY_AREAS = [
     people: [
       { name: "Stefanie Petkau", role: "Director of Kids & Preschool Ministries" },
       { name: "Rachel Leger", role: "Kids Ministry Coordinator" },
-      { name: "Melissa Grant", role: "Children's Director" },
-      { name: "Tom Avery", role: "K-2 Coordinator" },
-      { name: "Susan Lee", role: "3-5 Coordinator" },
-      { name: "Grace Nolan", role: "Check-in / Safety Lead" },
-      { name: "Peter Shaw", role: "Large Group Host" },
     ],
     resources: [
       { name: "Kids Wing", detail: "6 classrooms + theater room" },
