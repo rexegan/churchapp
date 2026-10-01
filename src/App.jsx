@@ -1732,7 +1732,7 @@ const MINISTRY_AREAS = [
     ],
   },
   {
-    id: "children", name: "Children's", icon: "🎨", color: "#059669", parent: "Student Ministry",
+    id: "children", name: "Kids", icon: "🎨", color: "#059669", parent: "Student Ministry",
     leader: "Melissa Grant", meets: "Sundays · both services · Kids Wing",
     members: 96, volunteers: 26,
     description: "K–5th grade — Sunday large group plus small groups.",
@@ -1748,6 +1748,24 @@ const MINISTRY_AREAS = [
       { name: "Check-in System", detail: "2 kiosks · security tags" },
       { name: "Curriculum — 'Orange'", detail: "Licensed through 2027" },
       { name: "Annual Budget", detail: "$15,500 · $10,300 used" },
+    ],
+  },
+  {
+    id: "preschool", name: "Preschool", icon: "🧸", color: "#0e7490", parent: "Student Ministry",
+    leader: "Ashley Hasty", meets: "Sundays · both services · Preschool Wing",
+    members: 34, volunteers: 14,
+    description: "Ages 3 through pre-K — play-based Bible learning.",
+    overseer: "Jeremy Dooley",
+    memberList: ["Finn Abbott", "Mason Barrett", "Hope Bowden", "Jade Chandler", "Olive Chandler", "Tessa Crane", "Tessa Dawson", "Ella Fleming", "Quinn Fleming", "Aiden Gentry", "Jade Goss", "Dylan Goss", "Mason Hargrove", "Paige Ingram", "Seth Ingram", "Mason Irwin", "Chloe Jarvis", "Dylan Keller", "Noah Keller", "Kara Norwood", "Ethan Norwood", "Dylan Ogden", "Lily Ogden", "Jonah Ogden", "Gavin Pearce", "Mia Rafferty", "Levi Rafferty", "Finn Slater", "Blake Slater", "Zoe Thorne", "Abby Thorne", "Nina Thorne", "Olive Wheeler", "Aiden Wheeler"],
+    volunteerList: ["Ruth Chandler", "Nina Dawson", "Hope Eastman", "Seth Hargrove", "Mason Hargrove", "Bella Ingram", "Faith Jarvis", "Seth Jarvis", "Paige Mabry", "Sadie Norwood", "Chloe Norwood", "Owen Slater", "Kara Thorne", "Caleb Wheeler"],
+    people: [
+      { name: "Stefanie Petkau", role: "Director of Kids & Preschool Ministries" },
+      { name: "Ashley Hasty", role: "Preschool Ministry Coordinator" },
+    ],
+    resources: [
+      { name: "Preschool Wing", detail: "3 classrooms · secure check-in" },
+      { name: "Curriculum", detail: "Play-based Bible lessons" },
+      { name: "Supplies Inventory", detail: "Restocked monthly" },
     ],
   },
   {
