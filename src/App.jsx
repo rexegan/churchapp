@@ -1761,10 +1761,6 @@ const MINISTRY_AREAS = [
     people: [
       { name: "Stefanie Petkau", role: "Director of Kids & Preschool Ministries" },
       { name: "Ashley Hasty", role: "Preschool Ministry Coordinator" },
-      { name: "Beth Caldwell", role: "Nursery Director" },
-      { name: "Angela Ruiz", role: "Infant Room Lead" },
-      { name: "Monica Hayes", role: "Toddler Room Lead" },
-      { name: "Cindy Palmer", role: "Volunteer Scheduler" },
     ],
     resources: [
       { name: "Nursery Suite", detail: "4 rooms · pager system" },
