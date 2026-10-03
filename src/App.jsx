@@ -2107,10 +2107,12 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
   const toLists = m => ({
     emails:    m.emails?.length    ? m.emails    : (m.email   ? [m.email]                          : [""]),
     phones:    m.phones?.length    ? m.phones    : (m.phone   ? [{ number: m.phone, tag: "Cell" }] : [{ number: "", tag: "Cell" }]),
-    addresses: m.addresses?.length ? m.addresses : (m.address ? [m.address]                        : [""]),
+    addresses: (m.addresses?.length ? m.addresses : (m.address ? [m.address] : [""]))
+      .map(a => typeof a === "string" ? { text: a, tag: "Home" } : a),
   });
   const [form, setForm] = useState({ ...member, ...toLists(member) });
   const PHONE_TAGS = ["Cell", "Office", "Home", "Work"];
+  const ADDRESS_TAGS = ["Home", "Office"];
   const ROLE_OPTIONS = ["Lead Teaching Pastor", "Elder", "Life Group Leader", "Volunteer"];
   const DEPT_OPTIONS = ["Staff", "Elder", "Volunteer", "Life Group Leader"];
   const initials = member.name.split(" ").map(n => n[0]).slice(0, 2).join("");
