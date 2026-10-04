@@ -211,6 +211,7 @@ function Sel({ label, children, ...props }) {
 // Multi-pick chips: toggles values in a comma-separated string
 function MultiPick({ label, value, options, onChange }) {
   const picked = (value || "").split(",").map(s => s.trim()).filter(Boolean);
+  options = [...options, ...picked.filter(p => !options.includes(p))];
   const toggle = opt => {
     const next = picked.includes(opt) ? picked.filter(p => p !== opt) : [...picked, opt];
     onChange(next.join(", "));
@@ -2147,7 +2148,7 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
     const emails    = (form.emails    || []).map(s => s.trim()).filter(Boolean);
     const phones    = (form.phones    || []).filter(p => (p.number || "").trim());
     const addresses = (form.addresses || []).filter(a => (a.text || "").trim());
-    onSave({ ...form, emails, phones, addresses, email: emails[0] || "", phone: phones[0]?.number || "", address: addresses[0]?.text || "" });
+    onSave({ ...form, role: form.role || member.role, dept: form.dept || member.dept, emails, phones, addresses, email: emails[0] || "", phone: phones[0]?.number || "", address: addresses[0]?.text || "" });
     setEditing(false);
   }
 
@@ -2774,6 +2775,21 @@ export default function ChurchOS() {
   const [events,        setEvents]        = useStored("cos2-events-v11",   SEED_EVENTS);
   const [open,          setOpen]          = useState(true);
   const [personName,    setPersonName]    = useState(null);
+  // Repair pass: if a seeded person lost their role/area (or was dropped), restore from seed
+  useEffect(() => {
+    setStaff(list => {
+      let changed = false;
+      const seedByName = Object.fromEntries(SEED_STAFF.map(s => [s.name.toLowerCase(), s]));
+      let next = list.map(p => {
+        const seed = seedByName[(p.name || "").toLowerCase()];
+        if (seed && (!p.dept || !p.role)) { changed = true; return { ...p, dept: p.dept || seed.dept, role: p.role || seed.role }; }
+        return p;
+      });
+      const have = new Set(next.map(p => (p.name || "").toLowerCase()));
+      for (const s of SEED_STAFF) if (!have.has(s.name.toLowerCase())) { next = [...next, s]; changed = true; }
+      return changed ? next : list;
+    });
+  }, []);
   const [peopleExtras,  setPeopleExtras]  = useStored("cos2-people", {});
   const [deaconsDir]                      = useStored("cos2-deacons", SEED_DEACONS);
 
