@@ -2779,25 +2779,40 @@ export default function ChurchOS() {
   const [events,        setEvents]        = useStored("cos2-events-v11",   SEED_EVENTS);
   const [open,          setOpen]          = useState(true);
   const [personName,    setPersonName]    = useState(null);
-  // Repair pass: if a seeded person lost their role/area (or was dropped), restore from seed.
-  // Seeded elders who lost their elder identity get role+area restored so they return to the tab.
+  // Roster guarantee, every load: each person from the official roster always
+  // exists, with their official role/area intact (any extra roles the user added
+  // are kept, appended). Contact info and notes are never touched. Duplicates by
+  // name are merged. People added by hand that aren't in the roster are kept.
   useEffect(() => {
-    const eld = /pastor|elder/i;
     setStaff(list => {
-      let changed = false;
-      const seedByName = Object.fromEntries(SEED_STAFF.map(s => [s.name.toLowerCase(), s]));
-      let next = list.map(p => {
-        const seed = seedByName[(p.name || "").toLowerCase()];
-        if (!seed) return p;
-        if (!p.dept || !p.role) { changed = true; p = { ...p, dept: p.dept || seed.dept, role: p.role || seed.role }; }
-        if (eld.test(seed.role + " " + seed.dept) && !eld.test((p.role || "") + " " + (p.dept || ""))) {
-          changed = true;
-          p = { ...p, role: seed.role + (p.role && p.role !== seed.role ? ", " + p.role : ""), dept: seed.dept };
+      const norm = s => (s || "").trim().toLowerCase();
+      // Merge duplicates by name, first occurrence wins field-by-field
+      const byName = new Map();
+      const extras = [];
+      for (const p of list) {
+        const k = norm(p.name);
+        if (!k) continue;
+        if (byName.has(k)) {
+          const prev = byName.get(k);
+          byName.set(k, { ...p, ...Object.fromEntries(Object.entries(prev).filter(([, v]) => v !== "" && v != null)) });
+        } else byName.set(k, p);
+      }
+      const next = [];
+      for (const seed of SEED_STAFF) {
+        const k = norm(seed.name);
+        const stored = byName.get(k);
+        if (stored) {
+          // Official role/area win; user-added roles not in the official title are appended
+          const extraRoles = (stored.role || "").split(",").map(s => s.trim()).filter(r => r && !seed.role.includes(r) && !r.includes("Pastor") && r !== "Elder");
+          next.push({ ...stored, name: seed.name, role: seed.role + (extraRoles.length ? ", " + extraRoles.join(", ") : ""), dept: seed.dept });
+          byName.delete(k);
+        } else {
+          next.push({ ...seed });
         }
-        return p;
-      });
-      const have = new Set(next.map(p => (p.name || "").toLowerCase()));
-      for (const s of SEED_STAFF) if (!have.has(s.name.toLowerCase())) { next = [...next, s]; changed = true; }
+      }
+      // Keep any hand-added people not in the official roster
+      for (const p of byName.values()) next.push(p);
+      const changed = JSON.stringify(next) !== JSON.stringify(list);
       return changed ? next : list;
     });
   }, []);
