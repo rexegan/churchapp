@@ -2309,7 +2309,7 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
   );
 }
 
-function HR({ staff, setStaff, title = "Pastors, Elders, and Staff", subtitle = "Click any person to open their file", includeDepts = null, defaultDept = "" }) {
+function HR({ staff, setStaff, title = "Pastors, Elders, and Staff", subtitle = "Click any person to open their file", belongs = null, defaultDept = "" }) {
   const [search, setSearch]         = useState("");
   const [filterStatus, setFilter]   = useState("All");
   const [selectedId, setSelectedId] = useState(null);
@@ -2317,7 +2317,7 @@ function HR({ staff, setStaff, title = "Pastors, Elders, and Staff", subtitle = 
   const [addForm, setAddForm]       = useState({});
 
   const empty = { name:"", role:"", dept:defaultDept, email:"", phone:"", address:"", status:"Active", startDate:today(), notes:"", emergencyName:"", emergencyRel:"", emergencyPhone:"", employeeId:"" };
-  const people = includeDepts ? staff.filter(s => includeDepts.some(d => (s.dept || "").includes(d))) : staff;
+  const people = belongs ? staff.filter(belongs) : staff;
   const depts = [...new Set(people.map(s => s.dept))];
   const deptColors = [C.accent, C.purple, C.green, C.gold, C.pink, C.accent2, C.red];
   const colorFor = d => deptColors[depts.indexOf(d) % deptColors.length] || C.accent;
@@ -2761,6 +2761,10 @@ const TABS = [
   { id:"marketing", label:"Marketing",      icon:"📣" },
 ];
 
+// A person belongs on the Pastors & Elders tab if their role OR area mentions
+// pastor/elder; everyone else is Staff. Every person is always on exactly one tab.
+const isElderPerson = p => /pastor|elder/i.test((p.role || "") + " " + (p.dept || ""));
+
 // ── Root ──────────────────────────────────────────────────────────────────────
 export default function ChurchOS() {
   const [storedTab,     setTab]           = useStored("cos2-tab",           "dashboard");
@@ -2775,14 +2779,21 @@ export default function ChurchOS() {
   const [events,        setEvents]        = useStored("cos2-events-v11",   SEED_EVENTS);
   const [open,          setOpen]          = useState(true);
   const [personName,    setPersonName]    = useState(null);
-  // Repair pass: if a seeded person lost their role/area (or was dropped), restore from seed
+  // Repair pass: if a seeded person lost their role/area (or was dropped), restore from seed.
+  // Seeded elders who lost their elder identity get role+area restored so they return to the tab.
   useEffect(() => {
+    const eld = /pastor|elder/i;
     setStaff(list => {
       let changed = false;
       const seedByName = Object.fromEntries(SEED_STAFF.map(s => [s.name.toLowerCase(), s]));
       let next = list.map(p => {
         const seed = seedByName[(p.name || "").toLowerCase()];
-        if (seed && (!p.dept || !p.role)) { changed = true; return { ...p, dept: p.dept || seed.dept, role: p.role || seed.role }; }
+        if (!seed) return p;
+        if (!p.dept || !p.role) { changed = true; p = { ...p, dept: p.dept || seed.dept, role: p.role || seed.role }; }
+        if (eld.test(seed.role + " " + seed.dept) && !eld.test((p.role || "") + " " + (p.dept || ""))) {
+          changed = true;
+          p = { ...p, role: seed.role + (p.role && p.role !== seed.role ? ", " + p.role : ""), dept: seed.dept };
+        }
         return p;
       });
       const have = new Set(next.map(p => (p.name || "").toLowerCase()));
@@ -2834,8 +2845,8 @@ export default function ChurchOS() {
         {tab === "deacons"    && <Deacons />}
         {tab === "events"     && <Administrative events={events} setEvents={setEvents} title="Events" subtitle="All church events — schedule, coordinate & track attendance" />}
         {tab === "finance"   && <Finance transactions={transactions} setTransactions={setTransactions} />}
-        {tab === "hr"        && <HR staff={staff} setStaff={setStaff} title="Pastors & Elders" subtitle="Elder body — click any person to open their file" includeDepts={["Elder"]} defaultDept="Elder" />}
-        {tab === "staff"     && <HR staff={staff} setStaff={setStaff} title="Staff" subtitle="Church staff — click any person to open their file" includeDepts={["Staff", "Volunteer", "Life Group Leader"]} defaultDept="Staff" />}
+        {tab === "hr"        && <HR staff={staff} setStaff={setStaff} title="Pastors & Elders" subtitle="Elder body — click any person to open their file" belongs={isElderPerson} defaultDept="Elder" />}
+        {tab === "staff"     && <HR staff={staff} setStaff={setStaff} title="Staff" subtitle="Church staff — click any person to open their file" belongs={p => !isElderPerson(p)} defaultDept="Staff" />}
         {tab === "pr"        && <PRComms announcements={announcements} setAnnouncements={setAnnouncements} />}
         {tab === "marketing" && <Marketing campaigns={campaigns} setCampaigns={setCampaigns} />}
       </main>
