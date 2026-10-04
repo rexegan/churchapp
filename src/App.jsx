@@ -208,6 +208,30 @@ function Sel({ label, children, ...props }) {
   return <Field label={label}><select {...props} style={{ ...inputStyle, ...props.style }}>{children}</select></Field>;
 }
 
+// Multi-pick chips: toggles values in a comma-separated string
+function MultiPick({ label, value, options, onChange }) {
+  const picked = (value || "").split(",").map(s => s.trim()).filter(Boolean);
+  const toggle = opt => {
+    const next = picked.includes(opt) ? picked.filter(p => p !== opt) : [...picked, opt];
+    onChange(next.join(", "));
+  };
+  return (
+    <Field label={label}>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        {options.map(opt => {
+          const on = picked.includes(opt);
+          return (
+            <button key={opt} type="button" onClick={() => toggle(opt)}
+              style={{ background: on ? C.accent : C.bg, color: on ? "#fff" : C.muted, border: `1px solid ${on ? C.accent : C.border}`, borderRadius: 8, padding: "7px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+              {on ? "✓ " : ""}{opt}
+            </button>
+          );
+        })}
+      </div>
+    </Field>
+  );
+}
+
 function Txt({ label, ...props }) {
   return <Field label={label}><textarea {...props} style={{ ...inputStyle, minHeight: 90, resize: "vertical", ...props.style }} /></Field>;
 }
@@ -2202,16 +2226,8 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               <div style={{ fontSize: 13, fontWeight: 800, color: C.text, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Contact Information</div>
               <Inp label="Full Name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <Sel label="Role / Title" value={form.role || ""} onChange={e => setForm(f => ({ ...f, role: e.target.value }))}>
-                  <option value="">Select…</option>
-                  {ROLE_OPTIONS.map(r => <option key={r}>{r}</option>)}
-                </Sel>
-                <Sel label="Area of Service" value={form.dept || ""} onChange={e => setForm(f => ({ ...f, dept: e.target.value }))}>
-                  <option value="">Select…</option>
-                  {DEPT_OPTIONS.map(d => <option key={d}>{d}</option>)}
-                </Sel>
-              </div>
+              <MultiPick label="Role / Title (pick all that apply)" value={form.role} options={ROLE_OPTIONS} onChange={v => setForm(f => ({ ...f, role: v }))} />
+              <MultiPick label="Area of Service (pick all that apply)" value={form.dept} options={DEPT_OPTIONS} onChange={v => setForm(f => ({ ...f, dept: v }))} />
 
               <Field label="Email">
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -2300,7 +2316,7 @@ function HR({ staff, setStaff, title = "Pastors, Elders, and Staff", subtitle = 
   const [addForm, setAddForm]       = useState({});
 
   const empty = { name:"", role:"", dept:defaultDept, email:"", phone:"", address:"", status:"Active", startDate:today(), notes:"", emergencyName:"", emergencyRel:"", emergencyPhone:"", employeeId:"" };
-  const people = includeDepts ? staff.filter(s => includeDepts.includes(s.dept)) : staff;
+  const people = includeDepts ? staff.filter(s => includeDepts.some(d => (s.dept || "").includes(d))) : staff;
   const depts = [...new Set(people.map(s => s.dept))];
   const deptColors = [C.accent, C.purple, C.green, C.gold, C.pink, C.accent2, C.red];
   const colorFor = d => deptColors[depts.indexOf(d) % deptColors.length] || C.accent;
@@ -2401,14 +2417,8 @@ function HR({ staff, setStaff, title = "Pastors, Elders, and Staff", subtitle = 
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <Inp label="Full Name" value={addForm.name || ""} onChange={e => setAddForm(f => ({ ...f, name: e.target.value }))} />
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              <Sel label="Role / Title" value={addForm.role || ""} onChange={e => setAddForm(f => ({ ...f, role: e.target.value }))}>
-                <option value="">Select…</option>
-                {["Lead Teaching Pastor", "Elder", "Elder / Pastor", "Life Group Leader", "Volunteer"].map(r => <option key={r}>{r}</option>)}
-              </Sel>
-              <Sel label="Area of Service" value={addForm.dept || ""} onChange={e => setAddForm(f => ({ ...f, dept: e.target.value }))}>
-                <option value="">Select…</option>
-                {["Staff", "Elder", "Volunteer", "Life Group Leader"].map(d => <option key={d}>{d}</option>)}
-              </Sel>
+              <MultiPick label="Role / Title (pick all that apply)" value={addForm.role} options={["Lead Teaching Pastor", "Elder", "Elder / Pastor", "Life Group Leader", "Volunteer"]} onChange={v => setAddForm(f => ({ ...f, role: v }))} />
+              <MultiPick label="Area of Service (pick all that apply)" value={addForm.dept} options={["Staff", "Elder", "Volunteer", "Life Group Leader"]} onChange={v => setAddForm(f => ({ ...f, dept: v }))} />
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <Inp label="Email" type="email" value={addForm.email || ""} onChange={e => setAddForm(f => ({ ...f, email: e.target.value }))} />
