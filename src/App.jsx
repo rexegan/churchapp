@@ -2113,7 +2113,7 @@ function HRFile({ member, onClose, onSave, onDelete, colorFor }) {
   const [form, setForm] = useState({ ...member, ...toLists(member) });
   const PHONE_TAGS = ["Cell", "Office", "Home", "Work"];
   const ADDRESS_TAGS = ["Home", "Office"];
-  const ROLE_OPTIONS = ["Lead Teaching Pastor", "Elder", "Life Group Leader", "Volunteer"];
+  const ROLE_OPTIONS = ["Lead Teaching Pastor", "Elder", "Elder / Pastor", "Life Group Leader", "Volunteer"];
   const DEPT_OPTIONS = ["Staff", "Elder", "Volunteer", "Life Group Leader"];
   const initials = member.name.split(" ").map(n => n[0]).slice(0, 2).join("");
   const yearsServed = member.startDate ? Math.floor((new Date() - new Date(member.startDate)) / (365.25 * 24 * 60 * 60 * 1000)) : null;
@@ -2403,7 +2403,7 @@ function HR({ staff, setStaff, title = "Pastors, Elders, and Staff", subtitle = 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <Sel label="Role / Title" value={addForm.role || ""} onChange={e => setAddForm(f => ({ ...f, role: e.target.value }))}>
                 <option value="">Select…</option>
-                {["Lead Teaching Pastor", "Elder", "Life Group Leader", "Volunteer"].map(r => <option key={r}>{r}</option>)}
+                {["Lead Teaching Pastor", "Elder", "Elder / Pastor", "Life Group Leader", "Volunteer"].map(r => <option key={r}>{r}</option>)}
               </Sel>
               <Sel label="Area of Service" value={addForm.dept || ""} onChange={e => setAddForm(f => ({ ...f, dept: e.target.value }))}>
                 <option value="">Select…</option>
