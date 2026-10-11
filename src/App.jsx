@@ -1721,7 +1721,7 @@ const MINISTRY_AREAS = [
     memberList: ["Abby Abbott", "Zoe Ashby", "Wyatt Ashby", "Ivy Ashby", "Wade Barrett", "Willa Barrett", "Henry Bowden", "Jade Eastman", "Faith Ellison", "Noah Fleming", "Tobias Fleming", "Violet Gentry", "Chloe Hargrove", "Caleb Irwin", "Tobias Irwin", "Jade Irwin", "Noah Irwin", "Kyle Judd", "Ivy Keller", "Tessa Lockhart", "Lily Mabry", "Nina Mabry", "Gavin Mabry", "Chloe Mercer", "Aiden Nix", "Abby Nix", "Reese Nix", "Yara Norwood", "Caleb Pearce", "Abby Quigley", "Jonah Quigley", "Grace Quimby", "Ivy Rafferty", "Kara Rafferty", "Tobias Rafferty", "Henry Rhodes", "Olive Tate", "Seth Tate", "Ruth Tate", "Willa Tate", "Nina Thorne", "Xander Thorne", "Faith Underhill", "Zoe Underhill", "Ruth Vaughn", "Levi Wheeler", "Tessa Wray", "Uriah Wray", "Abby Wray", "Cole Yancey", "Caleb York", "Jonah Zeller"],
     volunteerList: ["Ruth Barrett", "Reese Ellison", "Xander Goss", "Xander Hollis", "Owen Irwin", "Olive Norwood", "Uriah Norwood", "Quinn Underhill", "Paige Upton", "Gavin Zeller"],
     people: [
-      { name: "Landon Winc", role: "Preteen & Student Ministries Coordinator" },
+      { name: "Landon Wink", role: "Preteen & Student Ministries Coordinator" },
       { name: "Josh Turner", role: "High School Director" },
       { name: "Amber Wells", role: "Girls Discipleship Lead" },
       { name: "Chris Dalton", role: "Guys Discipleship Lead" },
@@ -1743,7 +1743,7 @@ const MINISTRY_AREAS = [
     memberList: ["Jade Ashby", "Ruth Barrett", "Ella Dawson", "Violet Duffield", "Mason Duffield", "Seth Eastman", "Caleb Eastman", "Reese Ellison", "Levi Fleming", "Gavin Gentry", "Wyatt Goss", "Ruth Hargrove", "Tessa Hargrove", "Cole Irwin", "Tessa Judd", "Ivy Keller", "Wade Keller", "Blake Kemp", "Abby Lockhart", "Mia Loften", "Dylan Loften", "Uriah Mabry", "Peyton Mabry", "Seth Nix", "Bella Orr", "Ivy Quimby", "Violet Rafferty", "Sadie Rafferty", "Tessa Rafferty", "Zoe Slater", "Finn Sperry", "Ivy Sperry", "Ruth Sperry", "Violet Underhill", "Chloe Upton", "Seth Vaughn", "Daisy Vick", "Seth Wray", "Nina Yancey", "Abby Zeller", "Vera Zeller", "Paige Zeller", "Paige Zink", "Abby Zink"],
     volunteerList: ["Isaac Ellison", "Ivy Falk", "Bella Jarvis", "Hope Judd", "Finn Loften", "Seth Quigley", "Yara Vick", "Grace York", "Ivy Zeller"],
     people: [
-      { name: "Landon Winc", role: "Preteen & Student Ministries Coordinator" },
+      { name: "Landon Wink", role: "Preteen & Student Ministries Coordinator" },
       { name: "Katie Sanders", role: "Middle School Director" },
       { name: "Ben Hoffman", role: "6th Grade Boys Lead" },
       { name: "Jill Marsh", role: "Small Group Coordinator" },

@@ -11,7 +11,7 @@ export const SEED_STAFF = [
   { id:8, name:"Stefanie Petkau", role:"Director of Kids & Preschool Ministries & Asst. to Family Pastor", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
   { id:9, name:"Ashley Hasty", role:"Preschool Ministry Coordinator", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
   { id:10, name:"Rachel Leger", role:"Kids Ministry Coordinator", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
-  { id:11, name:"Landon Winc", role:"Preteen & Student Ministries Coordinator", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
+  { id:11, name:"Landon Wink", role:"Preteen & Student Ministries Coordinator", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
   { id:12, name:"Jacob Williams", role:"Business Administrator", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
   { id:13, name:"Mike Scarbrough", role:"Facilities Manager", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
   { id:14, name:"Zac Saathoff", role:"Graphic Designer", dept:"Staff", email:"", phone:"", status:"Active", startDate:"" },
