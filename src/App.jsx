@@ -2761,9 +2761,14 @@ const TABS = [
   { id:"marketing", label:"Marketing",      icon:"📣" },
 ];
 
-// A person belongs on the Pastors & Elders tab if their role OR area mentions
-// pastor/elder; everyone else is Staff. Every person is always on exactly one tab.
-const isElderPerson = p => /pastor|elder/i.test((p.role || "") + " " + (p.dept || ""));
+// A person belongs on the Pastors & Elders tab if their area of service is Elder,
+// or (when no area is set) their own title is pastor/elder — being an *assistant to*
+// a pastor does not count. Everyone else is Staff; every person is on exactly one tab.
+const isElderPerson = p => {
+  if (p.dept) return /elder/i.test(p.dept);
+  const role = p.role || "";
+  return /pastor|elder/i.test(role) && !/assistant|asst/i.test(role);
+};
 
 // ── Root ──────────────────────────────────────────────────────────────────────
 export default function ChurchOS() {
