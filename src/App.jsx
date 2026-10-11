@@ -2790,6 +2790,8 @@ export default function ChurchOS() {
   useEffect(() => {
     setStaff(list => {
       const norm = s => (s || "").trim().toLowerCase();
+      const RENAMES = { "landon winc": "Landon Wink" };
+      list = list.map(p => RENAMES[norm(p.name)] ? { ...p, name: RENAMES[norm(p.name)] } : p);
       // Merge duplicates by name, first occurrence wins field-by-field
       const byName = new Map();
       const extras = [];
