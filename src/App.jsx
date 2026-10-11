@@ -2749,8 +2749,7 @@ function PersonCardModal({ name, lifeGroups, staff, deacons, extras, onSaveExtra
 // ── Sidebar nav ───────────────────────────────────────────────────────────────
 const TABS = [
   { id:"dashboard", label:"Dashboard",      icon:"🏠" },
-  { id:"hr",        label:"Pastors & Elders",  icon:"👔" },
-  { id:"staff",     label:"Staff",             icon:"🧑‍💼" },
+  { id:"hr",        label:"Pastors, Elders, and Staff",  icon:"👔" },
   { id:"admin",     label:"Administrative", icon:"📅" },
   { id:"family",     label:"Family Ministries", icon:"⛪" },
   { id:"lifegroups", label:"Life Groups",       icon:"👥" },
@@ -2865,8 +2864,7 @@ export default function ChurchOS() {
         {tab === "deacons"    && <Deacons />}
         {tab === "events"     && <Administrative events={events} setEvents={setEvents} title="Events" subtitle="All church events — schedule, coordinate & track attendance" />}
         {tab === "finance"   && <Finance transactions={transactions} setTransactions={setTransactions} />}
-        {tab === "hr"        && <HR staff={staff} setStaff={setStaff} title="Pastors & Elders" subtitle="Elder body — click any person to open their file" belongs={isElderPerson} defaultDept="Elder" />}
-        {tab === "staff"     && <HR staff={staff} setStaff={setStaff} title="Staff" subtitle="Church staff — click any person to open their file" belongs={p => !isElderPerson(p)} defaultDept="Staff" />}
+        {tab === "hr"        && <HR staff={staff} setStaff={setStaff} title="Pastors, Elders, and Staff" subtitle="Click any person to open their file" />}
         {tab === "pr"        && <PRComms announcements={announcements} setAnnouncements={setAnnouncements} />}
         {tab === "marketing" && <Marketing campaigns={campaigns} setCampaigns={setCampaigns} />}
       </main>
