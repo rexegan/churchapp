@@ -69,10 +69,10 @@ const today = () => new Date().toISOString().slice(0, 10);
 const fmtDate = (d) => {
   if (!d) return "";
   const m = String(d).match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (m) return `${m[2]}/${m[3]}/${m[1]}`;
+  if (m) return `${+m[2]}/${+m[3]}/${m[1]}`;
   const p = new Date(d);
   if (isNaN(p)) return d;
-  return String(p.getMonth() + 1).padStart(2, "0") + "/" + String(p.getDate()).padStart(2, "0") + "/" + p.getFullYear();
+  return (p.getMonth() + 1) + "/" + p.getDate() + "/" + p.getFullYear();
 };
 
 // ── Universal person card: click any name, anywhere ──────────────────────────
@@ -494,7 +494,7 @@ function MemberDetailPanel({ member, onClose, prayerRequests, meetings }) {
             </div>
             <div>
               <div style={{ fontWeight: 700, fontSize: 18, color: C.text }}>{member.name}</div>
-              <div style={{ fontSize: 13, color: C.muted, marginTop: 3 }}>{member.role} · Joined {member.joined}</div>
+              <div style={{ fontSize: 13, color: C.muted, marginTop: 3 }}>{member.role} · Joined {fmtDate(member.joined)}</div>
             </div>
           </div>
           <button onClick={onClose} style={{ background: "none", border: "none", color: C.muted, fontSize: 20, cursor: "pointer", lineHeight: 1 }}>✕</button>
@@ -506,7 +506,7 @@ function MemberDetailPanel({ member, onClose, prayerRequests, meetings }) {
             <div style={{ fontSize: 13, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>Contact</div>
             <div style={{ fontSize: 13, color: C.dim }}>{member.email}</div>
             <div style={{ fontSize: 13, color: C.dim }}>{fmtPhone(member.phone)}</div>
-            <div style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>Last contact: {member.lastContact}</div>
+            <div style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>Last contact: {fmtDate(member.lastContact)}</div>
           </div>
 
           {/* Attendance summary */}
