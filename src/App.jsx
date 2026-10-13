@@ -1700,10 +1700,6 @@ const MINISTRY_AREAS = [
     memberList: ["Caleb Abbott", "Nina Ashby", "Gavin Barrett", "Faith Bowden", "Anna Crane", "Ethan Duffield", "Anna Eastman", "Kara Eastman", "Mason Ellison", "Noah Fleming", "Kyle Gentry", "Owen Gentry", "Sadie Gentry", "Grace Hargrove", "Reese Hargrove", "Hope Hollis", "Levi Hollis", "Daisy Ingram", "Mia Irwin", "Hope Irwin", "Sadie Jarvis", "Violet Judd", "Jade Judd", "Wade Judd", "Gavin Keller", "Wyatt Kemp", "Jonah Mabry", "Kara Mabry", "Faith Mabry", "Jonah Nix", "Willa Nix", "Xander Nix", "Bella Norwood", "Ruth Norwood", "Caleb Orr", "Willa Orr", "Wade Pearce", "Peyton Pratt", "Willa Rafferty", "Bella Rhodes", "Seth Rhodes", "Wade Slater", "Noah Tate", "Tobias Thorne", "Abby Upton", "Vera Vick", "Mason Yancey", "Noah Zink"],
     volunteerList: ["Vera Barrett", "Blake Gentry", "Xander Goss", "Daisy Hollis", "Olive Keller", "Jonah Nix", "Kyle Sperry", "Wyatt Zeller"],
     people: [
-      { name: "Robert Garcia", role: "College Pastor" },
-      { name: "Emily Chen", role: "Worship Lead" },
-      { name: "Tyler Brooks", role: "Small Groups Coordinator" },
-      { name: "Hannah Foster", role: "Campus Outreach" },
     ],
     resources: [
       { name: "The Loft", detail: "Dedicated space · coffee bar" },
@@ -1722,10 +1718,6 @@ const MINISTRY_AREAS = [
     volunteerList: ["Ruth Barrett", "Reese Ellison", "Xander Goss", "Xander Hollis", "Owen Irwin", "Olive Norwood", "Uriah Norwood", "Quinn Underhill", "Paige Upton", "Gavin Zeller"],
     people: [
       { name: "Landon Wink", role: "Preteen & Student Ministries Coordinator" },
-      { name: "Josh Turner", role: "High School Director" },
-      { name: "Amber Wells", role: "Girls Discipleship Lead" },
-      { name: "Chris Dalton", role: "Guys Discipleship Lead" },
-      { name: "Rachel Kim", role: "Worship / Band Lead" },
     ],
     resources: [
       { name: "Student Building — Main Room", detail: "Stage, sound, lighting" },
@@ -1744,10 +1736,6 @@ const MINISTRY_AREAS = [
     volunteerList: ["Isaac Ellison", "Ivy Falk", "Bella Jarvis", "Hope Judd", "Finn Loften", "Seth Quigley", "Yara Vick", "Grace York", "Ivy Zeller"],
     people: [
       { name: "Landon Wink", role: "Preteen & Student Ministries Coordinator" },
-      { name: "Katie Sanders", role: "Middle School Director" },
-      { name: "Ben Hoffman", role: "6th Grade Boys Lead" },
-      { name: "Jill Marsh", role: "Small Group Coordinator" },
-      { name: "Danny Ortiz", role: "Games & Events" },
     ],
     resources: [
       { name: "Room 200 Wing", detail: "3 breakout rooms" },
@@ -1866,31 +1854,20 @@ function AreaBreakout({ area }) {
           </div>
         </div>
       )}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 14 }}>
         <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: 18 }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: C.text, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 12 }}>People</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {area.overseer && (
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, padding: "10px 12px", background: area.color + "10", borderRadius: 8, border: `1px solid ${area.color}44` }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, padding: "10px 12px", background: C.accent + "10", borderRadius: 8, border: `1px solid ${C.accent}44` }}>
                 <span style={{ fontSize: 13.5, fontWeight: 700, color: C.text }}><PName name={area.overseer} /></span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: area.color }}>Led By</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: C.accent }}>Led By</span>
               </div>
             )}
             {area.people.map(p => (
               <div key={p.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, padding: "8px 12px", background: C.bg, borderRadius: 8, border: `1px solid ${C.border}` }}>
                 <span style={{ fontSize: 13.5, fontWeight: 600, color: C.text }}><PName name={p.name} /></span>
                 <span style={{ fontSize: 12, color: C.muted, textAlign: "right" }}>{p.role}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: 18 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: C.text, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 12 }}>Resources</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            {area.resources.map(r => (
-              <div key={r.name} style={{ padding: "8px 12px", background: C.bg, borderRadius: 8, border: `1px solid ${C.border}` }}>
-                <div style={{ fontSize: 13.5, fontWeight: 600, color: C.text }}>{r.name}</div>
-                <div style={{ fontSize: 12, color: C.muted, marginTop: 1 }}>{r.detail}</div>
               </div>
             ))}
           </div>
@@ -1910,7 +1887,6 @@ function FamilyMinistries() {
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
       <div>
         <h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>Family Ministries</h1>
-        <p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>People and resources for every age and stage</p>
       </div>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         {areas.map(a => (
