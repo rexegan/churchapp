@@ -1940,24 +1940,58 @@ function LifeGroupsPage({ lifeGroups, prayerRequests, setPrayerRequests }) {
 
 // ── Deacons ──────────────────────────────────────────────────────────────────
 const SEED_DEACONS = [
-  { id:1, name:"Harold Simmons",  role:"Chairman",  phone:"(817) 555-0181", email:"hsimmons@email.com",  area:"Widows & shut-ins",        families:14, onCall:true  },
-  { id:2, name:"Walter Green",    role:"Deacon",    phone:"(817) 555-0132", email:"wgreen@email.com",    area:"Hospital visitation",      families:11, onCall:false },
-  { id:3, name:"Frank Delgado",   role:"Deacon",    phone:"(817) 555-0164", email:"fdelgado@email.com",  area:"Benevolence requests",     families:12, onCall:false },
-  { id:4, name:"Curtis Boyd",     role:"Deacon",    phone:"(817) 555-0117", email:"cboyd@email.com",     area:"New member follow-up",     families:10, onCall:false },
-  { id:5, name:"Leon Ashworth",   role:"Deacon",    phone:"(817) 555-0149", email:"lashworth@email.com", area:"Building & grounds",       families:9,  onCall:false },
-  { id:6, name:"Ray Whitfield",   role:"Deacon",    phone:"(817) 555-0126", email:"rwhitfield@email.com",area:"Lord's Supper preparation",families:13, onCall:false },
+  { id:1, name:"Rob Davis", team:1, lead:true, note:"" },
+  { id:2, name:"Bill Ardis", team:1, lead:false, note:"" },
+  { id:3, name:"Jerry Fanning", team:1, lead:false, note:"" },
+  { id:4, name:"Kevin Grounds", team:1, lead:false, note:"" },
+  { id:5, name:"Joel Harrell", team:1, lead:false, note:"" },
+  { id:6, name:"Shane Hasty", team:1, lead:false, note:"" },
+  { id:7, name:"Don Hicks", team:1, lead:false, note:"" },
+  { id:8, name:"Rob Miller", team:1, lead:false, note:"" },
+  { id:9, name:"Corey Rea", team:1, lead:false, note:"" },
+  { id:10, name:"Bobby Walden", team:1, lead:false, note:"" },
+  { id:11, name:"Joel Hulcy", team:2, lead:true, note:"" },
+  { id:12, name:"Rick Barnes", team:2, lead:false, note:"" },
+  { id:13, name:"Josh Hall", team:2, lead:false, note:"" },
+  { id:14, name:"Ryan Kimball", team:2, lead:false, note:"" },
+  { id:15, name:"Ron Neely", team:2, lead:false, note:"" },
+  { id:16, name:"Chuck Ogilvie", team:2, lead:false, note:"" },
+  { id:17, name:"Jeff Pool", team:2, lead:false, note:"" },
+  { id:18, name:"Kevin Webb", team:2, lead:false, note:"" },
+  { id:19, name:"Wally Williford", team:2, lead:false, note:"" },
+  { id:20, name:"Jon Cooper", team:3, lead:true, note:"" },
+  { id:21, name:"Colin Bartlett", team:3, lead:false, note:"" },
+  { id:22, name:"Luke Burgdorf", team:3, lead:false, note:"" },
+  { id:23, name:"Chris Gourley", team:3, lead:false, note:"" },
+  { id:24, name:"AJ Hulcy", team:3, lead:false, note:"Lake Trail" },
+  { id:25, name:"John Love", team:3, lead:false, note:"" },
+  { id:26, name:"Troy Ogden", team:3, lead:false, note:"" },
+  { id:27, name:"Joe Pavlik", team:3, lead:false, note:"" },
+  { id:28, name:"Paul Rhodes", team:3, lead:false, note:"Lake Trail" },
+  { id:29, name:"David Snyder", team:3, lead:false, note:"" },
+  { id:30, name:"Scott Vickers", team:3, lead:false, note:"" },
+  { id:31, name:"Wayne Boydston", team:4, lead:true, note:"" },
+  { id:32, name:"Fouad Arshad", team:4, lead:false, note:"" },
+  { id:33, name:"Steven Brown", team:4, lead:false, note:"" },
+  { id:34, name:"Spencer Davis", team:4, lead:false, note:"" },
+  { id:35, name:"Bud Lewis", team:4, lead:false, note:"" },
+  { id:36, name:"Blake Peebles", team:4, lead:false, note:"" },
+  { id:37, name:"Rex Russell", team:4, lead:false, note:"" },
+  { id:38, name:"Derrick Rybka", team:4, lead:false, note:"" },
+  { id:39, name:"Daniel Smith", team:4, lead:false, note:"" },
 ];
 
 function Deacons() {
-  const [deacons, setDeacons] = useStored("cos2-deacons", SEED_DEACONS);
+  const [deacons, setDeacons] = useStored("cos2-deacons-v2", SEED_DEACONS);
   const [modal, setModal] = useState(false);
-  const empty = { name:"", role:"Deacon", phone:"", email:"", area:"", families:"", onCall:false };
+  const empty = { name:"", team:1, lead:false, note:"" };
   const [form, setForm] = useState(empty);
+  const teams = [1, 2, 3, 4];
 
   function save() {
     if (!form.name) return;
-    if (form.id) setDeacons(d => d.map(x => x.id === form.id ? { ...form, families:+form.families||0 } : x));
-    else setDeacons(d => [...d, { ...form, id: Date.now(), families:+form.families||0 }]);
+    if (form.id) setDeacons(d => d.map(x => x.id === form.id ? { ...form, team: +form.team } : x));
+    else setDeacons(d => [...d, { ...form, id: Date.now(), team: +form.team }]);
     setModal(false);
   }
 
@@ -1966,37 +2000,40 @@ function Deacons() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
           <h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>Deacons</h1>
-          <p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>Deacon body, care assignments & family shepherding</p>
+          <p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>Deacon body — four teams · click any name for their card</p>
         </div>
         <Btn onClick={() => { setForm(empty); setModal(true); }}>+ Add Deacon</Btn>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12 }}>
-        <StatCard icon="🤝" label="Deacons"           value={deacons.length} color={C.accent} />
-        <StatCard icon="👥" label="Families Assigned" value={deacons.reduce((s, d) => s + (d.families || 0), 0)} color={C.green} />
-        <StatCard icon="📞" label="On Call Now"       value={deacons.find(d => d.onCall)?.name.split(" ")[0] || "—"} color={C.gold} />
+        <StatCard icon="🤝" label="Deacons" value={deacons.length} color={C.accent} />
+        <StatCard icon="👥" label="Teams"   value={teams.length}   color={C.green} />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10 }}>
-        {deacons.map(d => (
-          <div key={d.id} onClick={() => { setForm({ ...d, families: String(d.families || "") }); setModal(true); }}
-            style={{ background: C.card, border: `1px solid ${d.onCall ? C.gold + "66" : C.border}`, borderRadius: 10, padding: "14px 16px", cursor: "pointer", transition: "border-color .15s", minWidth: 0 }}
-            onMouseEnter={e => e.currentTarget.style.borderColor = C.accent}
-            onMouseLeave={e => e.currentTarget.style.borderColor = d.onCall ? C.gold + "66" : C.border}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span style={{ fontWeight: 700, fontSize: 14.5, color: C.text }}><PName name={d.name} /></span>
-              <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                {d.onCall && <Badge label="On Call" color={C.gold} />}
-                {d.role === "Chairman" && <Badge label="Chairman" color={C.accent} />}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 14 }}>
+        {teams.map(t => {
+          const lead = deacons.find(d => d.team === t && d.lead);
+          const members = deacons.filter(d => d.team === t && !d.lead).sort((a, b) => a.name.split(" ").slice(-1)[0].localeCompare(b.name.split(" ").slice(-1)[0]));
+          return (
+            <div key={t} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, overflow: "hidden" }}>
+              <div style={{ background: C.accent, padding: "10px 16px", textAlign: "center" }}>
+                <div style={{ fontSize: 15, fontWeight: 700, color: "#fff" }}>Deacon Team {t}</div>
+                {lead && <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.85)", marginTop: 2 }}><PName name={lead.name} style={{ color: "rgba(255,255,255,0.95)", fontWeight: 600 }} /> — Lead</div>}
+              </div>
+              <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", gap: 4 }}>
+                {members.map(d => (
+                  <div key={d.id} onClick={() => { setForm({ ...d }); setModal(true); }}
+                    style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 10px", background: C.bg, borderRadius: 7, border: `1px solid ${C.border}`, cursor: "pointer" }}
+                    onMouseEnter={e => e.currentTarget.style.borderColor = C.accent}
+                    onMouseLeave={e => e.currentTarget.style.borderColor = C.border}>
+                    <span style={{ fontSize: 13.5, color: C.text }}><PName name={d.name} /></span>
+                    {d.note && <span style={{ fontSize: 11.5, color: C.muted, fontStyle: "italic" }}>{d.note}</span>}
+                  </div>
+                ))}
               </div>
             </div>
-            <div style={{ fontSize: 12.5, color: C.muted }}>{d.area}</div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
-              <span style={{ fontSize: 12, color: C.dim }}>{fmtPhone(d.phone)} · {d.email}</span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: C.green, flexShrink: 0 }}>{d.families} families</span>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {modal && (
@@ -2004,19 +2041,14 @@ function Deacons() {
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <Inp label="Name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              <Sel label="Role" value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))}>
-                <option>Deacon</option><option>Chairman</option><option>Deacon Emeritus</option>
+              <Sel label="Team" value={form.team} onChange={e => setForm(f => ({ ...f, team: +e.target.value }))}>
+                {teams.map(t => <option key={t} value={t}>Team {t}</option>)}
               </Sel>
-              <Inp label="Families Assigned" type="number" value={form.families} onChange={e => setForm(f => ({ ...f, families: e.target.value }))} />
+              <Inp label="Note (campus, etc.)" value={form.note || ""} onChange={e => setForm(f => ({ ...f, note: e.target.value }))} placeholder="Lake Trail" />
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              <Inp label="Phone" value={fmtPhone(form.phone)} onChange={e => setForm(f => ({ ...f, phone: fmtPhone(e.target.value) }))} placeholder="(817) 555-1234" />
-              <Inp label="Email" type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
-            </div>
-            <Inp label="Care Area" value={form.area} onChange={e => setForm(f => ({ ...f, area: e.target.value }))} placeholder="Hospital visitation, benevolence, widows..." />
             <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13.5, color: C.text, cursor: "pointer" }}>
-              <input type="checkbox" checked={!!form.onCall} onChange={e => setForm(f => ({ ...f, onCall: e.target.checked }))} />
-              On call this month
+              <input type="checkbox" checked={!!form.lead} onChange={e => setForm(f => ({ ...f, lead: e.target.checked }))} />
+              Team lead
             </label>
             <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
               {form.id && <Btn outline color={C.red} onClick={() => { setDeacons(d => d.filter(x => x.id !== form.id)); setModal(false); }}>Remove</Btn>}
@@ -2678,7 +2710,7 @@ function PersonCardModal({ name, lifeGroups, staff, deacons, extras, onSaveExtra
             <div style={{ fontSize: 18, fontWeight: 700, color: C.text }}>{name}</div>
             <div style={{ display: "flex", gap: 6, marginTop: 6, flexWrap: "wrap" }}>
               {staffHit  && <Badge label={staffHit.role} color={C.accent} />}
-              {deaconHit && <Badge label={deaconHit.role === "Chairman" ? "Deacon Chairman" : "Deacon"} color={C.gold} />}
+              {deaconHit && <Badge label={"Deacon · Team " + deaconHit.team + (deaconHit.lead ? " Lead" : "")} color={C.gold} />}
               {lgGroup   && <Badge label={lgGroup.name} color={C.green} />}
               {ministryRole && <Badge label={ministryArea + " · " + ministryRole} color={C.purple} />}
               {!staffHit && !deaconHit && !lgGroup && !ministryRole && <Badge label="Guest / Friend" color={C.muted} />}
@@ -2706,7 +2738,7 @@ function PersonCardModal({ name, lifeGroups, staff, deacons, extras, onSaveExtra
               {lgMember && <Row label="Joined LifeGroup" value={fmtDate(lgMember.joined)} />}
               {att && <Row label="LG Attendance" value={att.pct + "% · " + (att.consecAbsent > 0 ? att.consecAbsent + " wk absent streak" : "current")} />}
               {lgMember?.lastContact && <Row label="Last Contact" value={fmtDate(lgMember.lastContact)} />}
-              {deaconHit && <Row label="Deacon Care Area" value={deaconHit.area + " · " + deaconHit.families + " families"} />}
+              {deaconHit && <Row label="Deacon Team" value={"Team " + deaconHit.team + (deaconHit.lead ? " — Lead" : "") + (deaconHit.note ? " · " + deaconHit.note : "")} />}
 
               {extra.notes && (<><Sect t="Notes" /><div style={{ fontSize: 13.5, color: C.text, background: C.bg, borderRadius: 8, padding: "10px 14px", lineHeight: 1.6 }}>{extra.notes}</div></>)}
 
@@ -2823,7 +2855,7 @@ export default function ChurchOS() {
     });
   }, []);
   const [peopleExtras,  setPeopleExtras]  = useStored("cos2-people", {});
-  const [deaconsDir]                      = useStored("cos2-deacons", SEED_DEACONS);
+  const [deaconsDir]                      = useStored("cos2-deacons-v2", SEED_DEACONS);
 
   return (
     <PersonCtx.Provider value={setPersonName}>
