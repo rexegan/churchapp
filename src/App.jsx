@@ -1986,7 +1986,9 @@ function Deacons() {
   const [modal, setModal] = useState(false);
   const empty = { name:"", team:1, lead:false, note:"" };
   const [form, setForm] = useState(empty);
+  const [view, setView] = useState("teams"); // "all" | "teams"
   const teams = [1, 2, 3, 4];
+  const byLast = (a, b) => a.name.split(" ").slice(-1)[0].localeCompare(b.name.split(" ").slice(-1)[0]) || a.name.localeCompare(b.name);
 
   function save() {
     if (!form.name) return;
@@ -2000,17 +2002,34 @@ function Deacons() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
           <h1 style={{ fontSize: 23, fontWeight: 700, color: C.text, letterSpacing: "-0.01em" }}>Deacons</h1>
-          <p style={{ color: C.muted, marginTop: 4, fontSize: 14.5 }}>Deacon body — four teams · click any name for their card</p>
         </div>
         <Btn onClick={() => { setForm(empty); setModal(true); }}>+ Add Deacon</Btn>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12 }}>
-        <StatCard icon="🤝" label="Deacons" value={deacons.length} color={C.accent} />
-        <StatCard icon="👥" label="Teams"   value={teams.length}   color={C.green} />
+        <StatCard icon="🤝" label="Deacons" value={deacons.length} color={C.accent} onClick={() => setView("all")} />
+        <StatCard icon="👥" label="Teams"   value={teams.length}   color={C.green}  onClick={() => setView("teams")} />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 14 }}>
+      {/* All deacons — alphabetized by last name */}
+      {view === "all" && (
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: 18 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: C.text, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 12 }}>All Deacons ({deacons.length})</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))", gap: 5 }}>
+            {[...deacons].sort(byLast).map(d => (
+              <div key={d.id} onClick={() => { setForm({ ...d }); setModal(true); }}
+                style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, padding: "6px 10px", background: C.bg, borderRadius: 7, border: `1px solid ${C.border}`, cursor: "pointer" }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = C.accent}
+                onMouseLeave={e => e.currentTarget.style.borderColor = C.border}>
+                <span style={{ fontSize: 13.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}><PName name={d.name} /></span>
+                <span style={{ fontSize: 11.5, fontWeight: 700, color: d.lead ? C.gold : C.muted, flexShrink: 0 }}>T{d.team}{d.lead ? " Lead" : ""}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {view === "teams" && <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 14 }}>
         {teams.map(t => {
           const lead = deacons.find(d => d.team === t && d.lead);
           const members = deacons.filter(d => d.team === t && !d.lead).sort((a, b) => a.name.split(" ").slice(-1)[0].localeCompare(b.name.split(" ").slice(-1)[0]));
@@ -2018,7 +2037,13 @@ function Deacons() {
             <div key={t} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, overflow: "hidden" }}>
               <div style={{ background: C.accent, padding: "10px 16px", textAlign: "center" }}>
                 <div style={{ fontSize: 15, fontWeight: 700, color: "#fff" }}>Deacon Team {t}</div>
-                {lead && <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.85)", marginTop: 2 }}><PName name={lead.name} style={{ color: "rgba(255,255,255,0.95)", fontWeight: 600 }} /> — Lead</div>}
+                {lead && (
+                  <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.85)", marginTop: 2 }}>
+                    <PName name={lead.name} style={{ color: "rgba(255,255,255,0.95)", fontWeight: 600 }} /> — Lead
+                    <button onClick={() => { setForm({ ...lead }); setModal(true); }} title="Edit team lead"
+                      style={{ background: "none", border: "none", color: "rgba(255,255,255,0.7)", cursor: "pointer", fontSize: 12, marginLeft: 6 }}>✎</button>
+                  </div>
+                )}
               </div>
               <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", gap: 4 }}>
                 {members.map(d => (
@@ -2034,7 +2059,7 @@ function Deacons() {
             </div>
           );
         })}
-      </div>
+      </div>}
 
       {modal && (
         <Modal title={form.id ? "Edit Deacon" : "Add Deacon"} onClose={() => setModal(false)}>
