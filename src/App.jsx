@@ -249,7 +249,7 @@ function Btn({ children, onClick, color = C.accent, outline, small, danger, styl
 function Dashboard({ staff, ministries, transactions, events, campaigns, prayerRequests, lifeGroups, setTab }) {
   const income  = transactions.filter(t => t.type === "Income").reduce((s, t)  => s + t.amount, 0);
   const expense = transactions.filter(t => t.type === "Expense").reduce((s, t) => s + t.amount, 0);
-  const upcoming = events.filter(e => e.date >= today()).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 5);
+  const upcoming = events.filter(e => e.date >= today()).sort((a, b) => a.date.localeCompare(b.date) || (a.time || "").localeCompare(b.time || ""));
   const totalMembers = ministries.reduce((s, m) => s + m.members, 0);
   const lgMembers = lifeGroups.reduce((s, g) => s + g.members.length, 0);
   const activePrayers = prayerRequests.filter(p => p.status === "Active" || p.status === "Ongoing").length;
@@ -281,9 +281,9 @@ function Dashboard({ staff, ministries, transactions, events, campaigns, prayerR
       {/* Upcoming events + Prayer needs — the heart of the view */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
         <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, padding: 20 }}>
-          <h3 style={{ fontWeight: 600, color: C.text, marginBottom: 14, fontSize: 16 }}>Upcoming Events</h3>
+          <h3 style={{ fontWeight: 600, color: C.text, marginBottom: 14, fontSize: 16 }}>Upcoming Events ({upcoming.length})</h3>
           {upcoming.length === 0 && <p style={{ color: C.muted, fontSize: 13 }}>No upcoming events.</p>}
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, maxHeight: 520, overflowY: "auto" }}>
             {upcoming.map(e => (
               <div key={e.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: C.bg, borderRadius: 10, border: `1px solid ${C.border}` }}>
                 <div>
