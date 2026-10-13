@@ -2837,7 +2837,7 @@ export default function ChurchOS() {
   const [campaigns,     setCampaigns]     = useStored("cos2-campaigns",     SEED_CAMPAIGNS);
   const [announcements, setAnnouncements] = useStored("cos2-announcements", SEED_ANNOUNCEMENTS);
   const [prayerRequests,setPrayerRequests]= useStored("cos2-prayer-v3",     SEED_PRAYER);
-  const [events,        setEvents]        = useStored("cos2-events-v11",   SEED_EVENTS);
+  const [events,        setEvents]        = useStored("cos2-events-v12",   SEED_EVENTS);
   const [open,          setOpen]          = useState(true);
   const [personName,    setPersonName]    = useState(null);
   // Roster guarantee, every load: each person from the official roster always
